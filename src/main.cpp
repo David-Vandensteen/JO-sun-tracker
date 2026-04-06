@@ -68,7 +68,7 @@ void loop() {
   lcd.setCursor(7, 1);
   lcd.print(lum2Percent);
   lcd.print("%  ");
-  // Moy
+  // Average
   lcd.setCursor(13, 1);
   lcd.print("    ");
   lcd.setCursor(13, 1);
