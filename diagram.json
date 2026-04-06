@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "author": "David Vandensteen",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-breadboard-half", "id": "bb1", "top": -147, "left": 156.4, "attrs": {} },
+    {
+      "type": "wokwi-breadboard-mini",
+      "id": "bb2",
+      "top": 490.5,
+      "left": -150.1,
+      "rotate": 90,
+      "attrs": {}
+    },
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": -143.4, "left": -125.4, "attrs": {} },
+    {
+      "type": "wokwi-lcd2004",
+      "id": "lcd1",
+      "top": 121.6,
+      "left": 236,
+      "attrs": { "pins": "i2c" }
+    },
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": -289.3, "left": 201.4, "attrs": {} },
+    {
+      "type": "wokwi-text",
+      "id": "text1",
+      "top": -316.8,
+      "left": 192,
+      "attrs": { "text": "Capteur lum 1" }
+    },
+    { "type": "wokwi-potentiometer", "id": "pot2", "top": -289.3, "left": 335.8, "attrs": {} },
+    {
+      "type": "wokwi-text",
+      "id": "text2",
+      "top": -316.8,
+      "left": 326.4,
+      "attrs": { "text": "Capteur lum 2" }
+    },
+    { "type": "wokwi-relay-module", "id": "relay1", "top": -230.2, "left": 508.8, "attrs": {} },
+    {
+      "type": "wokwi-text",
+      "id": "text3",
+      "top": -268.8,
+      "left": 566.4,
+      "attrs": { "text": "Vérin 1" }
+    },
+    { "type": "wokwi-relay-module", "id": "relay2", "top": -124.6, "left": 547.2, "attrs": {} },
+    {
+      "type": "wokwi-text",
+      "id": "text4",
+      "top": -163.2,
+      "left": 595.2,
+      "attrs": { "text": "Vérin 2" }
+    },
+    {
+      "type": "wokwi-slide-potentiometer",
+      "id": "pot3",
+      "top": 341,
+      "left": 450.2,
+      "attrs": { "travelLength": "30" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text5",
+      "top": 326.4,
+      "left": 470.4,
+      "attrs": { "text": "Seuil de luminosité" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 367.2,
+      "left": 336.2,
+      "rotate": 180,
+      "attrs": { "color": "green", "xray": "1" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn2",
+      "top": 367.2,
+      "left": 201.8,
+      "rotate": 180,
+      "attrs": { "color": "green", "xray": "1" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text6",
+      "top": 326.4,
+      "left": 182.4,
+      "attrs": { "text": "Forcer vérin 1" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text7",
+      "top": 326.4,
+      "left": 326.4,
+      "attrs": { "text": "Forcer vérin 2" }
+    }
+  ],
+  "connections": [
+    [ "lcd1:SDA", "uno:A4", "yellow", [ "h0" ] ],
+    [ "lcd1:SCL", "uno:A5", "yellow", [ "h0" ] ],
+    [ "uno:5V", "bb1:bp.1", "red", [ "v28.7", "h155.8" ] ],
+    [ "lcd1:VCC", "bb1:bp.2", "red", [ "h0" ] ],
+    [ "lcd1:GND", "bb1:bn.3", "black", [ "h0" ] ],
+    [ "uno:GND.1", "bb1:tn.1", "black", [ "v-48", "h200.3" ] ],
+    [ "bb1:bp.3", "bb1:tp.1", "red", [ "v-10.5", "h-46.4", "v-163.5" ] ],
+    [ "pot1:GND", "bb1:tn.5", "black", [ "v0" ] ],
+    [ "pot1:VCC", "bb1:tp.6", "red", [ "v0" ] ],
+    [ "pot1:SIG", "uno:A0", "purple", [ "v278.4", "h-157.8" ] ],
+    [ "pot2:GND", "bb1:tn.16", "black", [ "v0" ] ],
+    [ "pot2:VCC", "bb1:tp.18", "red", [ "v0" ] ],
+    [ "pot2:SIG", "uno:A1", "purple", [ "v288", "h-282.7" ] ],
+    [ "relay1:VCC", "bb1:tp.21", "red", [ "h0" ] ],
+    [ "relay1:GND", "bb1:tn.22", "black", [ "h0" ] ],
+    [ "uno:12", "relay1:IN", "green", [ "v0" ] ],
+    [ "relay2:VCC", "bb1:bp.21", "red", [ "h-134.4", "v144.9" ] ],
+    [ "relay2:GND", "bb1:bn.22", "black", [ "h-124.8", "v144.9" ] ],
+    [ "relay2:IN", "uno:13", "green", [ "v-115.4", "h-547.6" ] ],
+    [ "pot3:GND", "bb1:bn.23", "black", [ "v96", "h34", "v-422.4", "h-251.2" ] ],
+    [ "pot3:VCC", "bb1:bp.24", "red", [ "h-9.6", "v-57.6", "h192", "v-297.6", "h-184" ] ],
+    [ "pot3:SIG", "uno:A2", "green", [ "v-87.2", "h-407.2" ] ],
+    [ "uno:8", "bb2:1b.j", "magenta", [ "v-38.4", "h-191.6", "v652.8" ] ],
+    [ "uno:7", "bb2:1t.e", "magenta", [ "v-28.8", "h-198", "v556.8", "h86.4" ] ],
+    [ "uno:GND.2", "bb2:2t.e", "black", [ "h-5.7", "v76.7", "h-76.8", "v364.8" ] ],
+    [ "btn1:2.r", "bb2:1b.f", "magenta", [ "h-29", "v47.8", "h-336" ] ],
+    [ "btn1:1.r", "bb2:2t.d", "black", [ "v41.4", "h-365", "v45" ] ],
+    [ "btn2:2.r", "bb2:1t.d", "magenta", [ "h-192.2", "v19" ] ],
+    [ "btn2:1.r", "bb2:2t.c", "black", [ "v105.6", "h-230.6" ] ],
+    [ "uno:GND.3", "bb1:bn.4", "black", [ "v67.1", "h165.6" ] ]
+  ],
+  "dependencies": {}
+}
