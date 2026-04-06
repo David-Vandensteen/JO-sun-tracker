@@ -51,7 +51,7 @@ void loop() {
   int lum1Percent = map(sensorValue1, 0, 1023, 0, 100);
   int lum2Percent = map(sensorValue2, 0, 1023, 0, 100);
 
-  int moyenne = (lum1Percent + lum2Percent) / 2;
+  int average = (lum1Percent + lum2Percent) / 2;
 
   int thresholdRaw = analogRead(LUMINOSITY_THRESHOLD_PIN);
   int threshold = map(thresholdRaw, 0, 1023, 0, 100);
@@ -72,7 +72,7 @@ void loop() {
   lcd.setCursor(13, 1);
   lcd.print("    ");
   lcd.setCursor(13, 1);
-  lcd.print(moyenne);
+  lcd.print(average);
   lcd.print("%  ");
 
   lcd.setCursor(8, 3);
@@ -82,14 +82,14 @@ void loop() {
   lcd.print("%   ");
 
   lcd.setCursor(0, 2);
-  if (jack1Pressed || moyenne > threshold) {
+  if (jack1Pressed || average > threshold) {
     lcd.print("V1 ON ");
   } else {
     lcd.print("V1 OFF");
   }
 
   lcd.setCursor(8, 2);
-  if (jack2Pressed || moyenne > threshold) {
+  if (jack2Pressed || average > threshold) {
     lcd.print("V2 ON ");
   } else {
     lcd.print("V2 OFF");
@@ -105,19 +105,19 @@ void loop() {
     Serial.print(" (");
     Serial.print(lum2Percent);
     Serial.print("%)  Moyenne: ");
-    Serial.print(moyenne);
+    Serial.print(average);
     Serial.print("%  jack1Pressed: ");
     Serial.print(jack1Pressed);
     Serial.print("  jack2Pressed: ");
     Serial.println(jack2Pressed);
   }
 
-  if (jack1Pressed || moyenne > threshold) {
+  if (jack1Pressed || average > threshold) {
     digitalWrite(RELAY_1_PIN, HIGH);
   } else {
     digitalWrite(RELAY_1_PIN, LOW);
   }
-  if (jack2Pressed || moyenne > threshold) {
+  if (jack2Pressed || average > threshold) {
     digitalWrite(RELAY_2_PIN, HIGH);
   } else {
     digitalWrite(RELAY_2_PIN, LOW);
