@@ -16,6 +16,8 @@
 
 #define LDR_THRESHOLD 10
 
+static int eventDebugId = 1;
+
 bool compareWithThreshold(int ldr1, int ldr2, int threshold) {
   return abs(ldr1 - ldr2) <= threshold;
 }
@@ -88,7 +90,6 @@ void loop() {
   int ldr1Percent = map(ldr1Raw, 0, 1023, 100, 0);
   int ldr2Percent = map(ldr2Raw, 0, 1023, 100, 0);
 
-  static int eventDebugId = 1;
   if (EVENT_DEBUG) {
     if (!compareWithThreshold(ldr1Percent, ldr2Percent, LDR_THRESHOLD)) {
       Serial.print("[EVT-");
