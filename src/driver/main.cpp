@@ -88,35 +88,51 @@ void loop() {
   int ldr1Percent = map(ldr1Raw, 0, 1023, 100, 0);
   int ldr2Percent = map(ldr2Raw, 0, 1023, 100, 0);
 
+  static int eventDebugId = 1;
   if (EVENT_DEBUG) {
     if (!compareWithThreshold(ldr1Percent, ldr2Percent, LDR_THRESHOLD)) {
-      Serial.print("LDR values are different with threshold ");
+      Serial.print("[EVT-");
+      Serial.print(eventDebugId);
+      Serial.print("] LDR values are different with threshold ");
       Serial.print(LDR_THRESHOLD);
       Serial.println("%");
-      Serial.print("LDR1: ");
+      Serial.print("[EVT-");
+      Serial.print(eventDebugId);
+      Serial.print("] LDR1: ");
       Serial.print(ldr1Raw);
       Serial.print("  LDR2: ");
       Serial.println(ldr2Raw);
+      eventDebugId++;
     }
 
     if (!isAutoMode()) {
       if (digitalRead(DEPLOY_BUTTON_PIN) == LOW) {
-        Serial.println("Deploy button pressed");
+        Serial.print("[EVT-");
+        Serial.print(eventDebugId);
+        Serial.println("] Deploy button pressed");
+        eventDebugId++;
       }
       if (digitalRead(RETRACT_BUTTON_PIN) == LOW) {
-        Serial.println("Retract button pressed");
+        Serial.print("[EVT-");
+        Serial.print(eventDebugId);
+        Serial.println("] Retract button pressed");
+        eventDebugId++;
       }
     }
     if (digitalRead(SCAN_BUTTON_PIN) == LOW) {
-      Serial.println("Scan button pressed");
+      Serial.print("[EVT-");
+      Serial.print(eventDebugId);
+      Serial.println("] Scan button pressed");
+      eventDebugId++;
     }
     if (digitalRead(AUTO_BUTTON_PIN) == LOW) {
-      Serial.println("Auto button pressed");
+      Serial.print("[EVT-");
+      Serial.print(eventDebugId);
+      Serial.println("] Auto button pressed");
+      eventDebugId++;
     }
   }
+  if (PULL_DEBUG) pullDebug(ldr1Raw, ldr2Raw, ldr1Percent, ldr2Percent);
 
-  if (PULL_DEBUG) {
-    pullDebug(ldr1Raw, ldr2Raw, ldr1Percent, ldr2Percent);
-  }
   delay(500);
 }
