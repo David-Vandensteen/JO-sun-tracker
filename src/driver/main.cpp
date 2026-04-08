@@ -8,8 +8,16 @@
 
 #define LDR_1_PIN A0
 #define LDR_2_PIN A1
-#define DEPLOY_BUTTON_PIN 7
-#define RETRACT_BUTTON_PIN 8
+#define RETRACT_BUTTON_PIN 2
+#define DEPLOY_BUTTON_PIN 3
+
+#define AUTO_BUTTON_PIN 4
+
+#define LDR_THRESHOLD 10
+
+bool isAutoMode() {
+  return digitalRead(AUTO_BUTTON_PIN) == LOW;
+}
 
 bool compare_ldr_percent(int ldr1, int ldr2, int threshold) {
   return abs(ldr1 - ldr2) <= threshold;
@@ -20,6 +28,7 @@ void setup_pin() {
   pinMode(LDR_2_PIN, INPUT);
   pinMode(DEPLOY_BUTTON_PIN, INPUT_PULLUP);
   pinMode(RETRACT_BUTTON_PIN, INPUT_PULLUP);
+  pinMode(AUTO_BUTTON_PIN, INPUT_PULLUP);
   if (PULL_DEBUG || EVENT_DEBUG) {
     Serial.println("Pin setup completed");
     Serial.print("LDR_1_PIN: ");
@@ -30,6 +39,8 @@ void setup_pin() {
     Serial.println(DEPLOY_BUTTON_PIN);
     Serial.print("RETRACT_BUTTON_PIN: ");
     Serial.println(RETRACT_BUTTON_PIN);
+    Serial.print("AUTO_BUTTON_PIN: ");
+    Serial.println(AUTO_BUTTON_PIN);
   }
 }
 
@@ -48,18 +59,26 @@ void loop() {
   int ldr2Percent = map(ldr2Raw, 0, 1023, 100, 0);
 
   if (EVENT_DEBUG) {
-    if (!compare_ldr_percent(ldr1Percent, ldr2Percent, 10)) {
-      Serial.println("LDR values is different with threshold 10%");
+    if (!compare_ldr_percent(ldr1Percent, ldr2Percent, LDR_THRESHOLD)) {
+      Serial.print("LDR values are different with threshold ");
+      Serial.print(LDR_THRESHOLD);
+      Serial.println("%");
       Serial.print("LDR1: ");
       Serial.print(ldr1Raw);
       Serial.print("  LDR2: ");
       Serial.println(ldr2Raw);
     }
-    if (digitalRead(DEPLOY_BUTTON_PIN) == LOW) {
-      Serial.println("Deploy button pressed");
+
+    if (!isAutoMode()) {
+      if (digitalRead(DEPLOY_BUTTON_PIN) == LOW) {
+        Serial.println("Deploy button pressed");
+      }
+      if (digitalRead(RETRACT_BUTTON_PIN) == LOW) {
+        Serial.println("Retract button pressed");
+      }
     }
-    if (digitalRead(RETRACT_BUTTON_PIN) == LOW) {
-      Serial.println("Retract button pressed");
+    if (digitalRead(AUTO_BUTTON_PIN) == LOW) {
+      Serial.println("Auto button pressed");
     }
   }
 
@@ -78,6 +97,8 @@ void loop() {
     Serial.print(digitalRead(DEPLOY_BUTTON_PIN) == LOW ? "Pressed" : "Released");
     Serial.print("  Retract: ");
     Serial.print(digitalRead(RETRACT_BUTTON_PIN) == LOW ? "Pressed" : "Released");
+    Serial.print("  Auto: ");
+    Serial.print(digitalRead(AUTO_BUTTON_PIN) == LOW ? "On" : "Off");
     Serial.println("------------------------------");
   }
   delay(500);
