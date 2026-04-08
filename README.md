@@ -1,1 +1,1 @@
-# JO-foldable-solar-panel
+# JO-sun-tracker
