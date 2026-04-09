@@ -1,14 +1,17 @@
 # JO-sun-tracker
 
 ## Matériel pour un groupe de panneaux solaire
-- 1 carte Arduino UNO (5v) ou 1 carte Arduino NANO (3,3v) ?
+- 1 carte Arduino UNO (5v)
 - 1 module L298N (peut piloter 2 moteurs 12v)
-- 2 modules LDR LM393 (photocellule)
+- 2 modules LDR LM393 (photocellule) (prévoir l'étanchéité)
 - 1 anémomètre (ref ?)
 - 2 boutons poussoir
 - 1 bouton switch
 - 2 vérins 650mm 12v
 - Connecteurs JST
+- Têtes de broche compatible UNO
+- 1 LED verte
+- 1 resistance 220 Ohms
 
 ## Asservissement, monitoring et pilotage à distance
 Dans un second temps, il est prévu d'ajouter une carte de type Raspberry Pi ou ESP32, équipée d'un écran tactile, afin de superviser et piloter le groupe de cartes Arduino via un bus série et un protocole de communication adapté.
