@@ -8,6 +8,7 @@
 - 2 boutons poussoir
 - 1 bouton switch
 - 2 vérins 650mm 12v
+- Connecteurs JST
 
 ## Asservissement, monitoring et pilotage à distance
 Dans un second temps, il est prévu d'ajouter une carte de type Raspberry Pi ou ESP32, équipée d'un écran tactile, afin de superviser et piloter le groupe de cartes Arduino via un bus série et un protocole de communication adapté.
