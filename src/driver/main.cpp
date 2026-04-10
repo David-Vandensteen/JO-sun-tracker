@@ -1,5 +1,40 @@
 #include <Arduino.h>
 
+// Arduino Uno pin mapping:
+
+/*
+L298N Motor Driver:
+│
+├── 10: ─────────────────► ENA: (L298N, PWM motor 1)
+├── 8: ──────────────────► IN1: (L298N, motor 1 direction)
+├── 9: ──────────────────► IN2: (L298N, motor 1 direction)
+│
+├── 13: ─────────────────► ENB: (L298N, PWM motor 2)
+├── 11: ─────────────────► IN3: (L298N, motor 2 direction)
+└── 12: ─────────────────► IN4: (L298N, motor 2 direction)
+
+Mode button:
+│
+├── 4: ──────────────────► AUTO: (mode auto/manual switch button)
+
+Control buttons - work only in manual mode:
+│
+├── 2: ──────────────────► RETRACT: (retract button)
+└── 3: ──────────────────► DEPLOY: (deploy button)
+
+LDR 1 - sun sensor 1:
+|
+├── A0: ─────────────────► LDR 1: (analog input)
+
+LDR 2 - sun sensor 2:
+|
+├── A1: ─────────────────► LDR 2: (analog input)
+
+LDR 3 - night sensor:
+|
+├── A2: ─────────────────► LDR 3: (analog input)
+*/
+
 #define TRUE 1
 #define FALSE 0
 
@@ -18,12 +53,22 @@
 
 static int eventDebugId = 1;
 
+static struct {
+  const int ldr1Pin = LDR_1_PIN;
+  const int ldr2Pin = LDR_2_PIN;
+  const int deployButtonPin = DEPLOY_BUTTON_PIN;
+  const int retractButtonPin = RETRACT_BUTTON_PIN;
+  const int autoButtonPin = AUTO_BUTTON_PIN;
+  const int scanButtonPin = SCAN_BUTTON_PIN;
+
+} pinMapping;
+
 bool compareWithThreshold(int ldr1, int ldr2, int threshold) {
   return abs(ldr1 - ldr2) <= threshold;
 }
 
 bool isAutoMode() {
-  return digitalRead(AUTO_BUTTON_PIN) == LOW;
+  return digitalRead(pinMapping.autoButtonPin) == LOW;
 }
 
 void pullDebug(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent) {
@@ -38,13 +83,13 @@ void pullDebug(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent) {
   Serial.print(ldr2Percent);
   Serial.print("%)");
   Serial.print("  Deploy: ");
-  Serial.print(digitalRead(DEPLOY_BUTTON_PIN) == LOW ? "Pressed" : "Released");
+  Serial.print(digitalRead(pinMapping.deployButtonPin) == LOW ? "Pressed" : "Released");
   Serial.print("  Retract: ");
-  Serial.print(digitalRead(RETRACT_BUTTON_PIN) == LOW ? "Pressed" : "Released");
+  Serial.print(digitalRead(pinMapping.retractButtonPin) == LOW ? "Pressed" : "Released");
   Serial.print("  Auto: ");
-  Serial.print(digitalRead(AUTO_BUTTON_PIN) == LOW ? "On" : "Off");
+  Serial.print(digitalRead(pinMapping.autoButtonPin) == LOW ? "On" : "Off");
   Serial.print("  Scan: ");
-  Serial.print(digitalRead(SCAN_BUTTON_PIN) == LOW ? "Pressed" : "Released");
+  Serial.print(digitalRead(pinMapping.scanButtonPin) == LOW ? "Pressed" : "Released");
   Serial.println();
   Serial.println("------------------------------");
 }
@@ -107,26 +152,26 @@ void loop() {
     }
 
     if (!isAutoMode()) {
-      if (digitalRead(DEPLOY_BUTTON_PIN) == LOW) {
+      if (digitalRead(pinMapping.deployButtonPin) == LOW) {
         Serial.print("[EVT-");
         Serial.print(eventDebugId);
         Serial.println("] Deploy button pressed");
         eventDebugId++;
       }
-      if (digitalRead(RETRACT_BUTTON_PIN) == LOW) {
+      if (digitalRead(pinMapping.retractButtonPin) == LOW) {
         Serial.print("[EVT-");
         Serial.print(eventDebugId);
         Serial.println("] Retract button pressed");
         eventDebugId++;
       }
     }
-    if (digitalRead(SCAN_BUTTON_PIN) == LOW) {
+    if (digitalRead(pinMapping.scanButtonPin) == LOW) {
       Serial.print("[EVT-");
       Serial.print(eventDebugId);
       Serial.println("] Scan button pressed");
       eventDebugId++;
     }
-    if (digitalRead(AUTO_BUTTON_PIN) == LOW) {
+    if (digitalRead(pinMapping.autoButtonPin) == LOW) {
       Serial.print("[EVT-");
       Serial.print(eventDebugId);
       Serial.println("] Auto button pressed");
