@@ -72,3 +72,7 @@ LDR 3 - night sensor:
 |
 ├── A2: ─────────────────► LDR 3: (analog input)
 ```
+
+## Scénarios de test (montage + code)
+- [Fonctionnement basique du L298N](tests/L298N/01-basic)
+
