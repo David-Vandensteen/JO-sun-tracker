@@ -2,5 +2,6 @@
   "files.trimTrailingWhitespace": true,
   "[markdown]": {
     "files.trimTrailingWhitespace": false
-  }
+  },
+  "C_Cpp.errorSquiggles": "disabled"
 }
