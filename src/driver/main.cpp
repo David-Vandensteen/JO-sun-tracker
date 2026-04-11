@@ -1,6 +1,6 @@
 #include <Arduino.h>
-// Arduino Uno pin mapping:
 
+// Arduino Uno pin mapping:
 /*
 L298N Motor Driver:
 │
@@ -47,43 +47,27 @@ LDR 3 - night sensor:
 
 #define SETTINGS_LDR_THRESHOLD 10
 
-// ---------------------------
+// -------------------------------
 // Global variables and constants
-// ---------------------------
+// -------------------------------
 
 static int eventDebugId = 1;
 
-// ---------------------------
-// Types and structures
-// ---------------------------
+// ---------------------------------------------
+// Types, structures and constants for settings
+// ----------------------------------------------
 
-typedef struct LDRDay {
+typedef struct SettingsPinLDRDay {
   const uint8_t up;
   const uint8_t down;
-} LDRDay;
+} SettingsPinLDRDay;
 
-typedef uint8_t LDRNight;
+typedef uint8_t SettingsPinLDRNight;
 
-typedef struct LDR {
-  const LDRDay day;
-  const LDRNight night;
-} LDR;
-
-// Structures pour les valeurs LDR
-struct LDRRaw {
-  int dayUp;
-  int dayDown;
-};
-
-struct LDRPercent {
-  long dayUp;
-  long dayDown;
-};
-
-struct LDRValues {
-  LDRRaw raw;
-  LDRPercent percent;
-};
+typedef struct SettingsPinLDR {
+  const SettingsPinLDRDay day;
+  const SettingsPinLDRNight night;
+} SettingsPinLDR;
 
 typedef struct SettingsPinButton {
   const uint8_t deploy;
@@ -94,7 +78,7 @@ typedef struct SettingsPinButton {
 } SettingsPinButton;
 
 typedef struct SettingsPin {
-  const LDR LDR;
+  const SettingsPinLDR LDR;
   const SettingsPinButton button;
 
 } SettingsPin;
@@ -123,9 +107,29 @@ static const Settings settings = {
   .LDRThreshold = SETTINGS_LDR_THRESHOLD
 };
 
-// ---------------------------
-// Debug functions
-// ---------------------------
+// ---------------------------------------------
+// Structures for LDR readings and calculations
+// ---------------------------------------------
+
+typedef struct LDRRaw {
+  int dayUp;
+  int dayDown;
+} LDRRaw;
+
+typedef struct LDRPercent {
+  long dayUp;
+  long dayDown;
+} LDRPercent;
+
+typedef struct LDRValues {
+  LDRRaw raw;
+  LDRPercent percent;
+} LDRValues;
+
+
+// -----------------------------------
+// Debug functions for serial output
+// -----------------------------------
 
 void pullDebug(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent) {
   Serial.println("------------------------------");
