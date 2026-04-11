@@ -32,5 +32,9 @@ Le code de ce dossier permet de tester le pilotage de LEDs via les broches de l'
 > **Info supplémentaire :**
 > Pendant l'exécution, le code envoie également des messages sur la communication série (Serial Monitor) pour indiquer l'état des commandes et faciliter le débogage. Pensez à ouvrir le moniteur série dans l'IDE Arduino pour suivre ces traces en temps réel.
 
-Ce test est utile pour expérimenter avec le L298N.
+## Vidéo de démonstration
+
+[![Demo vidéo](https://img.youtube.com/vi/gziRdgw5Lqo/0.jpg)](https://youtu.be/gziRdgw5Lqo)
+
+
 
