@@ -1,5 +1,4 @@
 #include <Arduino.h>
-
 // Arduino Uno pin mapping:
 
 /*
@@ -35,41 +34,98 @@ LDR 3 - night sensor:
 ├── A2: ─────────────────► LDR 3: (analog input)
 */
 
+
+// ---------------------------
+// Define
+// ---------------------------
+
 #define TRUE 1
 #define FALSE 0
 
 #define PULL_DEBUG FALSE
 #define EVENT_DEBUG TRUE
 
-#define LDR_1_PIN A0
-#define LDR_2_PIN A1
-#define RETRACT_BUTTON_PIN 2
-#define DEPLOY_BUTTON_PIN 3
+#define SETTINGS_LDR_THRESHOLD 10
 
-#define AUTO_BUTTON_PIN 4
-#define SCAN_BUTTON_PIN 5
-
-#define LDR_THRESHOLD 10
+// ---------------------------
+// Global variables and constants
+// ---------------------------
 
 static int eventDebugId = 1;
 
-static struct {
-  const int ldr1Pin = LDR_1_PIN;
-  const int ldr2Pin = LDR_2_PIN;
-  const int deployButtonPin = DEPLOY_BUTTON_PIN;
-  const int retractButtonPin = RETRACT_BUTTON_PIN;
-  const int autoButtonPin = AUTO_BUTTON_PIN;
-  const int scanButtonPin = SCAN_BUTTON_PIN;
+// ---------------------------
+// Types and structures
+// ---------------------------
 
-} pinMapping;
+typedef struct LDRDay {
+  const uint8_t up;
+  const uint8_t down;
+} LDRDay;
 
-bool compareWithThreshold(int ldr1, int ldr2, int threshold) {
-  return abs(ldr1 - ldr2) <= threshold;
-}
+typedef uint8_t LDRNight;
 
-bool isAutoMode() {
-  return digitalRead(pinMapping.autoButtonPin) == LOW;
-}
+typedef struct LDR {
+  const LDRDay day;
+  const LDRNight night;
+} LDR;
+
+// Structures pour les valeurs LDR
+struct LDRRaw {
+  int dayUp;
+  int dayDown;
+};
+
+struct LDRPercent {
+  long dayUp;
+  long dayDown;
+};
+
+struct LDRValues {
+  LDRRaw raw;
+  LDRPercent percent;
+};
+
+typedef struct SettingsPinButton {
+  const uint8_t deploy;
+  const uint8_t retract;
+  const uint8_t automatic;
+  const uint8_t scan;
+
+} SettingsPinButton;
+
+typedef struct SettingsPin {
+  const LDR LDR;
+  const SettingsPinButton button;
+
+} SettingsPin;
+
+typedef struct Settings {
+  const SettingsPin pin;
+  uint16_t LDRThreshold;
+} Settings;
+
+static const Settings settings = {
+  .pin = {
+    .LDR = {
+      .day = {
+        .up = A0,
+        .down = A1
+      },
+      .night = A2
+    },
+    .button = {
+      .deploy = 2,
+      .retract = 3,
+      .automatic = 4,
+      .scan = 5
+    }
+  },
+  .LDRThreshold = SETTINGS_LDR_THRESHOLD
+};
+
+// ---------------------------
+// Debug functions
+// ---------------------------
 
 void pullDebug(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent) {
   Serial.println("------------------------------");
@@ -83,41 +139,53 @@ void pullDebug(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent) {
   Serial.print(ldr2Percent);
   Serial.print("%)");
   Serial.print("  Deploy: ");
-  Serial.print(digitalRead(pinMapping.deployButtonPin) == LOW ? "Pressed" : "Released");
+  Serial.print(digitalRead(settings.pin.button.deploy) == LOW ? "Pressed" : "Released");
   Serial.print("  Retract: ");
-  Serial.print(digitalRead(pinMapping.retractButtonPin) == LOW ? "Pressed" : "Released");
+  Serial.print(digitalRead(settings.pin.button.retract) == LOW ? "Pressed" : "Released");
   Serial.print("  Auto: ");
-  Serial.print(digitalRead(pinMapping.autoButtonPin) == LOW ? "On" : "Off");
+  Serial.print(digitalRead(settings.pin.button.automatic) == LOW ? "On" : "Off");
   Serial.print("  Scan: ");
-  Serial.print(digitalRead(pinMapping.scanButtonPin) == LOW ? "Pressed" : "Released");
+  Serial.print(digitalRead(settings.pin.button.scan) == LOW ? "Pressed" : "Released");
   Serial.println();
   Serial.println("------------------------------");
 }
 
-
 void setupPinDebug() {
   Serial.println("Pin setup completed");
-  Serial.print("LDR_1_PIN: ");
-  Serial.println(LDR_1_PIN);
-  Serial.print("LDR_2_PIN: ");
-  Serial.println(LDR_2_PIN);
-  Serial.print("DEPLOY_BUTTON_PIN: ");
-  Serial.println(DEPLOY_BUTTON_PIN);
-  Serial.print("RETRACT_BUTTON_PIN: ");
-  Serial.println(RETRACT_BUTTON_PIN);
-  Serial.print("AUTO_BUTTON_PIN: ");
-  Serial.println(AUTO_BUTTON_PIN);
-  Serial.print("SCAN_BUTTON_PIN: ");
-  Serial.println(SCAN_BUTTON_PIN);
+  Serial.println("Settings:");
+  Serial.print("  LDR day up: "); Serial.println(settings.pin.LDR.day.up);
+  Serial.print("  LDR day down: "); Serial.println(settings.pin.LDR.day.down);
+  Serial.print("  LDR night: "); Serial.println(settings.pin.LDR.night);
+  Serial.print("  Deploy button: "); Serial.println(settings.pin.button.deploy);
+  Serial.print("  Retract button: "); Serial.println(settings.pin.button.retract);
+  Serial.print("  Automatic button: "); Serial.println(settings.pin.button.automatic);
+  Serial.print("  Scan button: "); Serial.println(settings.pin.button.scan);
 }
 
+// ---------------------------
+// Utility functions
+// ---------------------------
+
+bool compareWithThreshold(long first, long second, long threshold) {
+  return abs(first - second) <= threshold;
+}
+
+bool isAutoMode() {
+  return digitalRead(settings.pin.button.automatic) == LOW;
+}
+
+// ---------------------------
+// Setup
+// ---------------------------
+
 void setupPin() {
-  pinMode(LDR_1_PIN, INPUT);
-  pinMode(LDR_2_PIN, INPUT);
-  pinMode(DEPLOY_BUTTON_PIN, INPUT_PULLUP);
-  pinMode(RETRACT_BUTTON_PIN, INPUT_PULLUP);
-  pinMode(AUTO_BUTTON_PIN, INPUT_PULLUP);
-  pinMode(SCAN_BUTTON_PIN, INPUT_PULLUP);
+  pinMode(settings.pin.LDR.day.up, INPUT);
+  pinMode(settings.pin.LDR.day.down, INPUT);
+  pinMode(settings.pin.LDR.night, INPUT);
+  pinMode(settings.pin.button.deploy, INPUT_PULLUP);
+  pinMode(settings.pin.button.retract, INPUT_PULLUP);
+  pinMode(settings.pin.button.automatic, INPUT_PULLUP);
+  pinMode(settings.pin.button.scan, INPUT_PULLUP);
   if (PULL_DEBUG || EVENT_DEBUG) setupPinDebug();
 }
 
@@ -129,56 +197,65 @@ void setup() {
   setupPin();
 }
 
+// ---------------------------
+// Main loop
+// ---------------------------
+
 void loop() {
-  int ldr1Raw = analogRead(LDR_1_PIN);
-  int ldr2Raw = analogRead(LDR_2_PIN);
-  int ldr1Percent = map(ldr1Raw, 0, 1023, 100, 0);
-  int ldr2Percent = map(ldr2Raw, 0, 1023, 100, 0);
+  LDRValues ldr;
+  ldr.raw.dayUp = analogRead(settings.pin.LDR.day.up);
+  ldr.raw.dayDown = analogRead(settings.pin.LDR.day.down);
+  ldr.percent.dayUp = map(ldr.raw.dayUp, 0, 1023, 100, 0);
+  ldr.percent.dayDown = map(ldr.raw.dayDown, 0, 1023, 100, 0);
 
   if (EVENT_DEBUG) {
-    if (!compareWithThreshold(ldr1Percent, ldr2Percent, LDR_THRESHOLD)) {
+    if (!compareWithThreshold(ldr.percent.dayUp, ldr.percent.dayDown, settings.LDRThreshold)) {
       Serial.print("[EVT-");
       Serial.print(eventDebugId);
       Serial.print("] LDR values are different with threshold ");
-      Serial.print(LDR_THRESHOLD);
+      Serial.print(settings.LDRThreshold);
       Serial.println("%");
       Serial.print("[EVT-");
       Serial.print(eventDebugId);
       Serial.print("] LDR1: ");
-      Serial.print(ldr1Raw);
-      Serial.print("  LDR2: ");
-      Serial.println(ldr2Raw);
+      Serial.print(ldr.raw.dayUp);
+      Serial.print(" (");
+      Serial.print(ldr.percent.dayUp);
+      Serial.print("%)  LDR2: ");
+      Serial.print(ldr.raw.dayDown);
+      Serial.print(" (");
+      Serial.print(ldr.percent.dayDown);
+      Serial.println("%)");
       eventDebugId++;
     }
-
     if (!isAutoMode()) {
-      if (digitalRead(pinMapping.deployButtonPin) == LOW) {
+      if (digitalRead(settings.pin.button.deploy) == LOW) {
         Serial.print("[EVT-");
         Serial.print(eventDebugId);
         Serial.println("] Deploy button pressed");
         eventDebugId++;
       }
-      if (digitalRead(pinMapping.retractButtonPin) == LOW) {
+      if (digitalRead(settings.pin.button.retract) == LOW) {
         Serial.print("[EVT-");
         Serial.print(eventDebugId);
         Serial.println("] Retract button pressed");
         eventDebugId++;
       }
     }
-    if (digitalRead(pinMapping.scanButtonPin) == LOW) {
+    if (digitalRead(settings.pin.button.scan) == LOW) {
       Serial.print("[EVT-");
       Serial.print(eventDebugId);
       Serial.println("] Scan button pressed");
       eventDebugId++;
     }
-    if (digitalRead(pinMapping.autoButtonPin) == LOW) {
+    if (digitalRead(settings.pin.button.automatic) == LOW) {
       Serial.print("[EVT-");
       Serial.print(eventDebugId);
       Serial.println("] Auto button pressed");
       eventDebugId++;
     }
   }
-  if (PULL_DEBUG) pullDebug(ldr1Raw, ldr2Raw, ldr1Percent, ldr2Percent);
+  if (PULL_DEBUG) pullDebug(ldr.raw.dayUp, ldr.raw.dayDown, ldr.percent.dayUp, ldr.percent.dayDown);
 
   delay(500);
 }
