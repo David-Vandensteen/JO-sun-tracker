@@ -214,6 +214,7 @@ void setupSettingsProgramDebug() {
   Serial.println("Program settings:");
   Serial.print("  Version: "); Serial.println(settings.program.version);
   Serial.print("  LDR threshold: "); Serial.print(settings.program.LDR.threshold); Serial.println("%");
+  Serial.print("  Motor speed: "); Serial.print(settings.program.motor.speed); Serial.println("%");
 }
 
 void setupSettingsDebug() {
