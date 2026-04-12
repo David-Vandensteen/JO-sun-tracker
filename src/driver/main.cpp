@@ -1,12 +1,10 @@
 #include <Arduino.h>
-
+#define VERSION "0.0.1"
 /*
-
   David Vandensteen
   MIT License
   JO Sun Tracker - Driver code for Arduino Uno
   @2026
-
 */
 
 // Arduino Uno pin mapping:
@@ -109,11 +107,12 @@ typedef struct SettingsProgramLDR {
   const uint16_t threshold;
 } SettingsProgramLDR;
 
-typdef struct SettingsProgramMotor {
+typedef struct SettingsProgramMotor {
   const int speed;
 } SettingsProgramMotor;
 
 typedef struct SettingsProgram {
+  const char* version;
   const SettingsProgramLDR LDR;
   const SettingsProgramMotor motor;
 } SettingsProgram;
@@ -149,6 +148,7 @@ static const Settings settings = {
     }
   },
   .program = {
+    .version = VERSION,
     .LDR = {
       .threshold = SETTINGS_PROGRAM_LDR_THRESHOLD
     },
@@ -212,6 +212,7 @@ void setupSettingsPinDebug() {
 
 void setupSettingsProgramDebug() {
   Serial.println("Program settings:");
+  Serial.print("  Version: "); Serial.println(settings.program.version);
   Serial.print("  LDR threshold: "); Serial.print(settings.program.LDR.threshold); Serial.println("%");
 }
 
