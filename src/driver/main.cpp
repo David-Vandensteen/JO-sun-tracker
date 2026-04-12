@@ -117,9 +117,9 @@ static const Settings settings = {
   .LDRThreshold = SETTINGS_LDR_THRESHOLD
 };
 
-// ---------------------------------------------
-// Structures for LDR readings and calculations
-// ---------------------------------------------
+// ---------------------------
+// Structures for LDR readings
+// ---------------------------
 
 typedef struct LDR {
   int raw;
@@ -131,22 +131,6 @@ typedef struct LDRs {
   LDR dayDown;
   LDR night;
 } LDRs;
-
-typedef struct LDRRaw {
-  int dayUp;
-  int dayDown;
-} LDRRaw;
-
-typedef struct LDRPercent {
-  long dayUp;
-  long dayDown;
-} LDRPercent;
-
-typedef struct LDRValues {
-  LDRRaw raw;
-  LDRPercent percent;
-} LDRValues;
-
 
 // -----------------------------------
 // Debug functions for serial output
