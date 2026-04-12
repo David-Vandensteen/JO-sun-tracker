@@ -50,6 +50,7 @@ LDR 3 - night sensor:
 
 #define PULL_DEBUG FALSE
 #define EVENT_DEBUG TRUE
+
 #define ANALOG_RESOLUTION 1023
 #define PWM_RESOLUTION 255
 
@@ -251,7 +252,7 @@ void MotorsRetract(int speedPercent) {
 // -----------------------------------
 // Debug functions for serial output
 // -----------------------------------
-void pullDebug(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent) {
+void debugPull(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent) {
   Serial.println("------------------------------");
   Serial.print("Lum1: ");
   Serial.print(ldr1Raw);
@@ -274,7 +275,7 @@ void pullDebug(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent) {
   Serial.println("------------------------------");
 }
 
-void setupSettingsPinDebug() {
+void debugSettingsPin() {
   Serial.println("Pin setup completed");
   Serial.println("Settings:");
   Serial.print("  LDR day up: "); Serial.println(settings.pin.LDR.day.up);
@@ -286,16 +287,16 @@ void setupSettingsPinDebug() {
   Serial.print("  Scan button: "); Serial.println(settings.pin.button.scan);
 }
 
-void setupSettingsProgramDebug() {
+void debugSettingsProgram() {
   Serial.println("Program settings:");
   Serial.print("  Version: "); Serial.println(settings.program.version);
   Serial.print("  LDR threshold: "); Serial.print(settings.program.LDR.threshold); Serial.println("%");
   Serial.print("  Motor speed: "); Serial.print(settings.program.motor.speed); Serial.println("%");
 }
 
-void setupSettingsDebug() {
-  setupSettingsPinDebug();
-  setupSettingsProgramDebug();
+void debugSettings() {
+  debugSettingsPin();
+  debugSettingsProgram();
 }
 
 // ---------------------------
@@ -309,7 +310,7 @@ void setupPin() {
   pinMode(settings.pin.button.retract, INPUT_PULLUP);
   pinMode(settings.pin.button.automatic, INPUT_PULLUP);
   pinMode(settings.pin.button.scan, INPUT_PULLUP);
-  if (PULL_DEBUG || EVENT_DEBUG) setupSettingsDebug();
+  if (PULL_DEBUG || EVENT_DEBUG) debugSettings();
 }
 
 void setup() {
@@ -374,7 +375,7 @@ void loop() {
       eventDebugId++;
     }
   }
-  if (PULL_DEBUG) pullDebug(ldrs.dayUp.raw, ldrs.dayDown.raw, ldrs.dayUp.percent, ldrs.dayDown.percent);
+  if (PULL_DEBUG) debugPull(ldrs.dayUp.raw, ldrs.dayDown.raw, ldrs.dayUp.percent, ldrs.dayDown.percent);
 
   delay(500);
 }
