@@ -1,5 +1,14 @@
 #include <Arduino.h>
 
+/*
+
+  David Vandensteen
+  MIT License
+  JO Sun Tracker - Driver code for Arduino Uno
+  @2026
+
+*/
+
 // Arduino Uno pin mapping:
 /*
 L298N Motor Driver:
