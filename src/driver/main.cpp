@@ -47,26 +47,28 @@ LDR 3 - night sensor:
 // ---------------------------
 // Define
 // ---------------------------
-
 #define TRUE 1
 #define FALSE 0
 
 #define PULL_DEBUG FALSE
 #define EVENT_DEBUG TRUE
 #define ANALOG_RESOLUTION 1023
+#define PWM_RESOLUTION 255
 
+// ---------------------------
+// Program settings
+// ---------------------------
 #define SETTINGS_PROGRAM_LDR_THRESHOLD 10
+#define SETTINGS_PROGRAM_MOTOR_SPEED 30
 
 // -------------------------------
 // Global variables and constants
 // -------------------------------
-
 static int eventDebugId = 1;
 
 // ---------------------------------------------
 // Types, structures and constants for settings
 // ----------------------------------------------
-
 typedef struct SettingsPinLDRDay {
   const uint8_t up;
   const uint8_t down;
@@ -87,8 +89,18 @@ typedef struct SettingsPinButton {
 
 } SettingsPinButton;
 
+typedef struct SettingsPinMotors {
+  const uint8_t ena;
+  const uint8_t in1;
+  const uint8_t in2;
+  const uint8_t enb;
+  const uint8_t in3;
+  const uint8_t in4;
+} SettingsPinMotor;
+
 typedef struct SettingsPin {
   const SettingsPinLDR LDR;
+  const SettingsPinMotor motors;
   const SettingsPinButton button;
 
 } SettingsPin;
@@ -97,8 +109,13 @@ typedef struct SettingsProgramLDR {
   const uint16_t threshold;
 } SettingsProgramLDR;
 
+typdef struct SettingsProgramMotor {
+  const int speed;
+} SettingsProgramMotor;
+
 typedef struct SettingsProgram {
   const SettingsProgramLDR LDR;
+  const SettingsProgramMotor motor;
 } SettingsProgram;
 
 
@@ -116,6 +133,14 @@ static const Settings settings = {
       },
       .night = A2
     },
+    .motors = {
+      .ena = 10,
+      .in1 = 8,
+      .in2 = 9,
+      .enb = 13,
+      .in3 = 11,
+      .in4 = 12
+    },
     .button = {
       .deploy = 2,
       .retract = 3,
@@ -126,14 +151,16 @@ static const Settings settings = {
   .program = {
     .LDR = {
       .threshold = SETTINGS_PROGRAM_LDR_THRESHOLD
+    },
+    .motor = {
+      .speed = SETTINGS_PROGRAM_MOTOR_SPEED
     }
   }
 };
 
-// ---------------------------
-// Structures for LDR readings
-// ---------------------------
-
+// ------------------
+// Structures for LDR
+// ------------------
 typedef struct LDR {
   int raw;
   int percent;
@@ -148,7 +175,6 @@ typedef struct LDRs {
 // -----------------------------------
 // Debug functions for serial output
 // -----------------------------------
-
 void pullDebug(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent) {
   Serial.println("------------------------------");
   Serial.print("Lum1: ");
@@ -197,7 +223,6 @@ void setupSettingsDebug() {
 // ---------------------------
 // Utility functions
 // ---------------------------
-
 bool compareWithThreshold(long first, long second, long threshold) {
   return abs(first - second) <= threshold;
 }
@@ -216,9 +241,61 @@ void updateLDRs(LDRs* ldrs) {
 }
 
 // ---------------------------
+// Motor control functions
+// ---------------------------
+void deployByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent) {
+  digitalWrite(inPin1, HIGH);
+  digitalWrite(inPin2, LOW);
+  analogWrite(enPin, map(speedPercent, 0, 100, 0, PWM_RESOLUTION));
+}
+
+void deployById(uint8_t id, int speedPercent) {
+  switch (id) {
+  case 1:
+    deployByPin(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena, speedPercent);
+    break;
+  case 2:
+    deployByPin(settings.pin.motors.in3, settings.pin.motors.in4, settings.pin.motors.enb, speedPercent);
+    break;
+
+  default:
+    break;
+  }
+}
+
+void deploy(int speedPercent) {
+  deployById(1, speedPercent);
+  deployById(2, speedPercent);
+}
+
+void retractByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent) {
+  digitalWrite(inPin1, LOW);
+  digitalWrite(inPin2, HIGH);
+  analogWrite(enPin, map(speedPercent, 0, 100, 0, PWM_RESOLUTION));
+}
+
+void retractById(uint8_t id, int speedPercent) {
+  switch (id) {
+  case 1:
+    retractByPin(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena, speedPercent);
+    break;
+  case 2:
+    retractByPin(settings.pin.motors.in3, settings.pin.motors.in4, settings.pin.motors.enb, speedPercent);
+    break;
+
+  default:
+    break;
+  }
+}
+
+void retract(int speedPercent) {
+  retractById(1, speedPercent);
+  retractById(2, speedPercent);
+}
+
+// ---------------------------
 // Setup
 // ---------------------------
-
 void setupPin() {
   pinMode(settings.pin.LDR.day.up, INPUT);
   pinMode(settings.pin.LDR.day.down, INPUT);
@@ -241,7 +318,6 @@ void setup() {
 // ---------------------------
 // Main loop
 // ---------------------------
-
 void loop() {
   LDRs ldrs;
   updateLDRs(&ldrs);
