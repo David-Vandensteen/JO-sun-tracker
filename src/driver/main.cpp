@@ -65,7 +65,7 @@ LDR 3 - night sensor:
 static int eventDebugId = 1;
 
 // ---------------------------------------------
-// Types, structures and constants for settings
+// Settings structures and constants
 // ----------------------------------------------
 typedef struct SettingsPinLDRDay {
   const uint8_t up;
@@ -158,9 +158,9 @@ static const Settings settings = {
   }
 };
 
-// ------------------
-// Structures for LDR
-// ------------------
+// ----
+// LDR Structures
+// ---
 typedef struct LDR {
   int raw;
   int percent;
@@ -171,6 +171,82 @@ typedef struct LDRs {
   LDR dayDown;
   LDR night;
 } LDRs;
+
+// ---------------------------
+// Utility functions
+// ---------------------------
+bool compareWithThreshold(long first, long second, long threshold) {
+  return abs(first - second) <= threshold;
+}
+
+bool isAutoMode() {
+  return digitalRead(settings.pin.button.automatic) == LOW;
+}
+
+// ----------------
+// LDR functions
+// ---------------
+void LDRsRead(LDRs* ldrs) {
+  ldrs->dayUp.raw = analogRead(settings.pin.LDR.day.up);
+  ldrs->dayDown.raw = analogRead(settings.pin.LDR.day.down);
+  ldrs->dayUp.percent = map(ldrs->dayUp.raw, 0, ANALOG_RESOLUTION, 100, 0);
+  ldrs->dayDown.percent = map(ldrs->dayDown.raw, 0, ANALOG_RESOLUTION, 100, 0);
+  ldrs->night.raw = analogRead(settings.pin.LDR.night);
+  ldrs->night.percent = map(ldrs->night.raw, 0, ANALOG_RESOLUTION, 100, 0);
+}
+
+// -----------------
+// Motor functions
+// ----------------------
+void MotorDeployByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent) {
+  digitalWrite(inPin1, HIGH);
+  digitalWrite(inPin2, LOW);
+  analogWrite(enPin, map(speedPercent, 0, 100, 0, PWM_RESOLUTION));
+}
+
+void MotorDeployById(uint8_t id, int speedPercent) {
+  switch (id) {
+  case 1:
+    MotorDeployByPin(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena, speedPercent);
+    break;
+  case 2:
+    MotorDeployByPin(settings.pin.motors.in3, settings.pin.motors.in4, settings.pin.motors.enb, speedPercent);
+    break;
+
+  default:
+    break;
+  }
+}
+
+void MotorsDeploy(int speedPercent) {
+  MotorDeployById(1, speedPercent);
+  MotorDeployById(2, speedPercent);
+}
+
+void MotorRetractByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent) {
+  digitalWrite(inPin1, LOW);
+  digitalWrite(inPin2, HIGH);
+  analogWrite(enPin, map(speedPercent, 0, 100, 0, PWM_RESOLUTION));
+}
+
+void MotorRetractById(uint8_t id, int speedPercent) {
+  switch (id) {
+  case 1:
+    MotorRetractByPin(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena, speedPercent);
+    break;
+  case 2:
+    MotorRetractByPin(settings.pin.motors.in3, settings.pin.motors.in4, settings.pin.motors.enb, speedPercent);
+    break;
+
+  default:
+    break;
+  }
+}
+
+void MotorsRetract(int speedPercent) {
+  MotorRetractById(1, speedPercent);
+  MotorRetractById(2, speedPercent);
+}
 
 // -----------------------------------
 // Debug functions for serial output
@@ -223,79 +299,6 @@ void setupSettingsDebug() {
 }
 
 // ---------------------------
-// Utility functions
-// ---------------------------
-bool compareWithThreshold(long first, long second, long threshold) {
-  return abs(first - second) <= threshold;
-}
-
-bool isAutoMode() {
-  return digitalRead(settings.pin.button.automatic) == LOW;
-}
-
-void updateLDRs(LDRs* ldrs) {
-  ldrs->dayUp.raw = analogRead(settings.pin.LDR.day.up);
-  ldrs->dayDown.raw = analogRead(settings.pin.LDR.day.down);
-  ldrs->dayUp.percent = map(ldrs->dayUp.raw, 0, ANALOG_RESOLUTION, 100, 0);
-  ldrs->dayDown.percent = map(ldrs->dayDown.raw, 0, ANALOG_RESOLUTION, 100, 0);
-  ldrs->night.raw = analogRead(settings.pin.LDR.night);
-  ldrs->night.percent = map(ldrs->night.raw, 0, ANALOG_RESOLUTION, 100, 0);
-}
-
-// ---------------------------
-// Motor control functions
-// ---------------------------
-void deployByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent) {
-  digitalWrite(inPin1, HIGH);
-  digitalWrite(inPin2, LOW);
-  analogWrite(enPin, map(speedPercent, 0, 100, 0, PWM_RESOLUTION));
-}
-
-void deployById(uint8_t id, int speedPercent) {
-  switch (id) {
-  case 1:
-    deployByPin(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena, speedPercent);
-    break;
-  case 2:
-    deployByPin(settings.pin.motors.in3, settings.pin.motors.in4, settings.pin.motors.enb, speedPercent);
-    break;
-
-  default:
-    break;
-  }
-}
-
-void deploy(int speedPercent) {
-  deployById(1, speedPercent);
-  deployById(2, speedPercent);
-}
-
-void retractByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent) {
-  digitalWrite(inPin1, LOW);
-  digitalWrite(inPin2, HIGH);
-  analogWrite(enPin, map(speedPercent, 0, 100, 0, PWM_RESOLUTION));
-}
-
-void retractById(uint8_t id, int speedPercent) {
-  switch (id) {
-  case 1:
-    retractByPin(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena, speedPercent);
-    break;
-  case 2:
-    retractByPin(settings.pin.motors.in3, settings.pin.motors.in4, settings.pin.motors.enb, speedPercent);
-    break;
-
-  default:
-    break;
-  }
-}
-
-void retract(int speedPercent) {
-  retractById(1, speedPercent);
-  retractById(2, speedPercent);
-}
-
-// ---------------------------
 // Setup
 // ---------------------------
 void setupPin() {
@@ -322,7 +325,7 @@ void setup() {
 // ---------------------------
 void loop() {
   LDRs ldrs;
-  updateLDRs(&ldrs);
+  LDRsRead(&ldrs);
 
   if (EVENT_DEBUG) {
     if (!compareWithThreshold(ldrs.dayUp.percent, ldrs.dayDown.percent, settings.program.LDR.threshold)) {
