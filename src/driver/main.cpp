@@ -44,6 +44,7 @@ LDR 3 - night sensor:
 
 #define PULL_DEBUG FALSE
 #define EVENT_DEBUG TRUE
+#define ANALOG_RESOLUTION 1023
 
 #define SETTINGS_LDR_THRESHOLD 10
 
@@ -110,6 +111,17 @@ static const Settings settings = {
 // ---------------------------------------------
 // Structures for LDR readings and calculations
 // ---------------------------------------------
+
+typedef struct LDR {
+  int raw;
+  int percent;
+} LDR;
+
+typedef struct LDRs {
+  LDR dayUp;
+  LDR dayDown;
+  LDR night;
+} LDRs;
 
 typedef struct LDRRaw {
   int dayUp;
@@ -178,6 +190,15 @@ bool isAutoMode() {
   return digitalRead(settings.pin.button.automatic) == LOW;
 }
 
+void updateLDRs(LDRs* ldrs) {
+  ldrs->dayUp.raw = analogRead(settings.pin.LDR.day.up);
+  ldrs->dayDown.raw = analogRead(settings.pin.LDR.day.down);
+  ldrs->dayUp.percent = map(ldrs->dayUp.raw, 0, ANALOG_RESOLUTION, 100, 0);
+  ldrs->dayDown.percent = map(ldrs->dayDown.raw, 0, ANALOG_RESOLUTION, 100, 0);
+  ldrs->night.raw = analogRead(settings.pin.LDR.night);
+  ldrs->night.percent = map(ldrs->night.raw, 0, ANALOG_RESOLUTION, 100, 0);
+}
+
 // ---------------------------
 // Setup
 // ---------------------------
@@ -206,14 +227,11 @@ void setup() {
 // ---------------------------
 
 void loop() {
-  LDRValues ldr;
-  ldr.raw.dayUp = analogRead(settings.pin.LDR.day.up);
-  ldr.raw.dayDown = analogRead(settings.pin.LDR.day.down);
-  ldr.percent.dayUp = map(ldr.raw.dayUp, 0, 1023, 100, 0);
-  ldr.percent.dayDown = map(ldr.raw.dayDown, 0, 1023, 100, 0);
+  LDRs ldrs;
+  updateLDRs(&ldrs);
 
   if (EVENT_DEBUG) {
-    if (!compareWithThreshold(ldr.percent.dayUp, ldr.percent.dayDown, settings.LDRThreshold)) {
+    if (!compareWithThreshold(ldrs.dayUp.percent, ldrs.dayDown.percent, settings.LDRThreshold)) {
       Serial.print("[EVT-");
       Serial.print(eventDebugId);
       Serial.print("] LDR values are different with threshold ");
@@ -222,13 +240,13 @@ void loop() {
       Serial.print("[EVT-");
       Serial.print(eventDebugId);
       Serial.print("] LDR1: ");
-      Serial.print(ldr.raw.dayUp);
+      Serial.print(ldrs.dayUp.raw);
       Serial.print(" (");
-      Serial.print(ldr.percent.dayUp);
+      Serial.print(ldrs.dayUp.percent);
       Serial.print("%)  LDR2: ");
-      Serial.print(ldr.raw.dayDown);
+      Serial.print(ldrs.dayDown.raw);
       Serial.print(" (");
-      Serial.print(ldr.percent.dayDown);
+      Serial.print(ldrs.dayDown.percent);
       Serial.println("%)");
       eventDebugId++;
     }
@@ -259,7 +277,7 @@ void loop() {
       eventDebugId++;
     }
   }
-  if (PULL_DEBUG) pullDebug(ldr.raw.dayUp, ldr.raw.dayDown, ldr.percent.dayUp, ldr.percent.dayDown);
+  if (PULL_DEBUG) pullDebug(ldrs.dayUp.raw, ldrs.dayDown.raw, ldrs.dayUp.percent, ldrs.dayDown.percent);
 
   delay(500);
 }
