@@ -62,7 +62,7 @@ LDR 3 - night sensor:
 // -------------------------------
 // Global variables and constants
 // -------------------------------
-static int eventDebugId = 1;
+static uint16_t eventDebugId = 1;
 
 // ---------------------------------------------
 // Settings structures and constants
