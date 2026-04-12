@@ -55,7 +55,7 @@ LDR 3 - night sensor:
 #define EVENT_DEBUG TRUE
 #define ANALOG_RESOLUTION 1023
 
-#define SETTINGS_LDR_THRESHOLD 10
+#define SETTINGS_PROGRAM_LDR_THRESHOLD 10
 
 // -------------------------------
 // Global variables and constants
@@ -93,9 +93,18 @@ typedef struct SettingsPin {
 
 } SettingsPin;
 
+typedef struct SettingsProgramLDR {
+  const uint16_t threshold;
+} SettingsProgramLDR;
+
+typedef struct SettingsProgram {
+  const SettingsProgramLDR LDR;
+} SettingsProgram;
+
+
 typedef struct Settings {
   const SettingsPin pin;
-  uint16_t LDRThreshold;
+  const SettingsProgram program;
 } Settings;
 
 static const Settings settings = {
@@ -114,7 +123,11 @@ static const Settings settings = {
       .scan = 5
     }
   },
-  .LDRThreshold = SETTINGS_LDR_THRESHOLD
+  .program = {
+    .LDR = {
+      .threshold = SETTINGS_PROGRAM_LDR_THRESHOLD
+    }
+  }
 };
 
 // ---------------------------
@@ -159,7 +172,7 @@ void pullDebug(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent) {
   Serial.println("------------------------------");
 }
 
-void setupPinDebug() {
+void setupSettingsPinDebug() {
   Serial.println("Pin setup completed");
   Serial.println("Settings:");
   Serial.print("  LDR day up: "); Serial.println(settings.pin.LDR.day.up);
@@ -169,6 +182,16 @@ void setupPinDebug() {
   Serial.print("  Retract button: "); Serial.println(settings.pin.button.retract);
   Serial.print("  Automatic button: "); Serial.println(settings.pin.button.automatic);
   Serial.print("  Scan button: "); Serial.println(settings.pin.button.scan);
+}
+
+void setupSettingsProgramDebug() {
+  Serial.println("Program settings:");
+  Serial.print("  LDR threshold: "); Serial.print(settings.program.LDR.threshold); Serial.println("%");
+}
+
+void setupSettingsDebug() {
+  setupSettingsPinDebug();
+  setupSettingsProgramDebug();
 }
 
 // ---------------------------
@@ -204,7 +227,7 @@ void setupPin() {
   pinMode(settings.pin.button.retract, INPUT_PULLUP);
   pinMode(settings.pin.button.automatic, INPUT_PULLUP);
   pinMode(settings.pin.button.scan, INPUT_PULLUP);
-  if (PULL_DEBUG || EVENT_DEBUG) setupPinDebug();
+  if (PULL_DEBUG || EVENT_DEBUG) setupSettingsDebug();
 }
 
 void setup() {
@@ -224,11 +247,11 @@ void loop() {
   updateLDRs(&ldrs);
 
   if (EVENT_DEBUG) {
-    if (!compareWithThreshold(ldrs.dayUp.percent, ldrs.dayDown.percent, settings.LDRThreshold)) {
+    if (!compareWithThreshold(ldrs.dayUp.percent, ldrs.dayDown.percent, settings.program.LDR.threshold)) {
       Serial.print("[EVT-");
       Serial.print(eventDebugId);
       Serial.print("] LDR values are different with threshold ");
-      Serial.print(settings.LDRThreshold);
+      Serial.print(settings.program.LDR.threshold);
       Serial.println("%");
       Serial.print("[EVT-");
       Serial.print(eventDebugId);
