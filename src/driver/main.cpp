@@ -41,7 +41,6 @@ LDR 3 - night sensor:
 ├── A2: ─────────► LDR 3: (analog input)
 */
 
-
 // -------
 // Define
 // -------
@@ -173,23 +172,23 @@ typedef struct LDRs {
   LDR night;
 } LDRs;
 
-void LDRsRead(LDRs* ldrs);
+static void LDRsRead(LDRs* ldrs);
 
 // -----------------
 // Utility functions
 // -----------------
-bool compareWithThreshold(long first, long second, long threshold) {
+static bool compareWithThreshold(long first, long second, long threshold) {
   return abs(first - second) <= threshold;
 }
 
-bool isAutoMode() {
+static bool isAutoMode() {
   return digitalRead(settings.pin.button.automatic) == LOW;
 }
 
 // -------------
 // LDR functions
 // -------------
-void LDRsRead(LDRs* ldrs) {
+static void LDRsRead(LDRs* ldrs) {
   ldrs->dayUp.raw = analogRead(settings.pin.LDR.day.up);
   ldrs->dayDown.raw = analogRead(settings.pin.LDR.day.down);
   ldrs->dayUp.percent = map(ldrs->dayUp.raw, 0, ANALOG_RESOLUTION, 100, 0);
@@ -201,13 +200,13 @@ void LDRsRead(LDRs* ldrs) {
 // ---------------
 // Motor functions
 // ---------------
-void MotorDeployByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent) {
+static void MotorDeployByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent) {
   digitalWrite(inPin1, HIGH);
   digitalWrite(inPin2, LOW);
   analogWrite(enPin, map(speedPercent, 0, 100, 0, PWM_RESOLUTION));
 }
 
-void MotorDeployById(uint8_t id, int speedPercent) {
+static void MotorDeployById(uint8_t id, int speedPercent) {
   switch (id) {
   case 1:
     MotorDeployByPin(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena, speedPercent);
@@ -221,18 +220,18 @@ void MotorDeployById(uint8_t id, int speedPercent) {
   }
 }
 
-void MotorsDeploy(int speedPercent) {
+static void MotorsDeploy(int speedPercent) {
   MotorDeployById(1, speedPercent);
   MotorDeployById(2, speedPercent);
 }
 
-void MotorRetractByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent) {
+static void MotorRetractByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent) {
   digitalWrite(inPin1, LOW);
   digitalWrite(inPin2, HIGH);
   analogWrite(enPin, map(speedPercent, 0, 100, 0, PWM_RESOLUTION));
 }
 
-void MotorRetractById(uint8_t id, int speedPercent) {
+static void MotorRetractById(uint8_t id, int speedPercent) {
   switch (id) {
   case 1:
     MotorRetractByPin(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena, speedPercent);
@@ -246,7 +245,7 @@ void MotorRetractById(uint8_t id, int speedPercent) {
   }
 }
 
-void MotorsRetract(int speedPercent) {
+static void MotorsRetract(int speedPercent) {
   MotorRetractById(1, speedPercent);
   MotorRetractById(2, speedPercent);
 }
@@ -254,7 +253,7 @@ void MotorsRetract(int speedPercent) {
 // ------
 // Serial
 // ------
-void serialPrintEvent(const char *message, uint16_t &eventId) {
+static void serialPrintEvent(const char *message, uint16_t &eventId) {
   Serial.print("[EVT-");
   Serial.print(eventId);
   Serial.print("] ");
@@ -262,16 +261,15 @@ void serialPrintEvent(const char *message, uint16_t &eventId) {
   eventId++;
 }
 
-void serialPrintlnEvent(const char *message, uint16_t &eventId) {
+static void serialPrintlnEvent(const char *message, uint16_t &eventId) {
   serialPrintEvent(message, eventId);
   Serial.println();
 }
 
-
 // ---------------------------------
 // Debug functions for serial output
 // ---------------------------------
-void serialDebugPull(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent) {
+static void serialDebugPull(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent) {
   Serial.println("------------------------------");
   Serial.print("Lum1: ");
   Serial.print(ldr1Raw);
@@ -294,7 +292,7 @@ void serialDebugPull(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent)
   Serial.println("------------------------------");
 }
 
-void serialDebugSettingsPin() {
+static void serialDebugSettingsPin() {
   Serial.println("Pin setup completed");
   Serial.println("Settings:");
   Serial.print("  LDR day up: "); Serial.println(settings.pin.LDR.day.up);
@@ -306,14 +304,14 @@ void serialDebugSettingsPin() {
   Serial.print("  Scan button: "); Serial.println(settings.pin.button.scan);
 }
 
-void serialDebugSettingsProgram() {
+static void serialDebugSettingsProgram() {
   Serial.println("Program settings:");
   Serial.print("  Version: "); Serial.println(settings.program.version);
   Serial.print("  LDR threshold: "); Serial.print(settings.program.LDR.threshold); Serial.println("%");
   Serial.print("  Motor speed: "); Serial.print(settings.program.motor.speed); Serial.println("%");
 }
 
-void serialDebugSettings() {
+static void serialDebugSettings() {
   serialDebugSettingsPin();
   serialDebugSettingsProgram();
 }
@@ -321,7 +319,7 @@ void serialDebugSettings() {
 // -----
 // Setup
 // -----
-void setupPin() {
+static void setupPin() {
   pinMode(settings.pin.LDR.day.up, INPUT);
   pinMode(settings.pin.LDR.day.down, INPUT);
   pinMode(settings.pin.LDR.night, INPUT);
