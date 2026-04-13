@@ -160,7 +160,7 @@ static const Settings settings = {
 };
 
 // ----
-// LDR Structures
+// LDR definitions
 // ---
 typedef struct LDR {
   int raw;
@@ -172,6 +172,8 @@ typedef struct LDRs {
   LDR dayDown;
   LDR night;
 } LDRs;
+
+void LDRsRead(LDRs* ldrs);
 
 // -----------------
 // Utility functions
