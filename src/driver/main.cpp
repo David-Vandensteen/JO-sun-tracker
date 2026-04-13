@@ -249,10 +249,27 @@ void MotorsRetract(int speedPercent) {
   MotorRetractById(2, speedPercent);
 }
 
+// ------
+// Serial
+// ------
+void serialPrintEvent(const char *message, uint16_t &eventId) {
+  Serial.print("[EVT-");
+  Serial.print(eventId);
+  Serial.print("] ");
+  Serial.print(message);
+  eventId++;
+}
+
+void serialPrintlnEvent(const char *message, uint16_t &eventId) {
+  serialPrintEvent(message, eventId);
+  Serial.println();
+}
+
+
 // ---------------------------------
 // Debug functions for serial output
 // ---------------------------------
-void SerialDebugPull(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent) {
+void serialDebugPull(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent) {
   Serial.println("------------------------------");
   Serial.print("Lum1: ");
   Serial.print(ldr1Raw);
@@ -275,7 +292,7 @@ void SerialDebugPull(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent)
   Serial.println("------------------------------");
 }
 
-void SerialDebugSettingsPin() {
+void serialDebugSettingsPin() {
   Serial.println("Pin setup completed");
   Serial.println("Settings:");
   Serial.print("  LDR day up: "); Serial.println(settings.pin.LDR.day.up);
@@ -287,16 +304,16 @@ void SerialDebugSettingsPin() {
   Serial.print("  Scan button: "); Serial.println(settings.pin.button.scan);
 }
 
-void SerialDebugSettingsProgram() {
+void serialDebugSettingsProgram() {
   Serial.println("Program settings:");
   Serial.print("  Version: "); Serial.println(settings.program.version);
   Serial.print("  LDR threshold: "); Serial.print(settings.program.LDR.threshold); Serial.println("%");
   Serial.print("  Motor speed: "); Serial.print(settings.program.motor.speed); Serial.println("%");
 }
 
-void SerialDebugSettings() {
-  SerialDebugSettingsPin();
-  SerialDebugSettingsProgram();
+void serialDebugSettings() {
+  serialDebugSettingsPin();
+  serialDebugSettingsProgram();
 }
 
 // -----
@@ -310,7 +327,7 @@ void setupPin() {
   pinMode(settings.pin.button.retract, INPUT_PULLUP);
   pinMode(settings.pin.button.automatic, INPUT_PULLUP);
   pinMode(settings.pin.button.scan, INPUT_PULLUP);
-  if (PULL_DEBUG || EVENT_DEBUG) SerialDebugSettings();
+  if (PULL_DEBUG || EVENT_DEBUG) serialDebugSettings();
 }
 
 void setup() {
@@ -330,52 +347,31 @@ void loop() {
 
   if (EVENT_DEBUG) {
     if (!compareWithThreshold(ldrs.dayUp.percent, ldrs.dayDown.percent, settings.program.LDR.threshold)) {
-      Serial.print("[EVT-");
-      Serial.print(eventId);
-      Serial.print("] LDR values are different with threshold ");
+      serialPrintEvent("LDR values are different with threshold", eventId);
       Serial.print(settings.program.LDR.threshold);
       Serial.println("%");
-      Serial.print("[EVT-");
-      Serial.print(eventId);
-      Serial.print("] LDR1: ");
-      Serial.print(ldrs.dayUp.raw);
-      Serial.print(" (");
-      Serial.print(ldrs.dayUp.percent);
-      Serial.print("%)  LDR2: ");
-      Serial.print(ldrs.dayDown.raw);
-      Serial.print(" (");
-      Serial.print(ldrs.dayDown.percent);
-      Serial.println("%)");
-      eventId++;
+
+      char ldrMsg[80];
+      snprintf(ldrMsg, sizeof(ldrMsg), "LDR1: %d (%d%%)  LDR2: %d (%d%%)",
+        ldrs.dayUp.raw, ldrs.dayUp.percent, ldrs.dayDown.raw, ldrs.dayDown.percent);
+      serialPrintlnEvent(ldrMsg, eventId);
     }
     if (!isAutoMode()) {
       if (digitalRead(settings.pin.button.deploy) == LOW) {
-        Serial.print("[EVT-");
-        Serial.print(eventId);
-        Serial.println("] Deploy button pressed");
-        eventId++;
+        serialPrintlnEvent("Deploy button pressed", eventId);
       }
       if (digitalRead(settings.pin.button.retract) == LOW) {
-        Serial.print("[EVT-");
-        Serial.print(eventId);
-        Serial.println("] Retract button pressed");
-        eventId++;
+        serialPrintlnEvent("Retract button pressed", eventId);
       }
     }
     if (digitalRead(settings.pin.button.scan) == LOW) {
-      Serial.print("[EVT-");
-      Serial.print(eventId);
-      Serial.println("] Scan button pressed");
-      eventId++;
+      serialPrintlnEvent("Scan button pressed", eventId);
     }
     if (digitalRead(settings.pin.button.automatic) == LOW) {
-      Serial.print("[EVT-");
-      Serial.print(eventId);
-      Serial.println("] Auto button pressed");
-      eventId++;
+      serialPrintlnEvent("Auto button pressed", eventId);
     }
   }
-  if (PULL_DEBUG) SerialDebugPull(ldrs.dayUp.raw, ldrs.dayDown.raw, ldrs.dayUp.percent, ldrs.dayDown.percent);
+  if (PULL_DEBUG) serialDebugPull(ldrs.dayUp.raw, ldrs.dayDown.raw, ldrs.dayUp.percent, ldrs.dayDown.percent);
 
   delay(500);
 }
