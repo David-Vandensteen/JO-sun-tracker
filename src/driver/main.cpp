@@ -47,8 +47,11 @@ LDR 3 - night sensor:
 #define TRUE 1
 #define FALSE 0
 
-#define PULL_DEBUG FALSE
-#define EVENT_DEBUG TRUE
+
+#define DEBUG_NONE   0x00
+#define DEBUG_PULL   0x01
+#define DEBUG_EVENT  0x02
+#define DEBUG_FLAGS  (DEBUG_PULL | DEBUG_EVENT)
 
 #define ANALOG_RESOLUTION 1023
 #define PWM_RESOLUTION 255
@@ -327,25 +330,27 @@ static void setupPin() {
   pinMode(settings.pin.button.retract, INPUT_PULLUP);
   pinMode(settings.pin.button.automatic, INPUT_PULLUP);
   pinMode(settings.pin.button.scan, INPUT_PULLUP);
-  if (PULL_DEBUG || EVENT_DEBUG) serialDebugSettings();
+  if (DEBUG_FLAGS & (DEBUG_PULL | DEBUG_EVENT)) serialDebugSettings();
 }
 
 void setup() {
-  if (PULL_DEBUG || EVENT_DEBUG) {
+  if (DEBUG_FLAGS & (DEBUG_PULL | DEBUG_EVENT)) {
     Serial.begin(9600);
     Serial.println("Debug mode enabled");
   }
   setupPin();
 }
 
-// ---------
-// Main loop
-// ---------
-void loop() {
+// -----
+// Loops
+// -----
+static void loopAutoMode() {
+  if (DEBUG_FLAGS & (DEBUG_PULL | DEBUG_EVENT)) serialPrintlnEvent("Auto mode active", eventId);
+
   LDRs ldrs;
   LDRsRead(&ldrs);
 
-  if (EVENT_DEBUG) {
+  if (DEBUG_FLAGS & DEBUG_EVENT) {
     if (!compareWithThreshold(ldrs.dayUp.percent, ldrs.dayDown.percent, settings.program.LDR.threshold)) {
       serialPrintEvent("LDR values are different with threshold", eventId);
       Serial.print(settings.program.LDR.threshold);
@@ -371,7 +376,25 @@ void loop() {
       serialPrintlnEvent("Auto button pressed", eventId);
     }
   }
-  if (PULL_DEBUG) serialDebugPull(ldrs.dayUp.raw, ldrs.dayDown.raw, ldrs.dayUp.percent, ldrs.dayDown.percent);
+  if (DEBUG_FLAGS & DEBUG_PULL) serialDebugPull(ldrs.dayUp.raw, ldrs.dayDown.raw, ldrs.dayUp.percent, ldrs.dayDown.percent);
 
   delay(500);
+}
+
+static void loopManualMode() {
+  if (DEBUG_FLAGS & DEBUG_PULL) {
+    serialPrintlnEvent("No button pressed, waiting for input...", eventId);
+  }
+}
+
+void loop() {
+  if (isAutoMode()) {
+    loopAutoMode();
+  } else {
+    if (DEBUG_FLAGS & (DEBUG_EVENT | DEBUG_PULL)) {
+      serialPrintlnEvent("Switched to manual mode", eventId);
+      serialPrintlnEvent("Waiting for button presses...", eventId);
+    }
+    loopManualMode();
+  }
 }
