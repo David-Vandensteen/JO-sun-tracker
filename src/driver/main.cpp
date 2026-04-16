@@ -47,11 +47,7 @@ LDR 3 - night sensor:
 #define TRUE 1
 #define FALSE 0
 
-
-#define DEBUG_NONE   0x00
-#define DEBUG_PULL   0x01
-#define DEBUG_EVENT  0x02
-#define DEBUG_FLAGS  (DEBUG_PULL | DEBUG_EVENT)
+#define DEBUG TRUE
 
 #define ANALOG_RESOLUTION 1023
 #define PWM_RESOLUTION 255
@@ -272,29 +268,6 @@ static void serialPrintlnEvent(const char *message, uint16_t &eventId) {
 // ---------------------------------
 // Debug functions for serial output
 // ---------------------------------
-static void serialDebugPull(int ldr1Raw, int ldr2Raw, int ldr1Percent, int ldr2Percent) {
-  Serial.println("------------------------------");
-  Serial.print("Lum1: ");
-  Serial.print(ldr1Raw);
-  Serial.print(" (");
-  Serial.print(ldr1Percent);
-  Serial.print("%)  Lum2: ");
-  Serial.print(ldr2Raw);
-  Serial.print(" (");
-  Serial.print(ldr2Percent);
-  Serial.print("%)");
-  Serial.print("  Deploy: ");
-  Serial.print(digitalRead(settings.pin.button.deploy) == LOW ? "Pressed" : "Released");
-  Serial.print("  Retract: ");
-  Serial.print(digitalRead(settings.pin.button.retract) == LOW ? "Pressed" : "Released");
-  Serial.print("  Auto: ");
-  Serial.print(digitalRead(settings.pin.button.automatic) == LOW ? "On" : "Off");
-  Serial.print("  Scan: ");
-  Serial.print(digitalRead(settings.pin.button.scan) == LOW ? "Pressed" : "Released");
-  Serial.println();
-  Serial.println("------------------------------");
-}
-
 static void serialDebugSettingsPin() {
   Serial.println("Pin setup completed");
   Serial.println("Settings:");
@@ -330,27 +303,31 @@ static void setupPin() {
   pinMode(settings.pin.button.retract, INPUT_PULLUP);
   pinMode(settings.pin.button.automatic, INPUT_PULLUP);
   pinMode(settings.pin.button.scan, INPUT_PULLUP);
-  if (DEBUG_FLAGS & (DEBUG_PULL | DEBUG_EVENT)) serialDebugSettings();
+  if (DEBUG) serialDebugSettings();
 }
 
 void setup() {
-  if (DEBUG_FLAGS & (DEBUG_PULL | DEBUG_EVENT)) {
+  if (DEBUG) {
     Serial.begin(9600);
     Serial.println("Debug mode enabled");
   }
   setupPin();
+  if (DEBUG && isAutoMode()) {
+    serialPrintlnEvent("Auto mode active", eventId);
+  } else if (DEBUG) {
+    serialPrintlnEvent("Manual mode active", eventId);
+  }
+
 }
 
 // -----
 // Loops
 // -----
 static void loopAutoMode() {
-  if (DEBUG_FLAGS & (DEBUG_PULL | DEBUG_EVENT)) serialPrintlnEvent("Auto mode active", eventId);
-
   LDRs ldrs;
   LDRsRead(&ldrs);
 
-  if (DEBUG_FLAGS & DEBUG_EVENT) {
+  if (DEBUG) {
     if (!compareWithThreshold(ldrs.dayUp.percent, ldrs.dayDown.percent, settings.program.LDR.threshold)) {
       serialPrintEvent("LDR values are different with threshold", eventId);
       Serial.print(settings.program.LDR.threshold);
@@ -361,40 +338,29 @@ static void loopAutoMode() {
         ldrs.dayUp.raw, ldrs.dayUp.percent, ldrs.dayDown.raw, ldrs.dayDown.percent);
       serialPrintlnEvent(ldrMsg, eventId);
     }
-    if (!isAutoMode()) {
-      if (digitalRead(settings.pin.button.deploy) == LOW) {
-        serialPrintlnEvent("Deploy button pressed", eventId);
-      }
-      if (digitalRead(settings.pin.button.retract) == LOW) {
-        serialPrintlnEvent("Retract button pressed", eventId);
-      }
-    }
-    if (digitalRead(settings.pin.button.scan) == LOW) {
-      serialPrintlnEvent("Scan button pressed", eventId);
-    }
-    if (digitalRead(settings.pin.button.automatic) == LOW) {
-      serialPrintlnEvent("Auto button pressed", eventId);
-    }
   }
-  if (DEBUG_FLAGS & DEBUG_PULL) serialDebugPull(ldrs.dayUp.raw, ldrs.dayDown.raw, ldrs.dayUp.percent, ldrs.dayDown.percent);
-
   delay(500);
 }
 
 static void loopManualMode() {
-  if (DEBUG_FLAGS & DEBUG_PULL) {
-    serialPrintlnEvent("No button pressed, waiting for input...", eventId);
+  if (digitalRead(settings.pin.button.deploy) == LOW) {
+    if (DEBUG) serialPrintlnEvent("Deploy button pressed", eventId);
+    MotorsDeploy(settings.program.motor.speed);
+  } else if (digitalRead(settings.pin.button.retract) == LOW) {
+    if (DEBUG) serialPrintlnEvent("Retract button pressed", eventId);
+    MotorsRetract(settings.program.motor.speed);
+  } else if (digitalRead(settings.pin.button.scan) == LOW) {
+    if (DEBUG) serialPrintlnEvent("Scan button pressed", eventId);
+    // Implement scan functionality here
   }
 }
 
 void loop() {
   if (isAutoMode()) {
     loopAutoMode();
-  } else {
-    if (DEBUG_FLAGS & (DEBUG_EVENT | DEBUG_PULL)) {
-      serialPrintlnEvent("Switched to manual mode", eventId);
-      serialPrintlnEvent("Waiting for button presses...", eventId);
-    }
-    loopManualMode();
+  } else if (DEBUG) {
+    serialPrintlnEvent("Switched to manual mode", eventId);
+    serialPrintlnEvent("Waiting for button presses...", eventId);
   }
 }
+
