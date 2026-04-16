@@ -64,7 +64,7 @@ LDR 3 - night sensor:
 static uint16_t eventId = 1;
 
 // ---------------------------------
-// Settings structures and constants
+// Settings definition and constants
 // ---------------------------------
 typedef struct SettingsPinLDRDay {
   const uint8_t up;
@@ -157,9 +157,9 @@ static const Settings settings = {
   }
 };
 
-// ----
+// ---------------
 // LDR definitions
-// ---
+// ---------------
 typedef struct LDR {
   int raw;
   int percent;
@@ -172,6 +172,13 @@ typedef struct LDRs {
 } LDRs;
 
 static void LDRsRead(LDRs* ldrs);
+
+// ------------------
+// Serial definitions
+// ------------------
+static void serialPrintSettingsPin(SettingsPin pin);
+static void serialPrintSettingsProgram(SettingsProgram program);
+static void serialPrintSettings(Settings settings);
 
 // -----------------
 // Utility functions
@@ -265,31 +272,28 @@ static void serialPrintlnEvent(const char *message, uint16_t &eventId) {
   Serial.println();
 }
 
-// ---------------------------------
-// Debug functions for serial output
-// ---------------------------------
-static void serialDebugSettingsPin() {
+static void serialPrintSettingsPin(SettingsPin pin) {
   Serial.println("Pin setup completed");
   Serial.println("Settings:");
-  Serial.print("  LDR day up: "); Serial.println(settings.pin.LDR.day.up);
-  Serial.print("  LDR day down: "); Serial.println(settings.pin.LDR.day.down);
-  Serial.print("  LDR night: "); Serial.println(settings.pin.LDR.night);
-  Serial.print("  Deploy button: "); Serial.println(settings.pin.button.deploy);
-  Serial.print("  Retract button: "); Serial.println(settings.pin.button.retract);
-  Serial.print("  Automatic button: "); Serial.println(settings.pin.button.automatic);
-  Serial.print("  Scan button: "); Serial.println(settings.pin.button.scan);
+  Serial.print("  LDR day up: "); Serial.println(pin.LDR.day.up);
+  Serial.print("  LDR day down: "); Serial.println(pin.LDR.day.down);
+  Serial.print("  LDR night: "); Serial.println(pin.LDR.night);
+  Serial.print("  Deploy button: "); Serial.println(pin.button.deploy);
+  Serial.print("  Retract button: "); Serial.println(pin.button.retract);
+  Serial.print("  Automatic button: "); Serial.println(pin.button.automatic);
+  Serial.print("  Scan button: "); Serial.println(pin.button.scan);
 }
 
-static void serialDebugSettingsProgram() {
+static void serialPrintSettingsProgram(SettingsProgram program) {
   Serial.println("Program settings:");
-  Serial.print("  Version: "); Serial.println(settings.program.version);
-  Serial.print("  LDR threshold: "); Serial.print(settings.program.LDR.threshold); Serial.println("%");
-  Serial.print("  Motor speed: "); Serial.print(settings.program.motor.speed); Serial.println("%");
+  Serial.print("  Version: "); Serial.println(program.version);
+  Serial.print("  LDR threshold: "); Serial.print(program.LDR.threshold); Serial.println("%");
+  Serial.print("  Motor speed: "); Serial.print(program.motor.speed); Serial.println("%");
 }
 
-static void serialDebugSettings() {
-  serialDebugSettingsPin();
-  serialDebugSettingsProgram();
+static void serialPrintSettings(Settings settings) {
+  serialPrintSettingsPin(settings.pin);
+  serialPrintSettingsProgram(settings.program);
 }
 
 // -----
@@ -303,7 +307,7 @@ static void setupPin() {
   pinMode(settings.pin.button.retract, INPUT_PULLUP);
   pinMode(settings.pin.button.automatic, INPUT_PULLUP);
   pinMode(settings.pin.button.scan, INPUT_PULLUP);
-  if (DEBUG) serialDebugSettings();
+  if (DEBUG) serialPrintSettings(settings);
 }
 
 void setup() {
