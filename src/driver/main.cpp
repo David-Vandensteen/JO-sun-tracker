@@ -187,6 +187,9 @@ static void MotorsRetract(int speedPercent, int pwmResolution);
 // ------------------
 // Serial definitions
 // ------------------
+static void serialPrintEvent(const char *message, uint16_t &eventId);
+static void serialPrintlnEvent(const char *message, uint16_t &eventId);
+static void serialPrintLDR(LDR ldr, const char *name);
 static void serialPrintSettingsPin(SettingsPin pin);
 static void serialPrintSettingsProgram(SettingsProgram program);
 static void serialPrintSettings(Settings settings);
@@ -269,15 +272,23 @@ static void MotorsRetract(int speedPercent, int pwmResolution) {
   MotorRetractById(2, speedPercent, pwmResolution);
 }
 
-// ------
-// Serial
-// ------
+// ----------------
+// Serial functions
+// ----------------
 static void serialPrintEvent(const char *message, uint16_t &eventId) {
   Serial.print("[EVT-");
   Serial.print(eventId);
   Serial.print("] ");
   Serial.print(message);
   eventId++;
+}
+
+static void serialPrintLDR(LDR ldr, const char *name) {
+    Serial.print(name);
+    Serial.print(ldr.raw);
+    Serial.print(" (");
+    Serial.print(ldr.percent);
+    Serial.println("%)");
 }
 
 static void serialPrintlnEvent(const char *message, uint16_t &eventId) {
@@ -347,14 +358,12 @@ static void loopAutoMode() {
 
   if (DEBUG) {
     if (!compareWithThreshold(ldrs.dayUp.percent, ldrs.dayDown.percent, settings.program.LDR.threshold)) {
-      serialPrintEvent("LDR values are different with threshold", eventId);
+      serialPrintEvent("LDR values are different with threshold ", eventId);
       Serial.print(settings.program.LDR.threshold);
       Serial.println("%");
 
-      char ldrMsg[80];
-      snprintf(ldrMsg, sizeof(ldrMsg), "LDR1: %d (%d%%)  LDR2: %d (%d%%)",
-        ldrs.dayUp.raw, ldrs.dayUp.percent, ldrs.dayDown.raw, ldrs.dayDown.percent);
-      serialPrintlnEvent(ldrMsg, eventId);
+      serialPrintLDR(ldrs.dayUp, "  LDR day up: ");
+      serialPrintLDR(ldrs.dayDown, "  LDR day down: ");
     }
   }
   delay(500);
