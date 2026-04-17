@@ -171,7 +171,18 @@ typedef struct LDRs {
   LDR night;
 } LDRs;
 
-static void LDRsRead(LDRs* ldrs);
+static void LDRReadByPin(LDR* ldr, uint8_t pin, int analogResolution);
+static void LDRsRead(LDRs* ldrs, int analogResolution);
+
+// ----------------
+// Motor definitions
+// ----------------
+static void MotorDeployByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent, int pwmResolution);
+static void MotorDeployById(uint8_t id, int speedPercent, int pwmResolution);
+static void MotorsDeploy(int speedPercent, int pwmResolution);
+static void MotorRetractByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent, int pwmResolution);
+static void MotorRetractById(uint8_t id, int speedPercent, int pwmResolution);
+static void MotorsRetract(int speedPercent, int pwmResolution);
 
 // ------------------
 // Serial definitions
@@ -194,31 +205,33 @@ static bool isAutoMode() {
 // -------------
 // LDR functions
 // -------------
-static void LDRsRead(LDRs* ldrs) {
-  ldrs->dayUp.raw = analogRead(settings.pin.LDR.day.up);
-  ldrs->dayDown.raw = analogRead(settings.pin.LDR.day.down);
-  ldrs->dayUp.percent = map(ldrs->dayUp.raw, 0, ANALOG_RESOLUTION, 100, 0);
-  ldrs->dayDown.percent = map(ldrs->dayDown.raw, 0, ANALOG_RESOLUTION, 100, 0);
-  ldrs->night.raw = analogRead(settings.pin.LDR.night);
-  ldrs->night.percent = map(ldrs->night.raw, 0, ANALOG_RESOLUTION, 100, 0);
+static void LDRReadByPin(LDR* ldr, uint8_t pin, int analogResolution) {
+  ldr->raw = analogRead(pin);
+  ldr->percent = map(ldr->raw, 0, analogResolution, 100, 0);
+}
+
+static void LDRsRead(LDRs* ldrs, int analogResolution) {
+  LDRReadByPin(&ldrs->dayUp, settings.pin.LDR.day.up, analogResolution);
+  LDRReadByPin(&ldrs->dayDown, settings.pin.LDR.day.down, analogResolution);
+  LDRReadByPin(&ldrs->night, settings.pin.LDR.night, analogResolution);
 }
 
 // ---------------
 // Motor functions
 // ---------------
-static void MotorDeployByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent) {
+static void MotorDeployByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent, int pwmResolution) {
   digitalWrite(inPin1, HIGH);
   digitalWrite(inPin2, LOW);
-  analogWrite(enPin, map(speedPercent, 0, 100, 0, PWM_RESOLUTION));
+  analogWrite(enPin, map(speedPercent, 0, 100, 0, pwmResolution));
 }
 
-static void MotorDeployById(uint8_t id, int speedPercent) {
+static void MotorDeployById(uint8_t id, int speedPercent, int pwmResolution) {
   switch (id) {
   case 1:
-    MotorDeployByPin(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena, speedPercent);
+    MotorDeployByPin(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena, speedPercent, pwmResolution);
     break;
   case 2:
-    MotorDeployByPin(settings.pin.motors.in3, settings.pin.motors.in4, settings.pin.motors.enb, speedPercent);
+    MotorDeployByPin(settings.pin.motors.in3, settings.pin.motors.in4, settings.pin.motors.enb, speedPercent, pwmResolution);
     break;
 
   default:
@@ -226,24 +239,24 @@ static void MotorDeployById(uint8_t id, int speedPercent) {
   }
 }
 
-static void MotorsDeploy(int speedPercent) {
-  MotorDeployById(1, speedPercent);
-  MotorDeployById(2, speedPercent);
+static void MotorsDeploy(int speedPercent, int pwmResolution) {
+  MotorDeployById(1, speedPercent, pwmResolution);
+  MotorDeployById(2, speedPercent, pwmResolution);
 }
 
-static void MotorRetractByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent) {
+static void MotorRetractByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent, int pwmResolution) {
   digitalWrite(inPin1, LOW);
   digitalWrite(inPin2, HIGH);
-  analogWrite(enPin, map(speedPercent, 0, 100, 0, PWM_RESOLUTION));
+  analogWrite(enPin, map(speedPercent, 0, 100, 0, pwmResolution));
 }
 
-static void MotorRetractById(uint8_t id, int speedPercent) {
+static void MotorRetractById(uint8_t id, int speedPercent, int pwmResolution) {
   switch (id) {
   case 1:
-    MotorRetractByPin(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena, speedPercent);
+    MotorRetractByPin(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena, speedPercent, pwmResolution);
     break;
   case 2:
-    MotorRetractByPin(settings.pin.motors.in3, settings.pin.motors.in4, settings.pin.motors.enb, speedPercent);
+    MotorRetractByPin(settings.pin.motors.in3, settings.pin.motors.in4, settings.pin.motors.enb, speedPercent, pwmResolution);
     break;
 
   default:
@@ -251,9 +264,9 @@ static void MotorRetractById(uint8_t id, int speedPercent) {
   }
 }
 
-static void MotorsRetract(int speedPercent) {
-  MotorRetractById(1, speedPercent);
-  MotorRetractById(2, speedPercent);
+static void MotorsRetract(int speedPercent, int pwmResolution) {
+  MotorRetractById(1, speedPercent, pwmResolution);
+  MotorRetractById(2, speedPercent, pwmResolution);
 }
 
 // ------
@@ -313,6 +326,7 @@ static void setupPin() {
 void setup() {
   if (DEBUG) {
     Serial.begin(9600);
+    delay(2000); // Let the serial monitor open
     Serial.println("Debug mode enabled");
   }
   setupPin();
@@ -329,7 +343,7 @@ void setup() {
 // -----
 static void loopAutoMode() {
   LDRs ldrs;
-  LDRsRead(&ldrs);
+  LDRsRead(&ldrs, ANALOG_RESOLUTION);
 
   if (DEBUG) {
     if (!compareWithThreshold(ldrs.dayUp.percent, ldrs.dayDown.percent, settings.program.LDR.threshold)) {
@@ -349,10 +363,10 @@ static void loopAutoMode() {
 static void loopManualMode() {
   if (digitalRead(settings.pin.button.deploy) == LOW) {
     if (DEBUG) serialPrintlnEvent("Deploy button pressed", eventId);
-    MotorsDeploy(settings.program.motor.speed);
+    MotorsDeploy(settings.program.motor.speed, PWM_RESOLUTION);
   } else if (digitalRead(settings.pin.button.retract) == LOW) {
     if (DEBUG) serialPrintlnEvent("Retract button pressed", eventId);
-    MotorsRetract(settings.program.motor.speed);
+    MotorsRetract(settings.program.motor.speed, PWM_RESOLUTION);
   } else if (digitalRead(settings.pin.button.scan) == LOW) {
     if (DEBUG) serialPrintlnEvent("Scan button pressed", eventId);
     // Implement scan functionality here
