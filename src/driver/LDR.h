@@ -2,18 +2,20 @@
 #define LDR_H
 #include <Arduino.h>
 
-typedef struct LDR {
-  int raw;
-  int percent;
-} LDR;
+class LDR {
+public:
+    int raw;
+    int percent;
+    LDR();
+    void read(uint8_t pin, int analogResolution);
+};
 
-typedef struct LDRs {
-  LDR dayUp;
-  LDR dayDown;
-  LDR night;
-} LDRs;
-
-void LDRReadByPin(LDR* ldr, uint8_t pin, int analogResolution);
-void LDRsRead(LDRs* ldrs, int analogResolution);
+class LDRs {
+public:
+    LDR dayUp;
+    LDR dayDown;
+    LDR night;
+    void read(uint8_t pinUp, uint8_t pinDown, uint8_t pinNight, int analogResolution);
+};
 
 #endif

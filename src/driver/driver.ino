@@ -45,59 +45,6 @@ static bool isAutoMode() {
   return digitalRead(settings.pin.button.automatic) == LOW;
 }
 
-// ---------------
-// Motor functions
-// ---------------
-static void MotorDeployByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent, int pwmResolution) {
-  digitalWrite(inPin1, HIGH);
-  digitalWrite(inPin2, LOW);
-  analogWrite(enPin, map(speedPercent, 0, 100, 0, pwmResolution));
-}
-
-static void MotorDeployById(uint8_t id, int speedPercent, int pwmResolution) {
-  switch (id) {
-  case 1:
-    MotorDeployByPin(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena, speedPercent, pwmResolution);
-    break;
-  case 2:
-    MotorDeployByPin(settings.pin.motors.in3, settings.pin.motors.in4, settings.pin.motors.enb, speedPercent, pwmResolution);
-    break;
-
-  default:
-    break;
-  }
-}
-
-static void MotorsDeploy(int speedPercent, int pwmResolution) {
-  MotorDeployById(1, speedPercent, pwmResolution);
-  MotorDeployById(2, speedPercent, pwmResolution);
-}
-
-static void MotorRetractByPin(uint8_t inPin1, uint8_t inPin2, uint8_t enPin, int speedPercent, int pwmResolution) {
-  digitalWrite(inPin1, LOW);
-  digitalWrite(inPin2, HIGH);
-  analogWrite(enPin, map(speedPercent, 0, 100, 0, pwmResolution));
-}
-
-static void MotorRetractById(uint8_t id, int speedPercent, int pwmResolution) {
-  switch (id) {
-  case 1:
-    MotorRetractByPin(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena, speedPercent, pwmResolution);
-    break;
-  case 2:
-    MotorRetractByPin(settings.pin.motors.in3, settings.pin.motors.in4, settings.pin.motors.enb, speedPercent, pwmResolution);
-    break;
-
-  default:
-    break;
-  }
-}
-
-static void MotorsRetract(int speedPercent, int pwmResolution) {
-  MotorRetractById(1, speedPercent, pwmResolution);
-  MotorRetractById(2, speedPercent, pwmResolution);
-}
-
 // ----------------
 // Serial functions
 // ----------------
@@ -180,7 +127,12 @@ void setup() {
 // -----
 static void loopAutoMode() {
   LDRs ldrs;
-  LDRsRead(&ldrs, ANALOG_RESOLUTION);
+  ldrs.read(
+    settings.pin.LDR.day.up,
+    settings.pin.LDR.day.down,
+    settings.pin.LDR.night,
+    ANALOG_RESOLUTION
+  );
 
   if (DEBUG) {
     if (!compareWithThreshold(ldrs.dayUp.percent, ldrs.dayDown.percent, settings.program.LDR.threshold)) {
@@ -196,12 +148,25 @@ static void loopAutoMode() {
 }
 
 static void loopManualMode() {
+  Motor motor1(
+    settings.pin.motors.in1,
+    settings.pin.motors.in2,
+    settings.pin.motors.ena
+  );
+  Motor motor2(
+    settings.pin.motors.in3,
+    settings.pin.motors.in4,
+    settings.pin.motors.enb
+  );
+
+  Motors motors(motor1, motor2);
+
   if (digitalRead(settings.pin.button.deploy) == LOW) {
     if (DEBUG) serialPrintlnEvent("Deploy button pressed", eventId);
-    MotorsDeploy(settings.program.motor.speed, PWM_RESOLUTION);
+    motors.deploy(settings.program.motor.speed, PWM_RESOLUTION);
   } else if (digitalRead(settings.pin.button.retract) == LOW) {
     if (DEBUG) serialPrintlnEvent("Retract button pressed", eventId);
-    MotorsRetract(settings.program.motor.speed, PWM_RESOLUTION);
+    motors.retract(settings.program.motor.speed, PWM_RESOLUTION);
   } else if (digitalRead(settings.pin.button.scan) == LOW) {
     if (DEBUG) serialPrintlnEvent("Scan button pressed", eventId);
     // Implement scan functionality here

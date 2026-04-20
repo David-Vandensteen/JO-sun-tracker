@@ -1,13 +1,15 @@
 #include "LDR.h"
 #include "settings.h"
 
-void LDRReadByPin(LDR* ldr, uint8_t pin, int analogResolution) {
-  ldr->raw = analogRead(pin);
-  ldr->percent = map(ldr->raw, 0, analogResolution, 100, 0);
+LDR::LDR() : raw(0), percent(0) {}
+
+void LDR::read(uint8_t pin, int analogResolution) {
+  raw = analogRead(pin);
+  percent = map(raw, 0, analogResolution, 100, 0);
 }
 
-void LDRsRead(LDRs* ldrs, int analogResolution) {
-  LDRReadByPin(&ldrs->dayUp, settings.pin.LDR.day.up, analogResolution);
-  LDRReadByPin(&ldrs->dayDown, settings.pin.LDR.day.down, analogResolution);
-  LDRReadByPin(&ldrs->night, settings.pin.LDR.night, analogResolution);
+void LDRs::read(uint8_t pinUp, uint8_t pinDown, uint8_t pinNight, int analogResolution) {
+  dayUp.read(pinUp, analogResolution);
+  dayDown.read(pinDown, analogResolution);
+  night.read(pinNight, analogResolution);
 }
