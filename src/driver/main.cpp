@@ -157,6 +157,16 @@ static const Settings settings = {
   }
 };
 
+// -------------------
+// Program definitions
+// -------------------
+void setup();
+static void setupPin();
+
+void loop();
+static void loopAutoMode();
+static void loopManualMode();
+
 // ---------------
 // LDR definitions
 // ---------------
