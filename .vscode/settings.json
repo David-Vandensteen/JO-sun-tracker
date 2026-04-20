@@ -1,4 +1,7 @@
 {
+  "files.associations": {
+    "*.ino": "cpp"
+  },
   "files.trimTrailingWhitespace": true,
   "[markdown]": {
     "files.trimTrailingWhitespace": false
