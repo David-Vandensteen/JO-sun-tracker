@@ -20,6 +20,9 @@ public:
   LDR night;
   LDRs(LDR dayUp, LDR dayDown, LDR night);
   void read();
+  bool isDayUpDifferentFromDayDown(long threshold);
+  bool isDayUpBrighterThanDayDown(long threshold);
+  bool isDayDownBrighterThanDayUp(long threshold);
 };
 
 #endif

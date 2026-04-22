@@ -25,3 +25,16 @@ void LDRs::read() {
   dayDown.read();
   night.read();
 }
+
+bool LDRs::isDayUpDifferentFromDayDown(long threshold) {
+  return abs(dayUp.percent - dayDown.percent) > threshold;
+}
+
+bool LDRs::isDayUpBrighterThanDayDown(long threshold) {
+  return dayUp.percent > dayDown.percent && isDayUpDifferentFromDayDown(threshold);
+}
+
+bool LDRs::isDayDownBrighterThanDayUp(long threshold) {
+  return dayDown.percent > dayUp.percent && isDayUpDifferentFromDayDown(threshold);
+}
+
