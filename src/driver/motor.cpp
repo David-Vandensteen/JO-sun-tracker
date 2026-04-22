@@ -2,7 +2,9 @@
 #include "motor.h"
 
 Motor::Motor(uint8_t in1, uint8_t in2, uint8_t en, int pwmResolution)
-    : _in1(in1), _in2(in2), _en(en), _pwmResolution(pwmResolution) {}
+    : _in1(in1), _in2(in2), _en(en), _pwmResolution(pwmResolution) {
+      Motor::stop(); // Ensure motor is stopped on initialization
+    }
 
 bool Motor::isBusy() {
     return _isBusy;
