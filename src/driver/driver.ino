@@ -48,10 +48,6 @@ static void loopManualMode();
 // -----------------
 // Utility functions
 // -----------------
-static bool compareWithThreshold(long first, long second, long threshold) {
-  return abs(first - second) <= threshold;
-}
-
 static bool isAutoMode() {
   return digitalRead(settings.pin.button.automatic) == LOW;
 }
@@ -77,6 +73,8 @@ void setup() {
     Serial.println("Debug mode enabled");
   }
   setupPin();
+  if (DEBUG) serialPrinter.eventln("The program will start...");
+  sleep(5000);
   if (DEBUG && isAutoMode()) {
     serialPrinter.eventln("Auto mode active");
   } else if (DEBUG) {
@@ -93,7 +91,7 @@ static void loopAutoMode() {
 
   if (now - lastIterationTime <= 1000) {
     ldrs.read();
-    bool isLDRDifferent = !compareWithThreshold(ldrs.dayUp.percent, ldrs.dayDown.percent, settings.program.LDR.threshold);
+    bool isLDRDifferent = ldrs.isDayUpDifferentFromDayDown(settings.program.LDR.threshold);
 
     if (DEBUG && isLDRDifferent) {
       serialPrinter.event("LDR values are different with threshold ");
@@ -105,10 +103,10 @@ static void loopAutoMode() {
     }
 
     if (isLDRDifferent) {
-      if (ldrs.dayUp.percent > ldrs.dayDown.percent) {
+      if (ldrs.isDayUpBrighterThanDayDown(settings.program.LDR.threshold)) {
         if (DEBUG) serialPrinter.eventln("Deploying motors");
         motors.deploy(settings.program.motor.speed);
-      } else {
+      } else if (ldrs.isDayDownBrighterThanDayUp(settings.program.LDR.threshold)) {
         if (DEBUG) serialPrinter.eventln("Retracting motors");
         motors.retract(settings.program.motor.speed);
       }
