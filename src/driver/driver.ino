@@ -16,7 +16,6 @@
 // -------
 #define TRUE 1
 #define FALSE 0
-
 #define DEBUG TRUE
 
 // -------------------------------
@@ -24,6 +23,11 @@
 // -------------------------------
 SerialPrint serialPrinter;
 extern const Settings settings;
+
+Motors motors(
+  Motor(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena),
+  Motor(settings.pin.motors.in3, settings.pin.motors.in4, settings.pin.motors.enb)
+);
 
 // -------------------
 // Program definitions

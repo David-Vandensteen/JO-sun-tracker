@@ -16,7 +16,7 @@ void Motor::retract(int speedPercent, int pwmResolution) {
     analogWrite(_en, map(speedPercent, 0, 100, 0, pwmResolution));
 }
 
-Motors::Motors(const Motor& m1, const Motor& m2)
+Motors::Motors(Motor m1, Motor m2)
     : motor1(m1), motor2(m2) {}
 
 void Motors::deploy(int speedPercent, int pwmResolution) {

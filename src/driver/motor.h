@@ -13,7 +13,7 @@ private:
 
 class Motors {
 public:
-	Motors(const Motor& m1, const Motor& m2);
+	Motors(Motor m1, Motor m2);
 	void deploy(int speedPercent, int pwmResolution);
 	void retract(int speedPercent, int pwmResolution);
 	Motor motor1;
