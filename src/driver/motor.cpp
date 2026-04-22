@@ -4,22 +4,29 @@
 Motor::Motor(uint8_t in1, uint8_t in2, uint8_t en, int pwmResolution)
     : _in1(in1), _in2(in2), _en(en), _pwmResolution(pwmResolution) {}
 
+bool Motor::isBusy() {
+    return _isBusy;
+}
+
 void Motor::deploy(int speedPercent) {
     digitalWrite(_in1, HIGH);
     digitalWrite(_in2, LOW);
     analogWrite(_en, map(speedPercent, 0, 100, 0, _pwmResolution));
+    _isBusy = true;
 }
 
 void Motor::retract(int speedPercent) {
     digitalWrite(_in1, LOW);
     digitalWrite(_in2, HIGH);
     analogWrite(_en, map(speedPercent, 0, 100, 0, _pwmResolution));
+    _isBusy = true;
 }
 
 void Motor::stop() {
     digitalWrite(_in1, LOW);
     digitalWrite(_in2, LOW);
     analogWrite(_en, 0);
+    _isBusy = false;
 }
 
 Motors::Motors(Motor m1, Motor m2)

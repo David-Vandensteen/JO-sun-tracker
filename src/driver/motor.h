@@ -7,10 +7,12 @@ public:
 	Motor(uint8_t in1, uint8_t in2, uint8_t en, int pwmResolution);
 	void deploy(int speedPercent);
 	void retract(int speedPercent);
-  void stop();
+	void stop();
+	bool isBusy();
 private:
 	uint8_t _in1, _in2, _en;
   int _pwmResolution;
+  bool _isBusy = false;
 };
 
 class Motors {
