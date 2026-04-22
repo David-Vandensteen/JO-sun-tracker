@@ -3,6 +3,7 @@
 #include "LDR.h"
 #include "motor.h"
 #include "serial_print.h"
+
 /*
   David Vandensteen
   MIT License
@@ -21,7 +22,7 @@
 // -------------------------------
 // Global variables and constants
 // -------------------------------
-static uint16_t eventId = 1;
+SerialPrint serialPrinter;
 extern const Settings settings;
 
 // -------------------
@@ -45,54 +46,6 @@ static bool isAutoMode() {
   return digitalRead(settings.pin.button.automatic) == LOW;
 }
 
-// ----------------
-// Serial functions
-// ----------------
-static void serialPrintEvent(const char *message, uint16_t &eventId) {
-  Serial.print("[EVT-");
-  Serial.print(eventId);
-  Serial.print("] ");
-  Serial.print(message);
-  eventId++;
-}
-
-static void serialPrintLDR(LDR ldr, const char *name) {
-    Serial.print(name);
-    Serial.print(ldr.raw);
-    Serial.print(" (");
-    Serial.print(ldr.percent);
-    Serial.println("%)");
-}
-
-static void serialPrintlnEvent(const char *message, uint16_t &eventId) {
-  serialPrintEvent(message, eventId);
-  Serial.println();
-}
-
-static void serialPrintSettingsPin(SettingsPin pin) {
-  Serial.println("Pin setup completed");
-  Serial.println("Settings:");
-  Serial.print("  LDR day up: "); Serial.println(pin.LDR.day.up);
-  Serial.print("  LDR day down: "); Serial.println(pin.LDR.day.down);
-  Serial.print("  LDR night: "); Serial.println(pin.LDR.night);
-  Serial.print("  Deploy button: "); Serial.println(pin.button.deploy);
-  Serial.print("  Retract button: "); Serial.println(pin.button.retract);
-  Serial.print("  Automatic button: "); Serial.println(pin.button.automatic);
-  Serial.print("  Scan button: "); Serial.println(pin.button.scan);
-}
-
-static void serialPrintSettingsProgram(SettingsProgram program) {
-  Serial.println("Program settings:");
-  Serial.print("  Version: "); Serial.println(program.version);
-  Serial.print("  LDR threshold: "); Serial.print(program.LDR.threshold); Serial.println("%");
-  Serial.print("  Motor speed: "); Serial.print(program.motor.speed); Serial.println("%");
-}
-
-static void serialPrintSettings(Settings settings) {
-  serialPrintSettingsPin(settings.pin);
-  serialPrintSettingsProgram(settings.program);
-}
-
 // -----
 // Setup
 // -----
@@ -104,7 +57,7 @@ static void setupPin() {
   pinMode(settings.pin.button.retract, INPUT_PULLUP);
   pinMode(settings.pin.button.automatic, INPUT_PULLUP);
   pinMode(settings.pin.button.scan, INPUT_PULLUP);
-  if (DEBUG) serialPrintSettings(settings);
+  if (DEBUG) serialPrinter.settings(settings);
 }
 
 void setup() {
@@ -115,11 +68,10 @@ void setup() {
   }
   setupPin();
   if (DEBUG && isAutoMode()) {
-    serialPrintlnEvent("Auto mode active", eventId);
+    serialPrinter.eventln("Auto mode active");
   } else if (DEBUG) {
-    serialPrintlnEvent("Manual mode active", eventId);
+    serialPrinter.eventln("Manual mode active");
   }
-
 }
 
 // -----
@@ -136,12 +88,12 @@ static void loopAutoMode() {
 
   if (DEBUG) {
     if (!compareWithThreshold(ldrs.dayUp.percent, ldrs.dayDown.percent, settings.program.LDR.threshold)) {
-      serialPrintEvent("LDR values are different with threshold ", eventId);
+      serialPrinter.event("LDR values are different with threshold ");
       Serial.print(settings.program.LDR.threshold);
       Serial.println("%");
 
-      serialPrintLDR(ldrs.dayUp, "  LDR day up: ");
-      serialPrintLDR(ldrs.dayDown, "  LDR day down: ");
+      serialPrinter.LDR(ldrs.dayUp, "  LDR day up: ");
+      serialPrinter.LDR(ldrs.dayDown, "  LDR day down: ");
     }
   }
   delay(500);
@@ -162,13 +114,13 @@ static void loopManualMode() {
   Motors motors(motor1, motor2);
 
   if (digitalRead(settings.pin.button.deploy) == LOW) {
-    if (DEBUG) serialPrintlnEvent("Deploy button pressed", eventId);
+    if (DEBUG) serialPrinter.eventln("Deploy button pressed");
     motors.deploy(settings.program.motor.speed, PWM_RESOLUTION);
   } else if (digitalRead(settings.pin.button.retract) == LOW) {
-    if (DEBUG) serialPrintlnEvent("Retract button pressed", eventId);
+    if (DEBUG) serialPrinter.eventln("Retract button pressed");
     motors.retract(settings.program.motor.speed, PWM_RESOLUTION);
   } else if (digitalRead(settings.pin.button.scan) == LOW) {
-    if (DEBUG) serialPrintlnEvent("Scan button pressed", eventId);
+    if (DEBUG) serialPrinter.eventln("Scan button pressed");
     // Implement scan functionality here
   }
 }
@@ -177,8 +129,8 @@ void loop() {
   if (isAutoMode()) {
     loopAutoMode();
   } else if (DEBUG) {
-    serialPrintlnEvent("Switched to manual mode", eventId);
-    serialPrintlnEvent("Waiting for button presses...", eventId);
+    serialPrinter.eventln("Switched to manual mode");
+    serialPrinter.eventln("Waiting for button presses...");
   }
 }
 
