@@ -21,12 +21,18 @@
 // -------------------------------
 // Global variables and constants
 // -------------------------------
-SerialPrint serialPrinter;
 extern const Settings settings;
+static SerialPrint serialPrinter;
 
-Motors motors(
-  Motor(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena),
-  Motor(settings.pin.motors.in3, settings.pin.motors.in4, settings.pin.motors.enb)
+static LDRs ldrs(
+  LDR(settings.pin.LDR.day.up, ANALOG_RESOLUTION),
+  LDR(settings.pin.LDR.day.down, ANALOG_RESOLUTION),
+  LDR(settings.pin.LDR.night, ANALOG_RESOLUTION)
+);
+
+static Motors motors(
+  Motor(settings.pin.motors.in1, settings.pin.motors.in2, settings.pin.motors.ena, PWM_RESOLUTION),
+  Motor(settings.pin.motors.in3, settings.pin.motors.in4, settings.pin.motors.enb, PWM_RESOLUTION)
 );
 
 // -------------------
@@ -82,16 +88,14 @@ void setup() {
 // Loops
 // -----
 static void loopAutoMode() {
-  LDRs ldrs;
-  ldrs.read(
-    settings.pin.LDR.day.up,
-    settings.pin.LDR.day.down,
-    settings.pin.LDR.night,
-    ANALOG_RESOLUTION
-  );
+  unsigned long now = millis();
+  unsigned long lastIterationTime = 0;
 
-  if (DEBUG) {
-    if (!compareWithThreshold(ldrs.dayUp.percent, ldrs.dayDown.percent, settings.program.LDR.threshold)) {
+  if (now - lastIterationTime <= 1000) {
+    ldrs.read();
+    bool isLDRDifferent = !compareWithThreshold(ldrs.dayUp.percent, ldrs.dayDown.percent, settings.program.LDR.threshold);
+
+    if (DEBUG && isLDRDifferent) {
       serialPrinter.event("LDR values are different with threshold ");
       Serial.print(settings.program.LDR.threshold);
       Serial.println("%");
@@ -99,30 +103,26 @@ static void loopAutoMode() {
       serialPrinter.LDR(ldrs.dayUp, "  LDR day up: ");
       serialPrinter.LDR(ldrs.dayDown, "  LDR day down: ");
     }
+
+    if (isLDRDifferent) {
+      if (ldrs.dayUp.percent > ldrs.dayDown.percent) {
+        if (DEBUG) serialPrinter.eventln("Deploying motors");
+        motors.deploy(settings.program.motor.speed);
+      } else {
+        if (DEBUG) serialPrinter.eventln("Retracting motors");
+        motors.retract(settings.program.motor.speed);
+      }
+    }
   }
-  delay(500);
 }
 
 static void loopManualMode() {
-  Motor motor1(
-    settings.pin.motors.in1,
-    settings.pin.motors.in2,
-    settings.pin.motors.ena
-  );
-  Motor motor2(
-    settings.pin.motors.in3,
-    settings.pin.motors.in4,
-    settings.pin.motors.enb
-  );
-
-  Motors motors(motor1, motor2);
-
   if (digitalRead(settings.pin.button.deploy) == LOW) {
     if (DEBUG) serialPrinter.eventln("Deploy button pressed");
-    motors.deploy(settings.program.motor.speed, PWM_RESOLUTION);
+    motors.deploy(settings.program.motor.speed);
   } else if (digitalRead(settings.pin.button.retract) == LOW) {
     if (DEBUG) serialPrinter.eventln("Retract button pressed");
-    motors.retract(settings.program.motor.speed, PWM_RESOLUTION);
+    motors.retract(settings.program.motor.speed);
   } else if (digitalRead(settings.pin.button.scan) == LOW) {
     if (DEBUG) serialPrinter.eventln("Scan button pressed");
     // Implement scan functionality here

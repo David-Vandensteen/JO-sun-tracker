@@ -4,18 +4,22 @@
 
 class LDR {
 public:
-    int raw;
-    int percent;
-    LDR();
-    void read(uint8_t pin, int analogResolution);
+  int raw;
+  int percent;
+  LDR(uint8_t pin, int analogResolution);
+  void read();
+private:
+  uint8_t _pin;
+  int _analogResolution;
 };
 
 class LDRs {
 public:
-    LDR dayUp;
-    LDR dayDown;
-    LDR night;
-    void read(uint8_t pinUp, uint8_t pinDown, uint8_t pinNight, int analogResolution);
+  LDR dayUp;
+  LDR dayDown;
+  LDR night;
+  LDRs(LDR dayUp, LDR dayDown, LDR night);
+  void read();
 };
 
 #endif

@@ -1,15 +1,27 @@
+#include <Arduino.h>
 #include "LDR.h"
 #include "settings.h"
 
-LDR::LDR() : raw(0), percent(0) {}
+LDR::LDR(uint8_t pin, int analogResolution)
+  : _pin(pin),
+    _analogResolution(analogResolution),
+    raw(0),
+    percent(0)
+{}
 
-void LDR::read(uint8_t pin, int analogResolution) {
-  raw = analogRead(pin);
-  percent = map(raw, 0, analogResolution, 100, 0);
+void LDR::read() {
+  raw = analogRead(_pin);
+  percent = map(raw, 0, _analogResolution, 100, 0);
 }
 
-void LDRs::read(uint8_t pinUp, uint8_t pinDown, uint8_t pinNight, int analogResolution) {
-  dayUp.read(pinUp, analogResolution);
-  dayDown.read(pinDown, analogResolution);
-  night.read(pinNight, analogResolution);
+LDRs::LDRs(LDR dayUp, LDR dayDown, LDR night)
+  : dayUp(dayUp),
+    dayDown(dayDown),
+    night(night)
+{}
+
+void LDRs::read() {
+  dayUp.read();
+  dayDown.read();
+  night.read();
 }
