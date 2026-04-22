@@ -19,6 +19,10 @@ Control buttons - work only in manual mode:
 ├── 2: ─────────► RETRACT: (retract button)
 └── 3: ─────────► DEPLOY: (deploy button)
 
+Status LED:
+│
+├── 6: ─────────► STATUS LED
+
 LDR 1 - sun sensor 1:
 |
 ├── A0: ─────────► LDR 1: (analog input)
@@ -56,7 +60,8 @@ const Settings settings = {
       .retract = 3,
       .automatic = 4,
       .scan = 5
-    }
+    },
+    .LEDStatus = 6
   },
   .program = {
     .version = VERSION,

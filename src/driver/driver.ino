@@ -39,7 +39,8 @@ static Motors motors(
 // Program definitions
 // -------------------
 void setup();
-static void setupPin();
+static void setupPin(SettingsPin pin);
+static void setupBlinkStatusLED(uint8_t pin);
 
 void loop();
 static void loopAutoMode();
@@ -55,15 +56,24 @@ static bool isAutoMode() {
 // -----
 // Setup
 // -----
-static void setupPin() {
-  pinMode(settings.pin.LDR.day.up, INPUT);
-  pinMode(settings.pin.LDR.day.down, INPUT);
-  pinMode(settings.pin.LDR.night, INPUT);
-  pinMode(settings.pin.button.deploy, INPUT_PULLUP);
-  pinMode(settings.pin.button.retract, INPUT_PULLUP);
-  pinMode(settings.pin.button.automatic, INPUT_PULLUP);
-  pinMode(settings.pin.button.scan, INPUT_PULLUP);
-  if (DEBUG) serialPrinter.settings(settings);
+static void setupPin(SettingsPin pin) {
+  pinMode(pin.LDR.day.up, INPUT);
+  pinMode(pin.LDR.day.down, INPUT);
+  pinMode(pin.LDR.night, INPUT);
+  pinMode(pin.button.deploy, INPUT_PULLUP);
+  pinMode(pin.button.retract, INPUT_PULLUP);
+  pinMode(pin.button.automatic, INPUT_PULLUP);
+  pinMode(pin.button.scan, INPUT_PULLUP);
+  pinMode(pin.LEDStatus, OUTPUT);
+}
+
+static void setupBlinkStatusLED(uint8_t pin) {
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(pin, HIGH);
+    delay(1000);
+    digitalWrite(pin, LOW);
+    delay(1000);
+  }
 }
 
 void setup() {
@@ -72,9 +82,9 @@ void setup() {
     delay(2000); // Let the serial monitor open
     Serial.println("Debug mode enabled");
   }
-  setupPin();
+  setupPin(settings.pin);
   if (DEBUG) serialPrinter.eventln("The program will start...");
-  sleep(5000);
+  setupBlinkStatusLED(settings.pin.LEDStatus);
   if (DEBUG && isAutoMode()) {
     serialPrinter.eventln("Auto mode active");
   } else if (DEBUG) {

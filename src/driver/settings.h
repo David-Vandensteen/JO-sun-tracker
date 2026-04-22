@@ -43,6 +43,7 @@ typedef struct SettingsPin {
   const SettingsPinLDR LDR;
   const SettingsPinMotor motors;
   const SettingsPinButton button;
+  const uint8_t LEDStatus;
 
 } SettingsPin;
 
