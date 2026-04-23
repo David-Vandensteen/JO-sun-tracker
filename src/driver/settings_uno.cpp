@@ -12,7 +12,7 @@ L298N Motor Driver:
 
 Mode button:
 │
-├── 4: ─────────► AUTO: (mode auto/manual switch button)
+├── 4: ─────────► AUTO: (mode auto/manual button)
 
 Control buttons - work only in manual mode:
 │
@@ -37,39 +37,33 @@ LDR 3 - night sensor:
 */
 
 #include "settings.h"
+#ifdef BOARD_UNO
 
-const Settings settings = {
-  .pin = {
-    .LDR = {
-      .day = {
-        .up = A0,
-        .down = A1
-      },
-      .night = A2
-    },
-    .motors = {
-      .ena = 10,
-      .in1 = 8,
-      .in2 = 9,
-      .enb = 13,
-      .in3 = 11,
-      .in4 = 12
-    },
-    .button = {
-      .deploy = 2,
-      .retract = 3,
-      .automatic = 4,
-      .scan = 5
-    },
-    .LEDStatus = 6
-  },
-  .program = {
-    .version = VERSION,
-    .LDR = {
-      .threshold = SETTINGS_PROGRAM_LDR_THRESHOLD
-    },
-    .motor = {
-      .speed = SETTINGS_PROGRAM_MOTOR_SPEED
-    }
-  }
-};
+#define SETTINGS_BOARD_ADC_RESOLUTION 1023
+#define SETTINGS_BOARD_PWM_RESOLUTION 255
+#define SETTINGS_PROGRAM_LDR_THRESHOLD 10
+#define SETTINGS_PROGRAM_MOTOR_SPEED 30
+
+void settingsInit(Settings *settings) {
+	settings->board.adc.resolution = SETTINGS_BOARD_ADC_RESOLUTION;
+	settings->board.pwm.resolution = SETTINGS_BOARD_PWM_RESOLUTION;
+	settings->board.pin.ldr.day.up = A0;
+	settings->board.pin.ldr.day.down = A1;
+	settings->board.pin.ldr.night = A2;
+	settings->board.pin.motors.ena = 10;
+	settings->board.pin.motors.in1 = 8;
+	settings->board.pin.motors.in2 = 9;
+	settings->board.pin.motors.enb = 13;
+	settings->board.pin.motors.in3 = 11;
+	settings->board.pin.motors.in4 = 12;
+	settings->board.pin.button.deploy = 2;
+	settings->board.pin.button.retract = 3;
+	settings->board.pin.button.automatic = 4;
+	settings->board.pin.button.scan = 5;
+	settings->board.pin.ledStatus = 6;
+	settings->program.version = VERSION;
+	settings->program.ldr.threshold = SETTINGS_PROGRAM_LDR_THRESHOLD;
+	settings->program.motor.speed = SETTINGS_PROGRAM_MOTOR_SPEED;
+}
+
+#endif

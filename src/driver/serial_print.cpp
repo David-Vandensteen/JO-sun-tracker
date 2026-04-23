@@ -1,6 +1,6 @@
 
 #include <Arduino.h>
-#include "LDR.h"
+#include "ldr.h"
 #include "settings.h"
 #include "serial_print.h"
 
@@ -31,12 +31,12 @@ static void SerialPrint::ldr(const LDR *ldr, const char *name) {
     Serial.println("%)");
 }
 
-static void SerialPrint::settingsPin(const SettingsPin *pin) {
+static void SerialPrint::settingsBoardPin(const SettingsBoardPin *pin) {
     Serial.println("Pin setup completed");
     Serial.println("Settings:");
-    Serial.print("  LDR day up: "); Serial.println(pin->LDR.day.up);
-    Serial.print("  LDR day down: "); Serial.println(pin->LDR.day.down);
-    Serial.print("  LDR night: "); Serial.println(pin->LDR.night);
+    Serial.print("  LDR day up: "); Serial.println(pin->ldr.day.up);
+    Serial.print("  LDR day down: "); Serial.println(pin->ldr.day.down);
+    Serial.print("  LDR night: "); Serial.println(pin->ldr.night);
     Serial.print("  Deploy button: "); Serial.println(pin->button.deploy);
     Serial.print("  Retract button: "); Serial.println(pin->button.retract);
     Serial.print("  Automatic button: "); Serial.println(pin->button.automatic);
@@ -46,11 +46,11 @@ static void SerialPrint::settingsPin(const SettingsPin *pin) {
 static void SerialPrint::settingsProgram(const SettingsProgram *program) {
     Serial.println("Program settings:");
     Serial.print("  Version: "); Serial.println(program->version);
-    Serial.print("  LDR threshold: "); Serial.print(program->LDR.threshold); Serial.println("%");
+    Serial.print("  LDR threshold: "); Serial.print(program->ldr.threshold); Serial.println("%");
     Serial.print("  Motor speed: "); Serial.print(program->motor.speed); Serial.println("%");
 }
 
 static void SerialPrint::globalSettings(const Settings *settings) {
-    settingsPin(&settings->pin);
-    settingsProgram(&settings->program);
+    SerialPrint::settingsBoardPin(&settings->board.pin);
+    SerialPrint::settingsProgram(&settings->program);
 }

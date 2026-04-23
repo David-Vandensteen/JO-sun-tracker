@@ -4,7 +4,7 @@
 
 class Setup {
 public:
-  static void pin(SettingsPin pin);
+  static void pin(SettingsBoardPin pin);
   static void blinkStatusLED(uint8_t pin);
 };
 

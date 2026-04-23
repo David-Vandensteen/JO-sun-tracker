@@ -3,70 +3,78 @@
 #include <Arduino.h>
 
 #define VERSION "0.0.1"
+#define BOARD_UNO
 
-#define SETTINGS_PROGRAM_LDR_THRESHOLD 10
-#define SETTINGS_PROGRAM_MOTOR_SPEED 30
+typedef struct SettingsBoardPinLDRDay {
+  uint8_t up;
+  uint8_t down;
+} SettingsBoardPinLDRDay;
 
-#define ANALOG_RESOLUTION 1023
-#define PWM_RESOLUTION 255
+typedef uint8_t SettingsBoardPinLDRNight;
 
-typedef struct SettingsPinLDRDay {
-  const uint8_t up;
-  const uint8_t down;
-} SettingsPinLDRDay;
+typedef struct SettingsBoardPinLDR {
+  SettingsBoardPinLDRDay day;
+  SettingsBoardPinLDRNight night;
+} SettingsBoardPinLDR;
 
-typedef uint8_t SettingsPinLDRNight;
+typedef struct SettingsBoardPinButton {
+  uint8_t deploy;
+  uint8_t retract;
+  uint8_t automatic;
+  uint8_t scan;
 
-typedef struct SettingsPinLDR {
-  const SettingsPinLDRDay day;
-  const SettingsPinLDRNight night;
-} SettingsPinLDR;
+} SettingsBoardPinButton;
 
-typedef struct SettingsPinButton {
-  const uint8_t deploy;
-  const uint8_t retract;
-  const uint8_t automatic;
-  const uint8_t scan;
+typedef struct SettingsBoardPinMotors {
+  uint8_t ena;
+  uint8_t in1;
+  uint8_t in2;
+  uint8_t enb;
+  uint8_t in3;
+  uint8_t in4;
+} SettingsBoardPinMotor;
 
-} SettingsPinButton;
+typedef struct SettingsBoardPin {
+  SettingsBoardPinLDR ldr;
+  SettingsBoardPinMotor motors;
+  SettingsBoardPinButton button;
+  uint8_t ledStatus;
 
-typedef struct SettingsPinMotors {
-  const uint8_t ena;
-  const uint8_t in1;
-  const uint8_t in2;
-  const uint8_t enb;
-  const uint8_t in3;
-  const uint8_t in4;
-} SettingsPinMotor;
+} SettingsBoardPin;
 
-typedef struct SettingsPin {
-  const SettingsPinLDR LDR;
-  const SettingsPinMotor motors;
-  const SettingsPinButton button;
-  const uint8_t LEDStatus;
+typedef struct SettingsBoardADC {
+  int resolution;
+} SettingsBoardADC;
 
-} SettingsPin;
+typedef struct SettingsBoardPWM {
+  int resolution;
+} SettingsBoardPWM;
+
+typedef struct SettingsBoard {
+  SettingsBoardPin pin;
+  SettingsBoardADC adc;
+  SettingsBoardPWM pwm;
+} SettingsBoard;
 
 typedef struct SettingsProgramLDR {
-  const uint16_t threshold;
+  uint16_t threshold;
 } SettingsProgramLDR;
 
 typedef struct SettingsProgramMotor {
-  const int speed;
+  int speed;
 } SettingsProgramMotor;
 
 typedef struct SettingsProgram {
-  const char* version;
-  const SettingsProgramLDR LDR;
-  const SettingsProgramMotor motor;
+  char* version;
+  SettingsProgramLDR ldr;
+  SettingsProgramMotor motor;
 } SettingsProgram;
 
-
 typedef struct Settings {
-  const SettingsPin pin;
-  const SettingsProgram program;
+  SettingsBoard board;
+  SettingsProgram program;
 } Settings;
 
-extern const Settings settings;
+void settingsInit(Settings *settings);
 
 #endif
