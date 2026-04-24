@@ -8,8 +8,6 @@
 #include <Arduino.h>
 #include "settings.h"
 #include "setup.h"
-#include "ldr.h"
-#include "motor.h"
 #include "serial_print.h"
 #include "logic.h"
 
@@ -18,15 +16,7 @@
 // -------------------------------
 static Settings settings;
 static SerialPrint serialPrint;
-static bool isAutoMode = TRUE;
 static Logic logic(&settings);
-
-// -------------------
-// Program definitions
-// -------------------
-void setup();
-void loop();
-static void setAutoMode(bool autoMode);
 
 // -----
 // Setup
@@ -44,23 +34,8 @@ void setup() {
   logic.init();
 }
 
-// ------
-// Utility functions
-// --
-static void setAutoMode(bool autoMode) {
-  isAutoMode = autoMode;
-  if (DEBUG) {
-    if (isAutoMode) {
-      serialPrint.eventln("Switched to automatic mode");
-    } else {
-      serialPrint.eventln("Switched to manual mode");
-      serialPrint.eventln("Waiting for button presses...");
-    }
-  }
-}
-
 void loop() {
-  digitalRead(settings.board.pin.button.automatic) == LOW ? setAutoMode(TRUE) : setAutoMode(FALSE);
-  isAutoMode == TRUE ? logic.runAuto() : logic.runManual();
+  digitalRead(settings.board.pin.button.automatic) == LOW ? logic.setAutoMode(TRUE) : logic.setAutoMode(FALSE);
+  logic.getAutoMode() == TRUE ? logic.runAuto() : logic.runManual();
 }
 

@@ -13,10 +13,15 @@ public:
   void deploy();
   void retract();
   void scan();
+  bool getAutoMode();
+  void setAutoMode(bool autoMode);
 private:
+  void initLDRs();
+  void initMotors();
   Settings* _settings;
   LDRs* _ldrs;
   Motors* _motors;
+  bool _isAutoMode = TRUE;
 };
 
 #endif

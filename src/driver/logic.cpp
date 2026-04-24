@@ -4,17 +4,25 @@
 
 Logic::Logic(Settings *settings) : _settings(settings) {}
 
-void Logic::init() {
-  if (DEBUG) SerialPrint::eventln("Initializing logic");
+void Logic::initLDRs() {
   _ldrs = new LDRs(
     LDR(_settings->board.pin.ldr.day.up, _settings->board.adc.resolution),
     LDR(_settings->board.pin.ldr.day.down, _settings->board.adc.resolution),
     LDR(_settings->board.pin.ldr.night, _settings->board.adc.resolution)
   );
+}
+
+void Logic::initMotors() {
   _motors = new Motors(
     Motor(_settings->board.pin.motors.in1, _settings->board.pin.motors.in2, _settings->board.pin.motors.ena, _settings->board.pwm.resolution),
     Motor(_settings->board.pin.motors.in3, _settings->board.pin.motors.in4, _settings->board.pin.motors.enb, _settings->board.pwm.resolution)
   );
+}
+
+void Logic::init() {
+  if (DEBUG) SerialPrint::eventln("Initializing logic");
+  initLDRs();
+  initMotors();
 }
 
 void Logic::deploy() {
@@ -30,6 +38,22 @@ void Logic::retract() {
 void Logic::scan() {
   if (DEBUG) SerialPrint::eventln("Scan button pressed");
   // Implement scan functionality here
+}
+
+bool Logic::getAutoMode() {
+  return _isAutoMode;
+}
+
+void Logic::setAutoMode(bool autoMode) {
+  _isAutoMode = autoMode;
+  if (DEBUG) {
+    if (_isAutoMode) {
+      SerialPrint::eventln("Switched to automatic mode");
+    } else {
+      SerialPrint::eventln("Switched to manual mode");
+      SerialPrint::eventln("Waiting for button presses...");
+    }
+  }
 }
 
 void Logic::runAuto() {
