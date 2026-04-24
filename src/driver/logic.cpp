@@ -1,8 +1,13 @@
+#include "setup.h"
 #include "settings.h"
 #include "logic.h"
 #include "serial_print.h"
 
 Logic::Logic(Settings *settings) : _settings(settings) {}
+
+void Logic::initPins(SettingsBoardPin pin) {
+  Setup::pin(pin);
+}
 
 void Logic::initLDRs() {
   _ldrs = new LDRs(
@@ -21,6 +26,7 @@ void Logic::initMotors() {
 
 void Logic::init() {
   if (DEBUG) SerialPrint::eventln("Initializing logic");
+  initPins(_settings->board.pin);
   initLDRs();
   initMotors();
 }

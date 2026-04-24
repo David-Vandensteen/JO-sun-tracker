@@ -16,6 +16,7 @@ public:
   bool getAutoMode();
   void setAutoMode(bool autoMode);
 private:
+  static void initPins(SettingsBoardPin pin);
   void initLDRs();
   void initMotors();
   Settings* _settings;
