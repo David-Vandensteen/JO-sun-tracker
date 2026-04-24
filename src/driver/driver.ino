@@ -24,6 +24,7 @@
 // -------------------------------
 static Settings settings;
 static SerialPrint serialPrint;
+static bool isAutoMode = TRUE;
 
 static LDRs ldrs(
   LDR(settings.board.pin.ldr.day.up, settings.board.adc.resolution),
@@ -41,15 +42,12 @@ static Motors motors(
 // -------------------
 void setup();
 void loop();
-static void loopAutoMode();
-static void loopManualMode();
-
-// -----------------
-// Utility functions
-// -----------------
-static bool isAutoMode() {
-  return digitalRead(settings.board.pin.button.automatic) == LOW;
-}
+static void autoMode();
+static void manualMode();
+static void setAutoMode(bool autoMode);
+static void deploy();
+static void retract();
+static void scan();
 
 // -----
 // Setup
@@ -57,24 +55,46 @@ static bool isAutoMode() {
 void setup() {
   settingsInit(&settings);
   if (DEBUG) {
-    Serial.begin(9600);
+    Serial.begin(9600); //TODO make baud rate configurable
     delay(2000); // Let the serial monitor open
     Serial.println("Debug mode enabled");
   }
   Setup::pin(settings.board.pin);
   if (DEBUG) serialPrint.eventln("The program will start...");
   Setup::blinkStatusLED(settings.board.pin.ledStatus);
-  if (DEBUG && isAutoMode()) {
-    serialPrint.eventln("Auto mode active");
-  } else if (DEBUG) {
-    serialPrint.eventln("Manual mode active");
+}
+
+// ------
+// Utility functions
+// --
+static void setAutoMode(bool autoMode) {
+  isAutoMode = autoMode;
+  if (DEBUG) {
+    if (isAutoMode) {
+      serialPrint.eventln("Switched to automatic mode");
+    } else {
+      serialPrint.eventln("Switched to manual mode");
+      serialPrint.eventln("Waiting for button presses...");
+    }
   }
 }
 
-// -----
-// Loops
-// -----
-static void loopAutoMode() {
+static void deploy() {
+  if (DEBUG) serialPrint.eventln("Deploying motors");
+  motors.deploy(settings.program.motor.speed);
+}
+
+static void retract() {
+  if (DEBUG) serialPrint.eventln("Retracting motors");
+  motors.retract(settings.program.motor.speed);
+}
+
+static void scan() {
+  if (DEBUG) serialPrint.eventln("Scan button pressed");
+  // Implement scan functionality here
+}
+
+static void autoMode() {
   unsigned long now = millis();
   unsigned long lastIterationTime = 0;
 
@@ -103,25 +123,22 @@ static void loopAutoMode() {
   }
 }
 
-static void loopManualMode() {
-  if (digitalRead(settings.board.pin.button.deploy) == LOW) {
-    if (DEBUG) serialPrint.eventln("Deploy button pressed");
-    motors.deploy(settings.program.motor.speed);
-  } else if (digitalRead(settings.board.pin.button.retract) == LOW) {
-    if (DEBUG) serialPrint.eventln("Retract button pressed");
-    motors.retract(settings.program.motor.speed);
-  } else if (digitalRead(settings.board.pin.button.scan) == LOW) {
-    if (DEBUG) serialPrint.eventln("Scan button pressed");
-    // Implement scan functionality here
+static void manualMode() {
+  uint8_t btn = 0;
+  if (digitalRead(settings.board.pin.button.deploy) == LOW) btn = 1;
+  else if (digitalRead(settings.board.pin.button.retract) == LOW) btn = 2;
+  else if (digitalRead(settings.board.pin.button.scan) == LOW) btn = 3;
+
+  switch (btn) {
+    case 1: deploy(); break;
+    case 2: retract(); break;
+    case 3: scan(); break;
+    default: break;
   }
 }
 
 void loop() {
-  if (isAutoMode()) {
-    loopAutoMode();
-  } else if (DEBUG) {
-    serialPrint.eventln("Switched to manual mode");
-    serialPrint.eventln("Waiting for button presses...");
-  }
+  digitalRead(settings.board.pin.button.automatic) == LOW ? setAutoMode(TRUE) : setAutoMode(FALSE);
+  isAutoMode == TRUE ? autoMode() : manualMode();
 }
 
