@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "setup.h"
 #include "settings.h"
 #include "logic.h"
@@ -25,8 +26,11 @@ void Logic::initMotors() {
 }
 
 void Logic::init() {
+  if (DEBUG) Serial.begin(9600); //TODO make baud rate configurable
+  if (DEBUG) delay(2000); // Let the serial monitor open
   if (DEBUG) SerialPrint::eventln("Initializing logic");
   initPins(_settings->board.pin);
+  Setup::blinkStatusLED(_settings->board.pin.ledStatus);
   initLDRs();
   initMotors();
 }
