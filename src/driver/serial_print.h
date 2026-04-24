@@ -5,16 +5,15 @@
 
 class SerialPrint {
 public:
-	SerialPrint();
-	void event(const char *message);
-	void eventln(const char *message);
+	static void event(const char *message);
+	static void eventln(const char *message);
 	static void settingsBoardPin(const SettingsBoardPin *pin);
 	static void settingsProgram(const SettingsProgram *program);
 	static void globalSettings(const Settings *settings);
 	static void ldr(const LDR *ldr, const char *name);
 private:
-	uint16_t eventId;
-	void eventPrefix(const char *message);
+	static uint16_t eventId;
+	static void eventPrefix(const char *message);
 };
 
 #endif

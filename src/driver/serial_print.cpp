@@ -4,9 +4,9 @@
 #include "settings.h"
 #include "serial_print.h"
 
-SerialPrint::SerialPrint() : eventId(1) {}
+static uint16_t SerialPrint::eventId = 1;
 
-void SerialPrint::eventPrefix(const char *message) {
+static void SerialPrint::eventPrefix(const char *message) {
     Serial.print("[EVT-");
     Serial.print(eventId);
     Serial.print("] ");
@@ -14,11 +14,11 @@ void SerialPrint::eventPrefix(const char *message) {
     eventId++;
 }
 
-void SerialPrint::event(const char *message) {
+static void SerialPrint::event(const char *message) {
     eventPrefix(message);
 }
 
-void SerialPrint::eventln(const char *message) {
+static void SerialPrint::eventln(const char *message) {
     eventPrefix(message);
     Serial.println();
 }

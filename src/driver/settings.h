@@ -2,6 +2,10 @@
 #define SETTINGS_H
 #include <Arduino.h>
 
+#define TRUE 1
+#define FALSE 0
+#define DEBUG TRUE
+
 #define VERSION "0.0.1"
 #define BOARD_UNO
 
