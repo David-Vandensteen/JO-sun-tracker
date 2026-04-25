@@ -8,8 +8,8 @@
 
 #define VERSION "0.0.1"
 
-#define BOARD_UNO
-// #define BOARD_ESP32_WROOM_32S
+// #define BOARD_UNO
+#define BOARD_ESP32_WROOM_32S
 
 typedef struct SettingsBoardPinLDRDay {
   uint8_t up;
