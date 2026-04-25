@@ -41,12 +41,14 @@ LDR 3 - night sensor:
 
 #define SETTINGS_BOARD_ADC_RESOLUTION 1023
 #define SETTINGS_BOARD_PWM_RESOLUTION 255
+#define SETTINGS_BOARD_SERIAL_BAUD_RATE 9600
 #define SETTINGS_PROGRAM_LDR_THRESHOLD 10
 #define SETTINGS_PROGRAM_MOTOR_SPEED 30
 
 void settingsInit(Settings *settings) {
 	settings->board.adc.resolution = SETTINGS_BOARD_ADC_RESOLUTION;
 	settings->board.pwm.resolution = SETTINGS_BOARD_PWM_RESOLUTION;
+  settings->board.serial.baudRate = SETTINGS_BOARD_SERIAL_BAUD_RATE;
 	settings->board.pin.ldr.day.up = A0;
 	settings->board.pin.ldr.day.down = A1;
 	settings->board.pin.ldr.night = A2;
