@@ -4,9 +4,9 @@
 #include "settings.h"
 #include "serial_print.h"
 
-static uint16_t SerialPrint::eventId = 1;
+uint16_t SerialPrint::eventId = 1;
 
-static void SerialPrint::eventPrefix(const char *message) {
+void SerialPrint::eventPrefix(const char *message) {
     Serial.print("[EVT-");
     Serial.print(eventId);
     Serial.print("] ");
@@ -14,16 +14,16 @@ static void SerialPrint::eventPrefix(const char *message) {
     eventId++;
 }
 
-static void SerialPrint::event(const char *message) {
+void SerialPrint::event(const char *message) {
     eventPrefix(message);
 }
 
-static void SerialPrint::eventln(const char *message) {
+void SerialPrint::eventln(const char *message) {
     eventPrefix(message);
     Serial.println();
 }
 
-static void SerialPrint::ldr(const LDR *ldr, const char *name) {
+void SerialPrint::ldr(const LDR *ldr, const char *name) {
     Serial.print(name);
     Serial.print(ldr->raw);
     Serial.print(" (");
@@ -31,7 +31,7 @@ static void SerialPrint::ldr(const LDR *ldr, const char *name) {
     Serial.println("%)");
 }
 
-static void SerialPrint::settingsBoardPin(const SettingsBoardPin *pin) {
+void SerialPrint::settingsBoardPin(const SettingsBoardPin *pin) {
     Serial.println("Pin setup completed");
     Serial.println("Settings:");
     Serial.print("  LDR day up: "); Serial.println(pin->ldr.day.up);
@@ -43,14 +43,14 @@ static void SerialPrint::settingsBoardPin(const SettingsBoardPin *pin) {
     Serial.print("  Scan button: "); Serial.println(pin->button.scan);
 }
 
-static void SerialPrint::settingsProgram(const SettingsProgram *program) {
+void SerialPrint::settingsProgram(const SettingsProgram *program) {
     Serial.println("Program settings:");
     Serial.print("  Version: "); Serial.println(program->version);
     Serial.print("  LDR threshold: "); Serial.print(program->ldr.threshold); Serial.println("%");
     Serial.print("  Motor speed: "); Serial.print(program->motor.speed); Serial.println("%");
 }
 
-static void SerialPrint::globalSettings(const Settings *settings) {
+void SerialPrint::globalSettings(const Settings *settings) {
     SerialPrint::settingsBoardPin(&settings->board.pin);
     SerialPrint::settingsProgram(&settings->program);
 }

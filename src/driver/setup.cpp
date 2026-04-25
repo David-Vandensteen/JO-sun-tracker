@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "setup.h"
 
-static void Setup::pin(SettingsBoardPin pin) {
+void Setup::pin(SettingsBoardPin pin) {
   pinMode(pin.ldr.day.up, INPUT);
   pinMode(pin.ldr.day.down, INPUT);
   pinMode(pin.ldr.night, INPUT);
@@ -12,7 +12,7 @@ static void Setup::pin(SettingsBoardPin pin) {
   pinMode(pin.ledStatus, OUTPUT);
 }
 
-static void Setup::blinkStatusLED(uint8_t pin) {
+void Setup::blinkStatusLED(uint8_t pin) {
   for (int i = 0; i < 3; i++) {
     digitalWrite(pin, HIGH);
     delay(1000);
