@@ -1,8 +1,8 @@
-
 #include <WiFi.h>
+#include "secret.h"
 
-const char* ssid     = "";
-const char* password = "";
+const char* ssid     = SSID;
+const char* password = PASSWORD;
 
 void setup() {
 	Serial.begin(115200);
@@ -30,5 +30,4 @@ void setup() {
 }
 
 void loop() {
-	// Rien à faire ici pour un simple test de connexion
 }
