@@ -1,7 +1,7 @@
 
 #include <Arduino.h>
-#include "ldr.h"
 #include "settings.h"
+#include "ldr.h"
 #include "serial_print.h"
 
 uint16_t SerialPrint::eventId = 1;
@@ -34,9 +34,14 @@ void SerialPrint::ldr(const LDR *ldr, const char *name) {
 void SerialPrint::settingsBoardPin(const SettingsBoardPin *pin) {
     Serial.println("Pin setup completed");
     Serial.println("Settings:");
-    Serial.print("  LDR day up: "); Serial.println(pin->ldr.day.up);
-    Serial.print("  LDR day down: "); Serial.println(pin->ldr.day.down);
-    Serial.print("  LDR night: "); Serial.println(pin->ldr.night);
+    for (uint8_t i = 0; i < TRACKER_MAX; i++) {
+        Serial.print("  Tracker ");
+        Serial.print(i + 1);
+        Serial.println(":");
+        Serial.print("    LDR day up: "); Serial.println(pin->tracker[i].ldr.day.up);
+        Serial.print("    LDR day down: "); Serial.println(pin->tracker[i].ldr.day.down);
+        Serial.print("    LDR night: "); Serial.println(pin->tracker[i].ldr.night);
+    }
     Serial.print("  Deploy button: "); Serial.println(pin->button.deploy);
     Serial.print("  Retract button: "); Serial.println(pin->button.retract);
     Serial.print("  Automatic button: "); Serial.println(pin->button.automatic);

@@ -11,17 +11,20 @@
 // #define BOARD_UNO
 #define BOARD_ESP32_WROOM_32S
 
-typedef struct SettingsBoardPinLDRDay {
+#define TRACKER_MAX 1
+#define TRACKER_1 0
+
+typedef struct SettingsBoardPinTrackerLDRDay {
   uint8_t up;
   uint8_t down;
-} SettingsBoardPinLDRDay;
+} SettingsBoardPinTrackerLDRDay;
 
-typedef uint8_t SettingsBoardPinLDRNight;
+typedef uint8_t SettingsBoardPinTrackerLDRNight;
 
-typedef struct SettingsBoardPinLDR {
-  SettingsBoardPinLDRDay day;
-  SettingsBoardPinLDRNight night;
-} SettingsBoardPinLDR;
+typedef struct SettingsBoardPinTrackerLDR {
+  SettingsBoardPinTrackerLDRDay day;
+  SettingsBoardPinTrackerLDRNight night;
+} SettingsBoardPinTrackerLDR;
 
 typedef struct SettingsBoardPinButton {
   uint8_t deploy;
@@ -40,9 +43,13 @@ typedef struct SettingsBoardPinMotors {
   uint8_t in4;
 } SettingsBoardPinMotor;
 
-typedef struct SettingsBoardPin {
-  SettingsBoardPinLDR ldr;
+typedef struct SettingsBoardPinTracker {
+  SettingsBoardPinTrackerLDR ldr;
   SettingsBoardPinMotor motors;
+} SettingsBoardPinTracker;
+
+typedef struct SettingsBoardPin {
+  SettingsBoardPinTracker tracker[TRACKER_MAX];
   SettingsBoardPinButton button;
   uint8_t ledStatus;
 

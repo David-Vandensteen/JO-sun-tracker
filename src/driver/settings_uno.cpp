@@ -39,6 +39,9 @@ LDR 3 - night sensor:
 #include "settings.h"
 #ifdef BOARD_UNO
 
+#undef TRACKER_MAX
+#define TRACKER_MAX 1
+
 #define SETTINGS_BOARD_ADC_RESOLUTION 1023
 #define SETTINGS_BOARD_PWM_RESOLUTION 255
 #define SETTINGS_BOARD_SERIAL_BAUD_RATE 9600
@@ -49,15 +52,15 @@ void settingsInit(Settings *settings) {
 	settings->board.adc.resolution = SETTINGS_BOARD_ADC_RESOLUTION;
 	settings->board.pwm.resolution = SETTINGS_BOARD_PWM_RESOLUTION;
   settings->board.serial.baudRate = SETTINGS_BOARD_SERIAL_BAUD_RATE;
-	settings->board.pin.ldr.day.up = A0;
-	settings->board.pin.ldr.day.down = A1;
-	settings->board.pin.ldr.night = A2;
-	settings->board.pin.motors.ena = 10;
-	settings->board.pin.motors.in1 = 8;
-	settings->board.pin.motors.in2 = 9;
-	settings->board.pin.motors.enb = 13;
-	settings->board.pin.motors.in3 = 11;
-	settings->board.pin.motors.in4 = 12;
+  settings->board.pin.tracker[TRACKER_1].ldr.day.up = A0;
+  settings->board.pin.tracker[TRACKER_1].ldr.day.down = A1;
+  settings->board.pin.tracker[TRACKER_1].ldr.night = A2;
+  settings->board.pin.tracker[TRACKER_1].motors.ena = 10;
+  settings->board.pin.tracker[TRACKER_1].motors.in1 = 8;
+  settings->board.pin.tracker[TRACKER_1].motors.in2 = 9;
+  settings->board.pin.tracker[TRACKER_1].motors.enb = 13;
+  settings->board.pin.tracker[TRACKER_1].motors.in3 = 11;
+  settings->board.pin.tracker[TRACKER_1].motors.in4 = 12;
 	settings->board.pin.button.deploy = 2;
 	settings->board.pin.button.retract = 3;
 	settings->board.pin.button.automatic = 4;
