@@ -1,6 +1,7 @@
 #include <Arduino.h>
-#include "settings.h"
+
 #include "ldr.h"
+#include "setting.h"
 
 LDR::LDR(uint8_t pin, int analogResolution)
   : _pin(pin),

@@ -6,12 +6,11 @@
 */
 
 #include <Arduino.h>
-#include "settings.h"
+#include "setting.h"
 #include "trackers.h"
 
-static Settings settings;
-static Trackers trackers(&settings);
+static Setting setting;
+static Trackers trackers(&setting);
 
 void setup() { trackers.init(); }
 void loop() { trackers.update(); }
-

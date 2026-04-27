@@ -1,26 +1,26 @@
 #include <Arduino.h>
-#include "settings.h"
+#include "setting.h"
 #include "trackers.h"
 
-Trackers::Trackers(Settings *settings)
-  : _settings(settings) {
-    for (uint8_t i = 0; i < TRACKER_MAX; i++) {
+Trackers::Trackers(Setting *setting)
+  : _setting(setting) {
+  for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _trackers[i] = Tracker(
-      &_settings->board.pin.tracker[i],
-      _settings->board.adc.resolution,
-      _settings->board.pwm.resolution,
-      _settings->program.motor.speed,
-      _settings->program.ldr.threshold
+      &_setting->board.pin.tracker[i],
+      _setting->board.adc.resolution,
+      _setting->board.pwm.resolution,
+      _setting->program.motor.speed,
+      _setting->program.ldr.threshold
     );
   }
 }
 
 void Trackers::init() {
-  if (DEBUG) Serial.begin(_settings->board.serial.baudRate);
+  if (DEBUG) Serial.begin(_setting->board.serial.baudRate);
   if (DEBUG) delay(2000);
   if (DEBUG) Serial.println("Trackers::init");
-  if (!isValidSettings(_settings)) {
-    if (DEBUG) Serial.println("Invalid settings");
+  if (!isValidSetting(_setting)) {
+    if (DEBUG) Serial.println("Invalid setting");
     // TODO implement LED protocol to indicate invalid settings
     while (TRUE);
   }
@@ -38,17 +38,17 @@ void Trackers::setAutoMode(bool autoMode) {
   _isAutoMode = autoMode;
   if (DEBUG) {
     if (_isAutoMode) {
-      Serial.println("Switched to auto mode");
+      Serial.println("Trackers: mode AUTO");
     } else {
-      Serial.println("Switched to manual mode");
+      Serial.println("Trackers: mode MANUEL");
     }
   }
 }
 
 void Trackers::update() {
-  bool deployButton = !digitalRead(_settings->board.pin.button.deploy);
-  bool retractButton = !digitalRead(_settings->board.pin.button.retract);
-  bool scanButton = !digitalRead(_settings->board.pin.button.scan);
+  bool deployButton = !_setting->board.pin.button.deploy;
+  bool retractButton = !_setting->board.pin.button.retract;
+  bool scanButton = !_setting->board.pin.button.scan;
 
   if (deployButton || retractButton) {
     if (DEBUG && deployButton) Serial.println("Trackers::update deploy button pressed");
@@ -65,10 +65,10 @@ void Trackers::update() {
 
 void Trackers::waitReady() {
   if (DEBUG) Serial.println("Trackers::waitReady");
-  for (uint8_t i = 0; i < 3; i++) { // TODO : implement led protocol to indicate waiting for ready state
-    digitalWrite(_settings->board.pin.ledStatus, HIGH);
+  for (uint8_t i = 0; i < 3; i++) {
+    digitalWrite(_setting->board.pin.ledStatus, HIGH);
     delay(1000);
-    digitalWrite(_settings->board.pin.ledStatus, LOW);
+    digitalWrite(_setting->board.pin.ledStatus, LOW);
     delay(1000);
   }
 }

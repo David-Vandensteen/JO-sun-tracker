@@ -1,14 +1,14 @@
 #ifndef TRACKER_H
 #define TRACKER_H
 #include <Arduino.h>
-#include "settings.h"
+
 #include "ldr.h"
 #include "motor.h"
 
 class Tracker {
 public:
   Tracker();
-  Tracker(SettingsBoardPinTracker* trackerPin, int adcResolution, int pwmResolution, int motorSpeedPercent, uint16_t ldrThreshold);
+    Tracker(SettingBoardPinTracker* trackerPin, int adcResolution, int pwmResolution, int motorSpeedPercent, uint16_t ldrThreshold);
   void init();
   void deploy();
   void retract();
@@ -22,7 +22,7 @@ private:
   int _pwmResolution;
   int _motorSpeedPercent;
   uint16_t _ldrThreshold;
-  SettingsBoardPinTracker *_trackerPin;
+  SettingBoardPinTracker *_trackerPin;
   LDRs _ldrs;
   Motors _motors;
 };

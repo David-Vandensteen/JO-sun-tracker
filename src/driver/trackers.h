@@ -1,11 +1,11 @@
 #ifndef TRACKERS_H
 #define TRACKERS_H
-#include "settings.h"
+#include "setting.h"
 #include "tracker.h"
 
 class Trackers {
 public:
-  Trackers(Settings *settings);
+  Trackers(Setting *setting);
   void init();
   bool isAutoMode();
   void setAutoMode(bool autoMode);
@@ -13,7 +13,7 @@ public:
 
 private:
   bool _isAutoMode = true;
-  Settings *_settings;
+  Setting *_setting;
   Tracker _trackers[TRACKER_MAX];
   void waitReady();
 };

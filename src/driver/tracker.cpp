@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "settings.h"
+#include "setting.h"
 #include "tracker.h"
 #include "ldr.h"
 #include "motor.h"
@@ -10,7 +10,7 @@ Tracker::Tracker()
     _motors(Motor(0,0,0,0), Motor(0,0,0,0))
 {}
 
-Tracker::Tracker(SettingsBoardPinTracker* trackerPin, int adcResolution, int pwmResolution, int motorSpeedPercent, uint16_t ldrThreshold)
+Tracker::Tracker(SettingBoardPinTracker* trackerPin, int adcResolution, int pwmResolution, int motorSpeedPercent, uint16_t ldrThreshold)
   : _trackerPin(trackerPin),
     _adcResolution(adcResolution),
     _pwmResolution(pwmResolution),
