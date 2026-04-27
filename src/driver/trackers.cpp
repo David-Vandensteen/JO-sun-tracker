@@ -1,10 +1,17 @@
+#include <Arduino.h>
 #include "settings.h"
 #include "trackers.h"
 
 Trackers::Trackers(Settings *settings)
   : _settings(settings) {
     for (uint8_t i = 0; i < TRACKER_MAX; i++) {
-    _trackers[i] = Tracker(&_settings->board.pin.tracker[i], _settings->board.adc.resolution, _settings->board.pwm.resolution);
+    _trackers[i] = Tracker(
+      &_settings->board.pin.tracker[i],
+      _settings->board.adc.resolution,
+      _settings->board.pwm.resolution,
+      _settings->program.motor.speed,
+      _settings->program.ldr.threshold
+    );
   }
 }
 
@@ -36,7 +43,19 @@ void Trackers::setAutoMode(bool autoMode) {
 }
 
 void Trackers::update() {
+  bool deployButton = !digitalRead(_settings->board.pin.button.deploy);
+  bool retractButton = !digitalRead(_settings->board.pin.button.retract);
+  bool scanButton = !digitalRead(_settings->board.pin.button.scan);
+
+  if (deployButton || retractButton) {
+    if (DEBUG && deployButton) Serial.println("Trackers::update deploy button pressed");
+    if (DEBUG && retractButton) Serial.println("Trackers::update retract button pressed");
+    setAutoMode(false);
+  }
+
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
-    _isAutoMode ? _trackers[i].updateAutoMode() : _trackers[i].updateManualMode();
+    _isAutoMode
+      ? _trackers[i].updateAutoMode()
+      : _trackers[i].updateManualMode(deployButton, retractButton);
   }
 }

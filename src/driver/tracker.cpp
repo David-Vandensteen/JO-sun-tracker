@@ -1,18 +1,21 @@
+#include <Arduino.h>
 #include "settings.h"
 #include "tracker.h"
 #include "ldr.h"
 #include "motor.h"
 
 Tracker::Tracker()
-  : _trackerPin(nullptr), _adcResolution(0), _pwmResolution(0),
+  : _trackerPin(nullptr), _adcResolution(0), _pwmResolution(0), _motorSpeedPercent(0), _ldrThreshold(0),
     _ldrs(LDR(0,0), LDR(0,0), LDR(0,0)),
     _motors(Motor(0,0,0,0), Motor(0,0,0,0))
 {}
 
-Tracker::Tracker(SettingsBoardPinTracker *trackerPin, int adcResolution, int pwmResolution)
+Tracker::Tracker(SettingsBoardPinTracker* trackerPin, int adcResolution, int pwmResolution, int motorSpeedPercent, uint16_t ldrThreshold)
   : _trackerPin(trackerPin),
     _adcResolution(adcResolution),
     _pwmResolution(pwmResolution),
+    _motorSpeedPercent(motorSpeedPercent),
+    _ldrThreshold(ldrThreshold),
     _ldrs(
       LDR(trackerPin->ldr.day.up, adcResolution),
       LDR(trackerPin->ldr.day.down, adcResolution),
@@ -30,26 +33,52 @@ void Tracker::init() {
   _motors.init();
 }
 
-void Tracker::deploy(int speedPercent) {
-  if (DEBUG) { Serial.print("Tracker::deploy "); Serial.println(speedPercent); }
-  _motors.deploy(speedPercent);
+void Tracker::deploy() {
+  if (DEBUG) { Serial.print("Tracker::deploy "); Serial.println(_motorSpeedPercent); }
+  _motors.deploy(_motorSpeedPercent);
 }
 
-void Tracker::retract(int speedPercent) {
-  if (DEBUG) { Serial.print("Tracker::retract "); Serial.println(speedPercent); }
-  _motors.retract(speedPercent);
+void Tracker::retract() {
+  if (DEBUG) { Serial.print("Tracker::retract "); Serial.println(_motorSpeedPercent); }
+  _motors.retract(_motorSpeedPercent);
 }
 
-void Tracker::scan(int speedPercent) {
-  if (DEBUG) { Serial.print("Tracker::scan "); Serial.println(speedPercent); }
+void Tracker::scan() {
+  if (DEBUG) { Serial.print("Tracker::scan "); Serial.println(_motorSpeedPercent); }
   // Implement scan functionality here
 }
 
 void Tracker::updateAutoMode() {
-  // Implement auto mode update logic here
+  unsigned long now = millis();
+  unsigned long lastIterationTime = 0;
+  if (now - lastIterationTime <= 1000) {
+    _ldrs.update();
+    bool isLDRDifferent = _ldrs.isDayUpDifferentFromDayDown(_ldrThreshold);
+
+    if (DEBUG && isLDRDifferent) Serial.println("LDR values are different");
+
+    if (isLDRDifferent) {
+      if (_ldrs.isDayUpBrighterThanDayDown(_ldrThreshold)) {
+        deploy();
+      } else if (_ldrs.isDayDownBrighterThanDayUp(_ldrThreshold)) {
+        retract();
+      }
+    } else {
+      stop();
+    }
+  }
 }
 
-void Tracker::updateManualMode() {
-  // Implement manual mode update logic here
+void Tracker::updateManualMode(bool deployButton, bool retractButton) {
+  if (deployButton) {
+    deploy();
+  } else if (retractButton) {
+    retract();
+  } else {
+    stop();
+  }
 }
 
+void Tracker::stop() {
+  _motors.stop();
+}
