@@ -3,6 +3,12 @@
 #include "ldr.h"
 #include "motor.h"
 
+Tracker::Tracker()
+  : _trackerPin(nullptr), _adcResolution(0), _pwmResolution(0),
+    _ldrs(LDR(0,0), LDR(0,0), LDR(0,0)),
+    _motors(Motor(0,0,0,0), Motor(0,0,0,0))
+{}
+
 Tracker::Tracker(SettingsBoardPinTracker *trackerPin, int adcResolution, int pwmResolution)
   : _trackerPin(trackerPin),
     _adcResolution(adcResolution),
@@ -20,11 +26,11 @@ Tracker::Tracker(SettingsBoardPinTracker *trackerPin, int adcResolution, int pwm
 
 void Tracker::init() {
   _ldrs.init();
+  _motors.init();
 }
 
 void Tracker::deploy(int speedPercent) {
   _motors.deploy(speedPercent);
-
 }
 
 void Tracker::retract(int speedPercent) {

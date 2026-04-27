@@ -5,6 +5,7 @@
 class Motor {
 public:
 	Motor(uint8_t in1, uint8_t in2, uint8_t en, int pwmResolution);
+  void init();
 	void deploy(int speedPercent);
 	void retract(int speedPercent);
 	void stop();
@@ -18,6 +19,7 @@ private:
 class Motors {
 public:
 	Motors(Motor m1, Motor m2);
+  void init();
 	void deploy(int speedPercent);
 	void retract(int speedPercent);
   void stop();

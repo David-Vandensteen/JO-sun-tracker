@@ -5,6 +5,8 @@
 #include "motor.h"
 
 class Tracker {
+public:
+  Tracker();
   Tracker(SettingsBoardPinTracker *trackerPin, int adcResolution, int pwmResolution);
   void init();
   void deploy(int speedPercent);

@@ -6,6 +6,9 @@ Motor::Motor(uint8_t in1, uint8_t in2, uint8_t en, int pwmResolution)
       Motor::stop(); // Ensure motor is stopped on initialization
     }
 
+void Motor::init() {
+  stop();
+}
 bool Motor::isBusy() {
     return _isBusy;
 }
@@ -33,6 +36,11 @@ void Motor::stop() {
 
 Motors::Motors(Motor m1, Motor m2)
     : motor1(m1), motor2(m2) {}
+
+void Motors::init() {
+    motor1.init();
+    motor2.init();
+}
 
 void Motors::deploy(int speedPercent) {
     motor1.deploy(speedPercent);
