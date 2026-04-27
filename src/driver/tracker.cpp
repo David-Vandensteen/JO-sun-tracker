@@ -1,0 +1,41 @@
+#include "settings.h"
+#include "tracker.h"
+#include "ldr.h"
+#include "motor.h"
+
+Tracker::Tracker(SettingsBoardPinTracker *trackerPin, int adcResolution, int pwmResolution)
+  : _trackerPin(trackerPin),
+    _adcResolution(adcResolution),
+    _pwmResolution(pwmResolution),
+    _ldrs(
+      LDR(trackerPin->ldr.day.up, adcResolution),
+      LDR(trackerPin->ldr.day.down, adcResolution),
+      LDR(trackerPin->ldr.night, adcResolution)
+    ),
+    _motors(
+      Motor(trackerPin->motors.in1, trackerPin->motors.in2, trackerPin->motors.ena, pwmResolution),
+      Motor(trackerPin->motors.in3, trackerPin->motors.in4, trackerPin->motors.enb, pwmResolution)
+    )
+{}
+
+void Tracker::init() {
+  _ldrs.init();
+}
+
+void Tracker::deploy(int speedPercent) {
+  _motors.deploy(speedPercent);
+
+}
+
+void Tracker::retract(int speedPercent) {
+  _motors.retract(speedPercent);
+}
+
+void Tracker::scan(int speedPercent) {
+  // Implement scan functionality here
+}
+
+void Tracker::update() {
+  // Implement update functionality here
+}
+
