@@ -10,6 +10,11 @@ Trackers::Trackers(Settings *settings)
 
 void Trackers::init() {
   if (DEBUG) Serial.println("Trackers::init");
+  if (!isValidSettings(_settings)) {
+    if (DEBUG) Serial.println("Invalid settings");
+    // TODO led error indication
+    while (TRUE);
+  }
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _trackers[i].init();
   }

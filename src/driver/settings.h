@@ -94,5 +94,6 @@ typedef struct Settings {
 } Settings;
 
 void settingsInit(Settings *settings);
+bool isValidSettings(Settings *settings);
 
 #endif
