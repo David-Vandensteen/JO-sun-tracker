@@ -45,7 +45,11 @@ void Tracker::scan(int speedPercent) {
   // Implement scan functionality here
 }
 
-void Tracker::update() {
-  // Implement update functionality here
+void Tracker::updateAutoMode() {
+  // Implement auto mode update logic here
+}
+
+void Tracker::updateManualMode() {
+  // Implement manual mode update logic here
 }
 

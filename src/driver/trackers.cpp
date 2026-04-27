@@ -20,8 +20,23 @@ void Trackers::init() {
   }
 }
 
+bool Trackers::isAutoMode() {
+  return _isAutoMode;
+}
+
+void Trackers::setAutoMode(bool autoMode) {
+  _isAutoMode = autoMode;
+  if (DEBUG) {
+    if (_isAutoMode) {
+      Serial.println("Switched to auto mode");
+    } else {
+      Serial.println("Switched to manual mode");
+    }
+  }
+}
+
 void Trackers::update() {
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
-    _trackers[i].update();
+    _isAutoMode ? _trackers[i].updateAutoMode() : _trackers[i].updateManualMode();
   }
 }

@@ -12,7 +12,8 @@ public:
   void deploy(int speedPercent);
   void retract(int speedPercent);
   void scan(int speedPercent);
-  void update();
+  void updateAutoMode();
+  void updateManualMode();
 
 private:
   int _adcResolution;
