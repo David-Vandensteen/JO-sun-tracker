@@ -9,7 +9,11 @@ LDR::LDR(uint8_t pin, int analogResolution)
     percent(0)
 {}
 
-void LDR::read() {
+void LDR::init() {
+  pinMode(_pin, INPUT);
+}
+
+void LDR::update() {
   raw = analogRead(_pin);
   percent = map(raw, 0, _analogResolution, 100, 0);
 }
@@ -20,10 +24,16 @@ LDRs::LDRs(LDR dayUp, LDR dayDown, LDR night)
     night(night)
 {}
 
-void LDRs::read() {
-  dayUp.read();
-  dayDown.read();
-  night.read();
+void LDRs::init() {
+  dayUp.init();
+  dayDown.init();
+  night.init();
+}
+
+void LDRs::update() {
+  dayUp.update();
+  dayDown.update();
+  night.update();
 }
 
 bool LDRs::isDayUpDifferentFromDayDown(long threshold) {
