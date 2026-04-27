@@ -15,6 +15,7 @@ private:
   bool _isAutoMode = true;
   Settings *_settings;
   Tracker _trackers[TRACKER_MAX];
+  void waitReady();
 };
 
 #endif

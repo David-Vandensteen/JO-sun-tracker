@@ -16,12 +16,15 @@ Trackers::Trackers(Settings *settings)
 }
 
 void Trackers::init() {
+  if (DEBUG) Serial.begin(_settings->board.serial.baudRate);
+  if (DEBUG) delay(2000);
   if (DEBUG) Serial.println("Trackers::init");
   if (!isValidSettings(_settings)) {
     if (DEBUG) Serial.println("Invalid settings");
-    // TODO led error indication
+    // TODO implement LED protocol to indicate invalid settings
     while (TRUE);
   }
+  waitReady();
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _trackers[i].init();
   }
@@ -57,5 +60,15 @@ void Trackers::update() {
     _isAutoMode
       ? _trackers[i].updateAutoMode()
       : _trackers[i].updateManualMode(deployButton, retractButton);
+  }
+}
+
+void Trackers::waitReady() {
+  if (DEBUG) Serial.println("Trackers::waitReady");
+  for (uint8_t i = 0; i < 3; i++) { // TODO : implement led protocol to indicate waiting for ready state
+    digitalWrite(_settings->board.pin.ledStatus, HIGH);
+    delay(1000);
+    digitalWrite(_settings->board.pin.ledStatus, LOW);
+    delay(1000);
   }
 }
