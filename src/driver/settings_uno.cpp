@@ -39,9 +39,6 @@ LDR 3 - night sensor:
 #include "settings.h"
 #ifdef BOARD_UNO
 
-#undef TRACKER_MAX
-#define TRACKER_MAX 1
-
 #define SETTINGS_BOARD_ADC_RESOLUTION 1023
 #define SETTINGS_BOARD_PWM_RESOLUTION 255
 #define SETTINGS_BOARD_SERIAL_BAUD_RATE 9600

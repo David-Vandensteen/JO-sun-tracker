@@ -2,17 +2,24 @@
 #define SETTINGS_H
 #include <Arduino.h>
 
+#define VERSION "0.0.1"
+
 #define TRUE 1
 #define FALSE 0
 #define DEBUG TRUE
 
-#define VERSION "0.0.1"
 
 // #define BOARD_UNO
 #define BOARD_ESP32_WROOM_32S
 
 #define TRACKER_MAX 1
 #define TRACKER_1 0
+
+#ifdef BOARD_UNO
+#undef TRACKER_MAX
+#define TRACKER_MAX 1
+#endif
+
 
 typedef struct SettingsBoardPinTrackerLDRDay {
   uint8_t up;
