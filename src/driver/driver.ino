@@ -7,17 +7,11 @@
 
 #include <Arduino.h>
 #include "settings.h"
-#include "logic.h"
+#include "trackers.h"
 
 static Settings settings;
-static Logic logic(&settings);
+static Trackers trackers(&settings);
 
-void setup() { logic.init(); }
-
-void loop() {
-  digitalRead(settings.board.pin.button.automatic) == LOW
-    ? logic.setAutoMode(TRUE) : logic.setAutoMode(FALSE);
-
-  logic.getAutoMode() == TRUE ? logic.runAuto() : logic.runManual();
-}
+void setup() { trackers.init(); }
+void loop() { trackers.update(); }
 
