@@ -25,19 +25,23 @@ Tracker::Tracker(SettingsBoardPinTracker *trackerPin, int adcResolution, int pwm
 {}
 
 void Tracker::init() {
+  if (DEBUG) Serial.println("Tracker::init");
   _ldrs.init();
   _motors.init();
 }
 
 void Tracker::deploy(int speedPercent) {
+  if (DEBUG) { Serial.print("Tracker::deploy "); Serial.println(speedPercent); }
   _motors.deploy(speedPercent);
 }
 
 void Tracker::retract(int speedPercent) {
+  if (DEBUG) { Serial.print("Tracker::retract "); Serial.println(speedPercent); }
   _motors.retract(speedPercent);
 }
 
 void Tracker::scan(int speedPercent) {
+  if (DEBUG) { Serial.print("Tracker::scan "); Serial.println(speedPercent); }
   // Implement scan functionality here
 }
 

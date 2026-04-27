@@ -6,10 +6,10 @@ Trackers::Trackers(Settings *settings)
     for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _trackers[i] = Tracker(&_settings->board.pin.tracker[i], _settings->board.adc.resolution, _settings->board.pwm.resolution);
   }
-
 }
 
 void Trackers::init() {
+  if (DEBUG) Serial.println("Trackers::init");
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _trackers[i].init();
   }
