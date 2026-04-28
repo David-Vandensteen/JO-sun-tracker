@@ -7,12 +7,9 @@ class Trackers {
 public:
   Trackers(Setting *setting);
   void init();
-  bool isAutoMode();
-  void setAutoMode(bool autoMode);
   void update();
 
 private:
-  bool _isAutoMode = true;
   Setting *_setting;
   Tracker _trackers[TRACKER_MAX];
   void waitReady();

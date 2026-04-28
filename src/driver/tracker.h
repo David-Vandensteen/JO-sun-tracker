@@ -10,6 +10,8 @@ public:
   Tracker();
     Tracker(SettingBoardPinTracker* trackerPin, int adcResolution, int pwmResolution, int motorSpeedPercent, uint16_t ldrThreshold);
   void init();
+  bool isAutoMode();
+  void setAutoMode(bool autoMode);
   void deploy();
   void retract();
   void scan();
@@ -21,6 +23,7 @@ private:
   int _adcResolution;
   int _pwmResolution;
   int _motorSpeedPercent;
+  bool _isAutoMode = true;
   uint16_t _ldrThreshold;
   SettingBoardPinTracker *_trackerPin;
   LDRs _ldrs;

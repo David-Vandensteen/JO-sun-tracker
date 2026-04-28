@@ -30,21 +30,6 @@ void Trackers::init() {
   }
 }
 
-bool Trackers::isAutoMode() {
-  return _isAutoMode;
-}
-
-void Trackers::setAutoMode(bool autoMode) {
-  _isAutoMode = autoMode;
-  if (DEBUG) {
-    if (_isAutoMode) {
-      Serial.println("Trackers: mode AUTO");
-    } else {
-      Serial.println("Trackers: mode MANUEL");
-    }
-  }
-}
-
 void Trackers::update() {
   bool deployButton = !_setting->board.pin.button.deploy;
   bool retractButton = !_setting->board.pin.button.retract;
@@ -53,16 +38,14 @@ void Trackers::update() {
   if (deployButton || retractButton) {
     if (DEBUG && deployButton) Serial.println("Trackers::update deploy button pressed");
     if (DEBUG && retractButton) Serial.println("Trackers::update retract button pressed");
-    setAutoMode(false);
   }
 
   if (scanButton) {
     if (DEBUG) Serial.println("Trackers::update scan button pressed");
-    setAutoMode(true);
   }
 
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
-    _isAutoMode
+    _trackers[i].isAutoMode()
       ? _trackers[i].updateAutoMode()
       : _trackers[i].updateManualMode(deployButton, retractButton);
   }

@@ -33,6 +33,21 @@ void Tracker::init() {
   _motors.init();
 }
 
+bool Tracker::isAutoMode() {
+  return _isAutoMode;
+}
+
+void Tracker::setAutoMode(bool autoMode) {
+  _isAutoMode = autoMode;
+  if (DEBUG) {
+    if (_isAutoMode) {
+      Serial.println("Tracker::setAutoMode auto mode");
+    } else {
+      Serial.println("Tracker::setAutoMode manual mode");
+    }
+  }
+}
+
 void Tracker::deploy() {
   if (DEBUG) { Serial.print("Tracker::deploy "); Serial.println(_motorSpeedPercent); }
   _motors.deploy(_motorSpeedPercent);
