@@ -5,7 +5,7 @@
 
 class Trackers {
 public:
-  Trackers(Setting *setting);
+  explicit Trackers(Setting *setting);
   void init();
   void update();
 

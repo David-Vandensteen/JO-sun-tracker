@@ -6,7 +6,7 @@ class LDR {
 public:
   int raw;
   int percent;
-  LDR(uint8_t pin, int analogResolution);
+  explicit LDR(uint8_t pin, int analogResolution);
   void init();
   void update();
 private:
@@ -19,7 +19,7 @@ public:
   LDR dayUp;
   LDR dayDown;
   LDR night;
-  LDRs(LDR dayUp, LDR dayDown, LDR night);
+  explicit LDRs(LDR dayUp, LDR dayDown, LDR night);
   void init();
   void update();
   bool isDayUpDifferentFromDayDown(long threshold);
