@@ -8,16 +8,13 @@ Ce dossier contient un exemple de serveur HTTP pour ESP32 qui sert une page HTML
 - Script esptool.py du dépôt officiel : https://github.com/espressif/esptool
 - Bibliothèque ArduinoLog (à installer via le gestionnaire de bibliothèques de l’IDE Arduino)
 
-
 ### Installer la bibliothèque ArduinoLog
 
 Dans l’IDE Arduino, va dans « Outils » > « Gérer les bibliothèques… », recherche « ArduinoLog » et clique sur « Installer ».
 
-
 ## Installation de esptool.py
 
 Installez esptool avec pip :
-
 
 ```sh
 pip3 install esptool
@@ -28,6 +25,28 @@ https://docs.espressif.com/projects/esptool/en/latest/esp32/
 
 esptool permet de lire, écrire, vérifier et manipuler la mémoire flash de l’ESP32. Pour l’upload SPIFFS, voir la section ci-dessus.
 
+## Lister les ports série disponibles
+
+Avant d’uploader, il peut être utile de connaître le port série de votre ESP32. Voici comment lister les ports disponibles :
+
+- **macOS / Linux** :
+
+```sh
+ls /dev/tty.*
+ls /dev/cu.*
+```
+
+- **Windows** :
+
+Ouvrez le « Gestionnaire de périphériques » et regardez sous « Ports (COM & LPT) ».
+
+Ou utilisez la commande PowerShell :
+
+```powershell
+[System.IO.Ports.SerialPort]::getportnames()
+```
+
+Note : Le port change selon la machine et l’USB utilisé.
 
 ## Upload SPIFFS avec le script Python
 
@@ -35,8 +54,6 @@ Pour téléverser des fichiers SPIFFS sur l’ESP32, utilisez le script python e
 
 1. Ouvrez un terminal dans le dossier de votre projet (là où se trouve le dossier `data`).
 2. Exécutez la commande suivante (adaptez le port série, la version et l'adresse SPIFFS si besoin) :
-
-
 
 ```sh
 python3 /Library/Frameworks/Python.framework/Versions/3.11/bin/esptool.py \
@@ -72,9 +89,7 @@ void setup() {
 
 Après le formatage, retire la ligne `SPIFFS.format();` pour éviter d’effacer à chaque démarrage.
 
-
 ## Étapes pour servir index.html depuis SPIFFS
-
 
 1. **Téléverser le fichier sur l’ESP32**
    - Ouvrez un terminal dans le dossier du projet.
