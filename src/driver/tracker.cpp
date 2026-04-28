@@ -1,10 +1,10 @@
-
 #include <Arduino.h>
-#include <ArduinoLog.h>
+
 #include "setting.h"
 #include "tracker.h"
 #include "ldr.h"
 #include "motor.h"
+#include "log.h"
 
 Tracker::Tracker()
   : _trackerPin(nullptr), _adcResolution(0), _pwmResolution(0), _motorSpeedPercent(0), _ldrThreshold(0),
@@ -30,7 +30,7 @@ Tracker::Tracker(SettingBoardPinTracker* trackerPin, int adcResolution, int pwmR
 {}
 
 void Tracker::init() {
-  if (DEBUG) Log.notice("Tracker::init\n");
+  LOG_INFO("Tracker::init");
   _ldrs.init();
   _motors.init();
 }
@@ -41,32 +41,31 @@ bool Tracker::isAutoMode() {
 
 void Tracker::setAutoMode(bool autoMode) {
   _isAutoMode = autoMode;
-  if (DEBUG) {
-    if (_isAutoMode) {
-      Log.notice("Tracker::setAutoMode auto mode\n");
-    } else {
-      Log.notice("Tracker::setAutoMode manual mode\n");
-    }
+  if (_isAutoMode) {
+    LOG_INFO("Tracker::setAutoMode auto mode");
+  } else {
+    LOG_INFO("Tracker::setAutoMode manual mode");
   }
 }
 
 void Tracker::deploy() {
-  if (DEBUG) { Log.notice("Tracker::deploy %d\n", _motorSpeedPercent); }
+  LOG_INFO("Tracker::deploy");
   _motors.deploy(_motorSpeedPercent);
 }
 
 void Tracker::retract() {
-  if (DEBUG) { Log.notice("Tracker::retract %d\n", _motorSpeedPercent); }
+  LOG_INFO("Tracker::retract");
   _motors.retract(_motorSpeedPercent);
 }
 
 void Tracker::scan() {
-  if (DEBUG) { Log.notice("Tracker::scan %d\n", _motorSpeedPercent); }
+  LOG_INFO("Tracker::scan");
   setAutoMode(true);
   // Implement scan functionality here
 }
 
 void Tracker::stop() {
+  LOG_INFO("Tracker::stop");
   _motors.stop();
 }
 
@@ -77,7 +76,7 @@ void Tracker::updateAutoMode() {
     _ldrs.update();
     bool isLDRDifferent = _ldrs.isDayUpDifferentFromDayDown(_ldrThreshold);
 
-    if (DEBUG && isLDRDifferent) Log.notice("LDR values are different\n");
+    if (isLDRDifferent) LOG_INFO("LDR values are different");
 
     if (isLDRDifferent) {
       if (_ldrs.isDayUpBrighterThanDayDown(_ldrThreshold)) {

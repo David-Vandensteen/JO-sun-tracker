@@ -8,8 +8,8 @@
 #define FALSE 0
 #define DEBUG TRUE
 
-// #define BOARD_UNO
-#define BOARD_ESP32_WROOM_32S
+#define BOARD_UNO
+// #define BOARD_ESP32_WROOM_32S
 
 #define TRACKER_MAX 1
 #define TRACKER_1 0

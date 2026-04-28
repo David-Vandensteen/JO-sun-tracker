@@ -1,4 +1,5 @@
 #include "setting.h"
+#ifdef BOARD_ESP32_WROOM_32S
 
 #define SETTING_BOARD_ADC_RESOLUTION 4095
 #define SETTING_BOARD_PWM_RESOLUTION 255
@@ -28,3 +29,5 @@ void settingInit(Setting *setting) {
     setting->program.ldr.threshold = SETTING_PROGRAM_LDR_THRESHOLD;
     setting->program.motor.speed = SETTING_PROGRAM_MOTOR_SPEED;
 }
+
+#endif

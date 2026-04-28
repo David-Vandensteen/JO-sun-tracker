@@ -1,7 +1,8 @@
 #include <Arduino.h>
-#include <ArduinoLog.h>
+
 #include "setting.h"
 #include "trackers.h"
+#include "log.h"
 
 Trackers::Trackers(Setting *setting)
   : _setting(setting) {
@@ -17,14 +18,9 @@ Trackers::Trackers(Setting *setting)
 }
 
 void Trackers::init() {
-  if (DEBUG) {
-    Serial.begin(_setting->board.serial.baudRate);
-    delay(2000);
-    Log.begin(LOG_LEVEL_NOTICE, &Serial);
-    Log.notice("Trackers::init\n");
-  }
+  LOG_INFO("Trackers::init");
   if (!isValidSetting(_setting)) {
-    if (DEBUG) Log.error("Invalid setting\n");
+    LOG_ERROR("Invalid setting");
     // TODO implement LED protocol to indicate invalid settings
     while (true);
   }
@@ -41,26 +37,26 @@ void Trackers::update() {
   bool scan = !_setting->board.pin.button.scan;
 
   if (scan) {
-    if (DEBUG) Log.notice("Trackers::update scan button pressed\n");
+    LOG_INFO("Trackers::update scan button pressed");
     selected.scan();
   }
 
   if (deploy && retract) {
-    if (DEBUG) Log.notice("Trackers::update both deploy and retract buttons pressed, stopping\n");
+    LOG_INFO("Trackers::update both deploy and retract buttons pressed, stopping");
     selected.setAutoMode(false);
     selected.stop();
   }
 
   if (deploy || retract) {
-    if (DEBUG && deploy) Log.notice("Trackers::update deploy button pressed\n");
-    if (DEBUG && retract) Log.notice("Trackers::update retract button pressed\n");
+    if (deploy) LOG_INFO("Trackers::update deploy button pressed");
+    if (retract) LOG_INFO("Trackers::update retract button pressed");
     selected.setAutoMode(false);
     deploy ? selected.deploy() : selected.retract();
   }
 }
 
 void Trackers::waitReady() {
-  if (DEBUG) Log.notice("Trackers::waitReady\n");
+  LOG_INFO("Trackers::waitReady");
   for (uint8_t i = 0; i < 3; i++) {
     digitalWrite(_setting->board.pin.ledStatus, HIGH);
     delay(1000);

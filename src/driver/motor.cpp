@@ -1,15 +1,15 @@
-
 #include <Arduino.h>
-#include <ArduinoLog.h>
+
 
 #include "motor.h"
 #include "setting.h"
+#include "log.h"
 
 Motor::Motor(uint8_t in1, uint8_t in2, uint8_t en, int pwmResolution)
     : _in1(in1), _in2(in2), _en(en), _pwmResolution(pwmResolution) {}
 
 void Motor::init() {
-    if (DEBUG) Log.notice("Motor::init\n");
+  LOG_INFO("Motor::init");
   stop();
 }
 bool Motor::isBusy() {
@@ -17,6 +17,7 @@ bool Motor::isBusy() {
 }
 
 void Motor::deploy(int speedPercent) {
+    LOG_INFO("Motor::deploy");
     digitalWrite(_in1, HIGH);
     digitalWrite(_in2, LOW);
     analogWrite(_en, map(speedPercent, 0, 100, 0, _pwmResolution));
@@ -24,6 +25,7 @@ void Motor::deploy(int speedPercent) {
 }
 
 void Motor::retract(int speedPercent) {
+    LOG_INFO("Motor::retract");
     digitalWrite(_in1, LOW);
     digitalWrite(_in2, HIGH);
     analogWrite(_en, map(speedPercent, 0, 100, 0, _pwmResolution));
@@ -31,6 +33,7 @@ void Motor::retract(int speedPercent) {
 }
 
 void Motor::stop() {
+    LOG_INFO("Motor::stop");
     digitalWrite(_in1, LOW);
     digitalWrite(_in2, LOW);
     analogWrite(_en, 0);
