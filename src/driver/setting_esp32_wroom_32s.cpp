@@ -21,8 +21,8 @@ void settingInit(Setting *setting) {
     setting->board.pin.tracker[TRACKER_1].motors.in4 = 13;
     setting->board.pin.button.deploy = 4;
     setting->board.pin.button.retract = 5;
-    setting->board.pin.button.automatic = 18;
     setting->board.pin.button.scan = 19;
+    setting->board.pin.button.selectedTracker = 20;
     setting->board.pin.ledStatus = 2;
     setting->program.version = VERSION;
     setting->program.ldr.threshold = SETTING_PROGRAM_LDR_THRESHOLD;

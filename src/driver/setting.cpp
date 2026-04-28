@@ -18,8 +18,9 @@ bool isValidSetting(Setting *setting) {
   }
   if (setting->board.pin.button.deploy == 0) return false;
   if (setting->board.pin.button.retract == 0) return false;
-  if (setting->board.pin.button.automatic == 0) return false;
   if (setting->board.pin.button.scan == 0) return false;
+  if (setting->board.pin.button.selectedTracker == 0) return false;
+  if (setting->board.pin.ledStatus == 0) return false;
   if (setting->program.version == nullptr || setting->program.version[0] == '\0') return false;
   if (setting->program.ldr.threshold < 0 || setting->program.ldr.threshold > setting->board.adc.resolution) return false;
   if (setting->program.motor.speed < 0 || setting->program.motor.speed > setting->board.pwm.resolution) return false;

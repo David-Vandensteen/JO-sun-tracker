@@ -34,8 +34,8 @@ typedef struct SettingBoardPinTrackerLDR {
 typedef struct SettingBoardPinButton {
   uint8_t deploy;
   uint8_t retract;
-  uint8_t automatic;
   uint8_t scan;
+  uint8_t selectedTracker;
 } SettingBoardPinButton;
 
 typedef struct SettingBoardPinMotors {

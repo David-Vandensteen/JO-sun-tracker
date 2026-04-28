@@ -10,9 +10,9 @@ L298N Motor Driver:
 ├── 11: ─────────► IN3: (L298N, motor 2 direction)
 └── 12: ─────────► IN4: (L298N, motor 2 direction)
 
-Mode button:
+Selected tracker button:
 │
-├── 4: ─────────► AUTO: (mode auto/manual button)
+├── 4: ─────────► SELECTED TRACKER: (select tracker button)
 
 Control buttons - work only in manual mode:
 │
@@ -60,8 +60,8 @@ void settingInit(Setting *setting) {
   setting->board.pin.tracker[TRACKER_1].motors.in4 = 12;
 	setting->board.pin.button.deploy = 2;
 	setting->board.pin.button.retract = 3;
-	setting->board.pin.button.automatic = 4;
 	setting->board.pin.button.scan = 5;
+  setting->board.pin.button.selectedTracker = 4;
 	setting->board.pin.ledStatus = 6;
 	setting->program.version = VERSION;
 	setting->program.ldr.threshold = SETTING_PROGRAM_LDR_THRESHOLD;
