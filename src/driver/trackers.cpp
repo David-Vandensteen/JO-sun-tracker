@@ -56,6 +56,11 @@ void Trackers::update() {
     setAutoMode(false);
   }
 
+  if (scanButton) {
+    if (DEBUG) Serial.println("Trackers::update scan button pressed");
+    setAutoMode(true);
+  }
+
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _isAutoMode
       ? _trackers[i].updateAutoMode()
