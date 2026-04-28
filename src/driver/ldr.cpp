@@ -13,7 +13,7 @@ LDR::LDR(uint8_t pin, int analogResolution)
 {}
 
 void LDR::init() {
-  LOG_INFO("LDR::init");
+  LOG_DEBUG("LDR::init");
   pinMode(_pin, INPUT);
 }
 
@@ -29,7 +29,7 @@ LDRs::LDRs(LDR dayUp, LDR dayDown, LDR night)
 {}
 
 void LDRs::init() {
-  LOG_INFO("LDRs::init");
+  LOG_DEBUG("LDRs::init");
   dayUp.init();
   dayDown.init();
   night.init();
