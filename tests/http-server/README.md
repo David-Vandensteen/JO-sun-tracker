@@ -5,12 +5,6 @@ Ce dossier contient un exemple de serveur HTTP pour ESP32 qui sert une page HTML
 ## Prérequis
 - Carte ESP32
 - Python 3
-- Script esptool.py du dépôt officiel : https://github.com/espressif/esptool
-- Bibliothèque ArduinoLog (à installer via le gestionnaire de bibliothèques de l’IDE Arduino)
-
-### Installer la bibliothèque ArduinoLog
-
-Dans l’IDE Arduino, va dans « Outils » > « Gérer les bibliothèques… », recherche « ArduinoLog » et clique sur « Installer ».
 
 ## Installation de esptool.py
 
