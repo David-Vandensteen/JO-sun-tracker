@@ -48,6 +48,19 @@ Ou utilisez la commande PowerShell :
 
 Note : Le port change selon la machine et l’USB utilisé.
 
+## Trouver l’adresse de départ SPIFFS (offset) dans l’IDE Arduino
+
+1. Ouvre l’IDE Arduino.
+2. Va dans le menu **Outils > Partition Scheme** (ou « Schéma de partition »).
+3. Note le nom du schéma sélectionné (ex : « Default 4MB with spiffs »).
+4. Pour connaître l’offset exact :
+   - Va dans le dossier d’installation de l’ESP32, sous :  
+     `hardware/espressif/esp32/tools/partitions/`
+   - Ouvre le fichier `.csv` correspondant au schéma choisi.
+   - Cherche la ligne commençant par `spiffs` : la colonne « Offset » donne l’adresse à utiliser (ex : `0x290000`).
+
+**Remarque** : L’offset par défaut est souvent `0x290000`, mais il peut varier selon le schéma choisi.
+
 ## Upload SPIFFS avec le script Python
 
 Pour téléverser des fichiers SPIFFS sur l’ESP32, utilisez le script python esptool.py du dépôt officiel Espressif :
