@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "setting.h"
+#include "led_protocol.h"
 #include "trackers.h"
 #include "log.h"
 
@@ -14,61 +15,51 @@ Trackers::Trackers(Setting *setting)
       _setting->program.ldr.threshold
     );
   }
+  _ledProtocol = LedProtocol(_setting->board.pin.ledStatus);
+  _command = Command(&_setting->board.pin.button);
 }
 
 void Trackers::init() {
   LOG_DEBUG("Trackers::init");
-  #if defined(BOARD_UNO)
+  _ledProtocol.init();
+  #if defined(BOARD_UNO) || defined(BOARD_NANO)
     pinMode(LED_BUILTIN, OUTPUT);
   #endif
   if (!isValidSetting(_setting)) {
     LOG_ERROR("Invalid setting");
-    // TODO implement LED protocol to indicate invalid settings
-    while (true);
+    _ledProtocol.invalidSetting();
   }
-  waitReady();
+  #ifndef BOARD_NANO
+  logSetting(_setting);
+  #endif
+  _ledProtocol.waitReady();
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _trackers[i].init();
   }
+  _command.init();
 }
 
 void Trackers::update() {
-  auto selected = _trackers[_setting->board.pin.button.selectedTracker];
-  bool deploy = !_setting->board.pin.button.deploy;
-  bool retract = !_setting->board.pin.button.retract;
-  bool scan = !_setting->board.pin.button.scan;
+  Tracker selectedTracker = _trackers[_command.getSelectedTrackerId()];
+  bool deploy = _command.isDeployPressed();
+  bool retract = _command.isRetractPressed();
+  bool scan = _command.isScanPressed();
 
   if (scan) {
     LOG_DEBUG("Trackers::update scan button pressed");
-    selected.scan();
+    selectedTracker.scan();
   }
 
   if (deploy && retract) {
     LOG_DEBUG("Trackers::update both deploy and retract buttons pressed, stopping");
-    selected.setAutoMode(false);
-    selected.stop();
+    selectedTracker.setAutoMode(false);
+    selectedTracker.stop();
   }
 
   if (deploy || retract) {
     if (deploy) LOG_DEBUG("Trackers::update deploy button pressed");
     if (retract) LOG_DEBUG("Trackers::update retract button pressed");
-    selected.setAutoMode(false);
-    deploy ? selected.deploy() : selected.retract();
-  }
-}
-
-void Trackers::waitReady() {
-  LOG_DEBUG("Trackers::waitReady");
-  for (uint8_t i = 0; i < 3; i++) {
-    digitalWrite(_setting->board.pin.ledStatus, HIGH);
-    #if defined(BOARD_UNO)
-      digitalWrite(LED_BUILTIN, HIGH);
-    #endif
-    delay(1000);
-    digitalWrite(_setting->board.pin.ledStatus, LOW);
-    #if defined(BOARD_UNO)
-      digitalWrite(LED_BUILTIN, LOW);
-    #endif
-    delay(1000);
+    selectedTracker.setAutoMode(false);
+    deploy ? selectedTracker.deploy() : selectedTracker.retract();
   }
 }

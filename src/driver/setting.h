@@ -8,13 +8,19 @@
 #define FALSE 0
 #define DEBUG TRUE
 
-#define BOARD_UNO
+#define BOARD_NANO
+// #define BOARD_UNO
 // #define BOARD_ESP32_WROOM_32S
 
 #define TRACKER_MAX 1
 #define TRACKER_1 0
 
 #ifdef BOARD_UNO
+#undef TRACKER_MAX
+#define TRACKER_MAX 1
+#endif
+
+#ifdef BOARD_NANO
 #undef TRACKER_MAX
 #define TRACKER_MAX 1
 #endif
@@ -98,5 +104,9 @@ typedef struct Setting {
 
 void settingInit(Setting *setting);
 bool isValidSetting(Setting *setting);
+
+#ifndef BOARD_UNO
+void logSetting(Setting *setting);
+#endif
 
 #endif

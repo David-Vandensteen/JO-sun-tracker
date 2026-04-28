@@ -1,7 +1,6 @@
 #ifndef TRACKER_H
 #define TRACKER_H
 #include <Arduino.h>
-
 #include "ldr.h"
 #include "motor.h"
 
