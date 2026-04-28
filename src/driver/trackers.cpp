@@ -31,23 +31,29 @@ void Trackers::init() {
 }
 
 void Trackers::update() {
-  bool deployButton = !_setting->board.pin.button.deploy;
-  bool retractButton = !_setting->board.pin.button.retract;
-  bool scanButton = !_setting->board.pin.button.scan;
+  auto selected = _trackers[_setting->board.pin.button.selectedTracker];
+  bool deploy = !_setting->board.pin.button.deploy;
+  bool retract = !_setting->board.pin.button.retract;
+  bool scan = !_setting->board.pin.button.scan;
 
-  if (deployButton || retractButton) {
-    if (DEBUG && deployButton) Serial.println("Trackers::update deploy button pressed");
-    if (DEBUG && retractButton) Serial.println("Trackers::update retract button pressed");
-  }
-
-  if (scanButton) {
+  if (scan) {
     if (DEBUG) Serial.println("Trackers::update scan button pressed");
+    selected.scan();
   }
 
-  for (uint8_t i = 0; i < TRACKER_MAX; i++) {
-    _trackers[i].isAutoMode()
-      ? _trackers[i].updateAutoMode()
-      : _trackers[i].updateManualMode(deployButton, retractButton);
+  if (deploy && retract) {
+    if (DEBUG) Serial.println("Trackers::update both deploy and retract buttons pressed, stopping");
+    selected.setAutoMode(false);
+    selected.stop();
+  }
+
+  if (deploy || retract) {
+    if (DEBUG) {
+      if (deploy) Serial.println("Trackers::update deploy button pressed");
+      if (retract) Serial.println("Trackers::update retract button pressed");
+    }
+    selected.setAutoMode(false);
+    deploy ? selected.deploy() : selected.retract();
   }
 }
 

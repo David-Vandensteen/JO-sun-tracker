@@ -60,6 +60,7 @@ void Tracker::retract() {
 
 void Tracker::scan() {
   if (DEBUG) { Serial.print("Tracker::scan "); Serial.println(_motorSpeedPercent); }
+  setAutoMode(true);
   // Implement scan functionality here
 }
 
@@ -86,23 +87,4 @@ void Tracker::updateAutoMode() {
       stop();
     }
   }
-}
-
-void Tracker::updateManualMode(bool deployButton, bool retractButton) {
-  if (deployButton && retractButton) {
-    if (DEBUG) Serial.println("Tracker::updateManualMode both deploy and retract buttons pressed, stopping");
-    stop();
-    return;
-  }
-  if (deployButton) {
-    if (DEBUG) Serial.println("Tracker::updateManualMode deploy button pressed");
-    deploy();
-    return;
-  }
-  if (retractButton) {
-    if (DEBUG) Serial.println("Tracker::updateManualMode retract button pressed");
-    retract();
-    return;
-  }
-  stop();
 }

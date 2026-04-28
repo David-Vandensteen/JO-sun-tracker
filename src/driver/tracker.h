@@ -15,9 +15,8 @@ public:
   void deploy();
   void retract();
   void scan();
-  void stop();
   void updateAutoMode();
-  void updateManualMode(bool deployButton, bool retractButton);
+  void stop();
 
 private:
   int _adcResolution;
