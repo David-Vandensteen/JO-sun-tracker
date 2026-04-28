@@ -1,4 +1,6 @@
+
 #include <Arduino.h>
+#include <ArduinoLog.h>
 
 #include "ldr.h"
 #include "setting.h"
@@ -11,7 +13,7 @@ LDR::LDR(uint8_t pin, int analogResolution)
 {}
 
 void LDR::init() {
-  if (DEBUG) { Serial.print("LDR::init "); Serial.println(_pin); }
+  if (DEBUG) { Log.notice("LDR::init %d\n", _pin); }
   pinMode(_pin, INPUT);
 }
 
@@ -27,7 +29,7 @@ LDRs::LDRs(LDR dayUp, LDR dayDown, LDR night)
 {}
 
 void LDRs::init() {
-  if (DEBUG) Serial.println("LDRs::init");
+  if (DEBUG) Log.notice("LDRs::init\n");
   dayUp.init();
   dayDown.init();
   night.init();
