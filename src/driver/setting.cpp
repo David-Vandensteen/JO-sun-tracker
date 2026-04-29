@@ -91,7 +91,7 @@ bool isValidSetting(Setting *setting) {
   return true;
 }
 
-#ifndef BOARD_NANO
+#ifdef BOARD_ESP32_WROOM_32S
 void logSetting(Setting *setting) {
   LOG_DEBUG("Setting:");
   LOG_DEBUG("- Board:");

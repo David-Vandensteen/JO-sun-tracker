@@ -29,7 +29,7 @@ void Trackers::init() {
     LOG_ERROR("Invalid setting");
     _ledProtocol.invalidSetting();
   }
-  #ifndef BOARD_NANO
+  #ifdef BOARD_ESP32_WROOM_32S
   logSetting(_setting);
   #endif
   _ledProtocol.waitReady();
@@ -41,9 +41,9 @@ void Trackers::init() {
 
 void Trackers::update() {
   Tracker selectedTracker = _trackers[_command.getSelectedTrackerId()];
-  bool deploy = _command.isDeployPressed();
-  bool retract = _command.isRetractPressed();
-  bool scan = _command.isScanPressed();
+  bool deploy = _command.isDeployButtonPressed();
+  bool retract = _command.isRetractButtonPressed();
+  bool scan = _command.isScanButtonPressed();
 
   if (scan) {
     LOG_DEBUG("Trackers::update scan button pressed");
