@@ -15,7 +15,7 @@ static Trackers trackers(&setting);
 
 void setup() {
   settingInit(&setting);
-  if (DEBUG) Serial.begin(setting.board.serial.baudRate);
+  if (LOG_SERIAL) Serial.begin(setting.board.serial.baudRate);
   delay(2000);
   LOG_DEBUG("setup");
   trackers.init();

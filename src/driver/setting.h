@@ -4,8 +4,6 @@
 
 #define VERSION "0.0.1"
 
-#define DEBUG true
-
 // #define BOARD_NANO
 #define BOARD_UNO
 // #define BOARD_ESP32_WROOM_32S
