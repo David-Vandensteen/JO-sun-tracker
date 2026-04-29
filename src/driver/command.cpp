@@ -10,7 +10,7 @@ Command::Command(SettingBoardPinButton *buttonPin)
   : _buttonPin(buttonPin) {}
 
 void Command::init() {
-  LOG_DEBUG("Command::init");
+  LOG_TRACE("Command::init\n");
   pinMode(_buttonPin->deploy, INPUT_PULLUP);
   pinMode(_buttonPin->retract, INPUT_PULLUP);
   pinMode(_buttonPin->scan, INPUT_PULLUP);
@@ -41,7 +41,7 @@ bool Command::isScanButtonPressed() {
     _scanButtonState.previous = _scanButtonState.current;
     _scanButtonState.current = !digitalRead(_buttonPin->scan);
     if (_scanButtonState.current) {
-      LOG_DEBUGF("Command::isScanButtonPressed state: %d", static_cast<int>(_state));
+      LOG_TRACE("Command::isScanButtonPressed state: scanning\n");
       _state = (_state == State::Scanning) ? State::Idle : State::Scanning;
     }
   }
@@ -57,11 +57,11 @@ uint8_t Command::getSelectedTrackerId() {
 }
 
 void Command::log() {
-  LOG_DEBUG("Command:");
-  LOG_DEBUGF("- Deploy button: %s", isDeployButtonPressed() ? "pressed" : "not pressed");
-  LOG_DEBUGF("- Retract button: %s", isRetractButtonPressed() ? "pressed" : "not pressed");
-  LOG_DEBUGF("- Scan button: %s", isScanButtonPressed() ? "pressed" : "not pressed");
-  LOG_DEBUGF("- Selected tracker ID: %d", getSelectedTrackerId());
-  LOG_DEBUGF("- State: %d", static_cast<int>(_state));
+  LOG_TRACE("Command:"); // TODO
+  // LOG_TRACEF("- Deploy button: %s", isDeployButtonPressed() ? "pressed" : "not pressed");
+  // LOG_TRACEF("- Retract button: %s", isRetractButtonPressed() ? "pressed" : "not pressed");
+  // LOG_TRACEF("- Scan button: %s", isScanButtonPressed() ? "pressed" : "not pressed");
+  // LOG_TRACEF("- Selected tracker ID: %d", getSelectedTrackerId());
+  // LOG_TRACEF("- State: %d", static_cast<int>(_state));
 }
 

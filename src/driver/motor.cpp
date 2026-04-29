@@ -9,7 +9,7 @@ Motor::Motor(uint8_t in1, uint8_t in2, uint8_t en, int pwmResolution)
     : _in1(in1), _in2(in2), _en(en), _pwmResolution(pwmResolution) {}
 
 void Motor::init() {
-  LOG_DEBUG("Motor::init");
+    LOG_TRACE("Motor::init\n");
   stop();
 }
 bool Motor::isBusy() {
@@ -17,7 +17,7 @@ bool Motor::isBusy() {
 }
 
 void Motor::deploy(int speedPercent) {
-    LOG_DEBUG("Motor::deploy");
+    LOG_TRACE("Motor::deploy\n");
     digitalWrite(_in1, HIGH);
     digitalWrite(_in2, LOW);
     analogWrite(_en, map(speedPercent, 0, 100, 0, _pwmResolution));
@@ -25,7 +25,7 @@ void Motor::deploy(int speedPercent) {
 }
 
 void Motor::retract(int speedPercent) {
-    LOG_DEBUG("Motor::retract");
+    LOG_TRACE("Motor::retract\n");
     digitalWrite(_in1, LOW);
     digitalWrite(_in2, HIGH);
     analogWrite(_en, map(speedPercent, 0, 100, 0, _pwmResolution));
@@ -33,7 +33,7 @@ void Motor::retract(int speedPercent) {
 }
 
 void Motor::stop() {
-    LOG_DEBUG("Motor::stop");
+    LOG_TRACE("Motor::stop\n");
     digitalWrite(_in1, LOW);
     digitalWrite(_in2, LOW);
     analogWrite(_en, 0);

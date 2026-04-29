@@ -9,7 +9,7 @@ LedProtocol::LedProtocol(uint8_t ledStatusPin)
   : _ledStatusPin(ledStatusPin) {}
 
 void LedProtocol::init() {
-  LOG_DEBUG("LedProtocol::init");
+  LOG_TRACE("LedProtocol::init\n");
   pinMode(_ledStatusPin, OUTPUT);
 }
 
@@ -30,7 +30,7 @@ void LedProtocol::invalidSetting() {
 }
 
 void LedProtocol::waitReady() {
-  LOG_DEBUG("LedProtocol::waitReady");
+  LOG_TRACE("LedProtocol::waitReady\n");
   for (uint8_t i = 0; i < 3; i++) {
     #if defined(BOARD_UNO) || defined(BOARD_NANO)
       digitalWrite(LED_BUILTIN, HIGH);

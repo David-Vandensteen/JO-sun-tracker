@@ -20,7 +20,7 @@ Trackers::Trackers(Setting *setting)
 }
 
 void Trackers::init() {
-  LOG_DEBUG("Trackers::init");
+  LOG_TRACE("Trackers::init\n");
   _ledProtocol.init();
   #if defined(BOARD_UNO) || defined(BOARD_NANO)
     pinMode(LED_BUILTIN, OUTPUT);
@@ -46,19 +46,19 @@ void Trackers::update() {
   bool scan = _command.isScanButtonPressed();
 
   if (scan) {
-    LOG_DEBUG("Trackers::update scan button pressed");
+    LOG_TRACE("Trackers::update scan button pressed\n");
     selectedTracker.scan();
   }
 
   if (deploy && retract) {
-    LOG_DEBUG("Trackers::update both deploy and retract buttons pressed, stopping");
+    LOG_TRACE("Trackers::update both deploy and retract buttons pressed, stopping\n");
     selectedTracker.setAutoMode(false);
     selectedTracker.stop();
   }
 
   if (deploy || retract) {
-    if (deploy) LOG_DEBUG("Trackers::update deploy button pressed");
-    if (retract) LOG_DEBUG("Trackers::update retract button pressed");
+    if (deploy) LOG_TRACE("Trackers::update deploy button pressed\n");
+    if (retract) LOG_TRACE("Trackers::update retract button pressed\n");
     selectedTracker.setAutoMode(false);
     deploy ? selectedTracker.deploy() : selectedTracker.retract();
   }

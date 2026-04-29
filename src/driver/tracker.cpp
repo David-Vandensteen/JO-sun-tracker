@@ -30,7 +30,7 @@ Tracker::Tracker(SettingBoardPinTracker* trackerPin, int adcResolution, int pwmR
 {}
 
 void Tracker::init() {
-  LOG_DEBUG("Tracker::init");
+  LOG_TRACE("Tracker::init\n");
   _ldrs.init();
   _motors.init();
 }
@@ -42,30 +42,30 @@ bool Tracker::isAutoMode() {
 void Tracker::setAutoMode(bool autoMode) {
   _isAutoMode = autoMode;
   if (_isAutoMode) {
-    LOG_DEBUG("Tracker::setAutoMode auto mode");
+    LOG_TRACE("Tracker::setAutoMode auto mode\n");
   } else {
-    LOG_DEBUG("Tracker::setAutoMode manual mode");
+    LOG_TRACE("Tracker::setAutoMode manual mode\n");
   }
 }
 
 void Tracker::deploy() {
-  LOG_DEBUG("Tracker::deploy");
+  LOG_TRACE("Tracker::deploy\n");
   _motors.deploy(_motorSpeedPercent);
 }
 
 void Tracker::retract() {
-  LOG_DEBUG("Tracker::retract");
+  LOG_TRACE("Tracker::retract\n");
   _motors.retract(_motorSpeedPercent);
 }
 
 void Tracker::scan() {
-  LOG_DEBUG("Tracker::scan");
+  LOG_TRACE("Tracker::scan\n");
   setAutoMode(true);
   // Implement scan functionality here
 }
 
 void Tracker::stop() {
-  LOG_DEBUG("Tracker::stop");
+  LOG_TRACE("Tracker::stop\n");
   _motors.stop();
 }
 
@@ -76,7 +76,7 @@ void Tracker::updateAutoMode() {
     _ldrs.update();
     bool isLDRDifferent = _ldrs.isDayUpDifferentFromDayDown(_ldrThreshold);
 
-    if (isLDRDifferent) LOG_DEBUG("LDR values are different");
+    if (isLDRDifferent) LOG_TRACE("LDR values are different\n");
 
     if (isLDRDifferent) {
       if (_ldrs.isDayUpBrighterThanDayDown(_ldrThreshold)) {
