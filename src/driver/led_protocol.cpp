@@ -14,7 +14,7 @@ void LedProtocol::init() {
 }
 
 void LedProtocol::invalidSetting() {
-  Log.error("Invalid setting");
+  Log.fatal("Invalid setting");
   while (true) {
     #if defined(BOARD_UNO) || defined(BOARD_NANO)
       digitalWrite(LED_BUILTIN, HIGH);

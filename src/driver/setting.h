@@ -8,6 +8,8 @@
 #define BOARD_UNO
 // #define BOARD_ESP32_WROOM_32S
 
+#define LOG true
+// #define LOG false
 // #define LOG_LEVEL LOG_LEVEL_SILENT
 // #define LOG_LEVEL LOG_LEVEL_FATAL
 // #define LOG_LEVEL LOG_LEVEL_ERROR

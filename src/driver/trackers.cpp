@@ -21,18 +21,22 @@ Trackers::Trackers(Setting *setting)
 
 void Trackers::init() {
   Log.trace("Trackers::init\n");
+  Log.notice("Initializing trackers\n");
   _ledProtocol.init();
   #if defined(BOARD_UNO) || defined(BOARD_NANO)
     pinMode(LED_BUILTIN, OUTPUT);
   #endif
   if (!isValidSetting(_setting)) {
-    Log.error("Invalid setting");
+    Log.fatal("Invalid setting");
     _ledProtocol.invalidSetting();
   }
+  Log.notice("Setting is valid\n");
   #ifdef BOARD_ESP32_WROOM_32S
   logSetting(_setting);
   #endif
+  Log.notice("Waiting before starting...\n");
   _ledProtocol.waitReady();
+  Log.notice("Now is ready\n");
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _trackers[i].init();
   }
