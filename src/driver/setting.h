@@ -1,6 +1,7 @@
 #ifndef SETTING_H
 #define SETTING_H
 #include <Arduino.h>
+#include <ArduinoLog.h>
 
 #define VERSION "0.0.1"
 

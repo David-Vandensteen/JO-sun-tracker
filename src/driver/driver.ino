@@ -6,7 +6,6 @@
 */
 
 #include <Arduino.h>
-#include <ArduinoLog.h>
 #include "driver.h"
 #include "setting.h"
 #include "trackers.h"
