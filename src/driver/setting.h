@@ -4,9 +4,7 @@
 
 #define VERSION "0.0.1"
 
-#define TRUE 1
-#define FALSE 0
-#define DEBUG TRUE
+#define DEBUG true
 
 #define BOARD_NANO
 // #define BOARD_UNO
