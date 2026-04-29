@@ -95,29 +95,29 @@ bool isValidSetting(Setting *setting) {
 void logSetting(Setting *setting) {
   LOG_DEBUG("Setting:");
   LOG_DEBUG("- Board:");
-  LOG_DEBUG("  - ADC resolution: " + String(setting->board.adc.resolution));
-  LOG_DEBUG("  - PWM resolution: " + String(setting->board.pwm.resolution));
-  LOG_DEBUG("  - Serial baud rate: " + String(setting->board.serial.baudRate));
+  LOG_DEBUGF("  - ADC resolution: %d", setting->board.adc.resolution);
+  LOG_DEBUGF("  - PWM resolution: %d", setting->board.pwm.resolution);
+  LOG_DEBUGF("  - Serial baud rate: %lu", setting->board.serial.baudRate);
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
-    LOG_DEBUG("  - Tracker " + String(i) + ":");
-    LOG_DEBUG("    - LDR day up pin: " + String(setting->board.pin.tracker[i].ldr.day.up));
-    LOG_DEBUG("    - LDR day down pin: " + String(setting->board.pin.tracker[i].ldr.day.down));
-    LOG_DEBUG("    - LDR night pin: " + String(setting->board.pin.tracker[i].ldr.night));
-    LOG_DEBUG("    - Motor ENA pin: " + String(setting->board.pin.tracker[i].motors.ena));
-    LOG_DEBUG("    - Motor IN1 pin: " + String(setting->board.pin.tracker[i].motors.in1));
-    LOG_DEBUG("    - Motor IN2 pin: " + String(setting->board.pin.tracker[i].motors.in2));
-    LOG_DEBUG("    - Motor ENB pin: " + String(setting->board.pin.tracker[i].motors.enb));
-    LOG_DEBUG("    - Motor IN3 pin: " + String(setting->board.pin.tracker[i].motors.in3));
-    LOG_DEBUG("    - Motor IN4 pin: " + String(setting->board.pin.tracker[i].motors.in4));
+    LOG_DEBUGF("  - Tracker %d:", i);
+    LOG_DEBUGF("    - LDR day up pin: %d", setting->board.pin.tracker[i].ldr.day.up);
+    LOG_DEBUGF("    - LDR day down pin: %d", setting->board.pin.tracker[i].ldr.day.down);
+    LOG_DEBUGF("    - LDR night pin: %d", setting->board.pin.tracker[i].ldr.night);
+    LOG_DEBUGF("    - Motor ENA pin: %d", setting->board.pin.tracker[i].motors.ena);
+    LOG_DEBUGF("    - Motor IN1 pin: %d", setting->board.pin.tracker[i].motors.in1);
+    LOG_DEBUGF("    - Motor IN2 pin: %d", setting->board.pin.tracker[i].motors.in2);
+    LOG_DEBUGF("    - Motor ENB pin: %d", setting->board.pin.tracker[i].motors.enb);
+    LOG_DEBUGF("    - Motor IN3 pin: %d", setting->board.pin.tracker[i].motors.in3);
+    LOG_DEBUGF("    - Motor IN4 pin: %d", setting->board.pin.tracker[i].motors.in4);
   }
-  LOG_DEBUG("  - Button deploy pin: " + String(setting->board.pin.button.deploy));
-  LOG_DEBUG("  - Button retract pin: " + String(setting->board.pin.button.retract));
-  LOG_DEBUG("  - Button scan pin: " + String(setting->board.pin.button.scan));
-  LOG_DEBUG("  - Button selectedTracker pin: " + String(setting->board.pin.button.selectedTracker));
-  LOG_DEBUG("  - LED status pin: " + String(setting->board.pin.ledStatus));
+  LOG_DEBUGF("  - Button deploy pin: %d", setting->board.pin.button.deploy);
+  LOG_DEBUGF("  - Button retract pin: %d", setting->board.pin.button.retract);
+  LOG_DEBUGF("  - Button scan pin: %d", setting->board.pin.button.scan);
+  LOG_DEBUGF("  - Button selectedTracker pin: %d", setting->board.pin.button.selectedTracker);
+  LOG_DEBUGF("  - LED status pin: %d", setting->board.pin.ledStatus);
   LOG_DEBUG("- Program:");
-  LOG_DEBUG("  - Version: " + String(setting->program.version));
-  LOG_DEBUG("  - LDR threshold: " + String(setting->program.ldr.threshold));
-  LOG_DEBUG("  - Motor speed: " + String(setting->program.motor.speed));
+  LOG_DEBUGF("  - Version: %s", setting->program.version);
+  LOG_DEBUGF("  - LDR threshold: %d", setting->program.ldr.threshold);
+  LOG_DEBUGF("  - Motor speed: %d", setting->program.motor.speed);
 }
 #endif
