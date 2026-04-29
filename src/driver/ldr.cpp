@@ -1,9 +1,8 @@
 #include <Arduino.h>
 
-
 #include "ldr.h"
 #include "setting.h"
-#include "log.h"
+#include <ArduinoLog.h>
 
 LDR::LDR(uint8_t pin, int analogResolution)
   : _pin(pin),
@@ -13,7 +12,7 @@ LDR::LDR(uint8_t pin, int analogResolution)
 {}
 
 void LDR::init() {
-  LOG_TRACE("LDR::init\n");
+  Log.trace("LDR::init\n");
   pinMode(_pin, INPUT);
 }
 
@@ -29,14 +28,14 @@ LDRs::LDRs(LDR dayUp, LDR dayDown, LDR back)
 {}
 
 void LDRs::init() {
-  LOG_TRACE("LDRs::init\n");
+  Log.trace("LDRs::init\n");
   dayUp.init();
   dayDown.init();
   back.init();
 }
 
 void LDRs::update() {
-  LOG_TRACE("LDRs::update\n");
+  Log.trace("LDRs::update\n");
   dayUp.update();
   dayDown.update();
   back.update();

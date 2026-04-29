@@ -6,9 +6,9 @@
 */
 
 #include <Arduino.h>
+#include <ArduinoLog.h>
 #include "setting.h"
 #include "trackers.h"
-#include "log.h"
 
 static Setting setting;
 static Trackers trackers(&setting);
@@ -16,9 +16,9 @@ static Trackers trackers(&setting);
 void setup() {
   settingInit(&setting);
   Serial.begin(setting.board.serial.baudRate);
-  Log.begin(LOG_LEVEL_TRACE, &Serial);
+  Log.begin(LOG_LEVEL, &Serial);
   delay(2000);
-  LOG_TRACE("setup\n");
+  Log.trace("setup\n");
   trackers.init();
 }
 void loop() {

@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "setting.h"
 #include "command.h"
-#include "log.h"
+#include <ArduinoLog.h>
 
 Command::Command()
   : _buttonPin(nullptr) {}
@@ -10,7 +10,7 @@ Command::Command(SettingBoardPinButton *buttonPin)
   : _buttonPin(buttonPin) {}
 
 void Command::init() {
-  LOG_TRACE("Command::init\n");
+  Log.trace("Command::init\n");
   pinMode(_buttonPin->deploy, INPUT_PULLUP);
   pinMode(_buttonPin->retract, INPUT_PULLUP);
   pinMode(_buttonPin->scan, INPUT_PULLUP);
@@ -41,7 +41,7 @@ bool Command::isScanButtonPressed() {
     _scanButtonState.previous = _scanButtonState.current;
     _scanButtonState.current = !digitalRead(_buttonPin->scan);
     if (_scanButtonState.current) {
-      LOG_TRACE("Command::isScanButtonPressed state: scanning\n");
+      Log.trace("Command::isScanButtonPressed state: scanning\n");
       _state = (_state == State::Scanning) ? State::Idle : State::Scanning;
     }
   }
@@ -57,7 +57,7 @@ uint8_t Command::getSelectedTrackerId() {
 }
 
 void Command::log() {
-  LOG_TRACE("Command:"); // TODO
+  Log.trace("Command:"); // TODO
   // LOG_TRACEF("- Deploy button: %s", isDeployButtonPressed() ? "pressed" : "not pressed");
   // LOG_TRACEF("- Retract button: %s", isRetractButtonPressed() ? "pressed" : "not pressed");
   // LOG_TRACEF("- Scan button: %s", isScanButtonPressed() ? "pressed" : "not pressed");

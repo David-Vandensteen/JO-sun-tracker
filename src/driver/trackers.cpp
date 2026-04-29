@@ -2,7 +2,7 @@
 #include "setting.h"
 #include "led_protocol.h"
 #include "trackers.h"
-#include "log.h"
+#include <ArduinoLog.h>
 
 Trackers::Trackers(Setting *setting)
   : _setting(setting) {
@@ -20,13 +20,13 @@ Trackers::Trackers(Setting *setting)
 }
 
 void Trackers::init() {
-  LOG_TRACE("Trackers::init\n");
+  Log.trace("Trackers::init\n");
   _ledProtocol.init();
   #if defined(BOARD_UNO) || defined(BOARD_NANO)
     pinMode(LED_BUILTIN, OUTPUT);
   #endif
   if (!isValidSetting(_setting)) {
-    LOG_ERROR("Invalid setting");
+    Log.error("Invalid setting");
     _ledProtocol.invalidSetting();
   }
   #ifdef BOARD_ESP32_WROOM_32S
@@ -46,19 +46,19 @@ void Trackers::update() {
   bool scan = _command.isScanButtonPressed();
 
   if (scan) {
-    LOG_TRACE("Trackers::update scan button pressed\n");
+    Log.trace("Trackers::update scan button pressed\n");
     selectedTracker.scan();
   }
 
   if (deploy && retract) {
-    LOG_TRACE("Trackers::update both deploy and retract buttons pressed, stopping\n");
+    Log.trace("Trackers::update both deploy and retract buttons pressed, stopping\n");
     selectedTracker.setAutoMode(false);
     selectedTracker.stop();
   }
 
   if (deploy || retract) {
-    if (deploy) LOG_TRACE("Trackers::update deploy button pressed\n");
-    if (retract) LOG_TRACE("Trackers::update retract button pressed\n");
+    if (deploy) Log.trace("Trackers::update deploy button pressed\n");
+    if (retract) Log.trace("Trackers::update retract button pressed\n");
     selectedTracker.setAutoMode(false);
     deploy ? selectedTracker.deploy() : selectedTracker.retract();
   }
