@@ -24,11 +24,6 @@ void setup() {
 }
 
 void loop() {
-  unsigned long currentTime = millis();
-  static unsigned long lastTime = 0;
-  if (currentTime - lastTime >= 30000) {
-    lastTime = currentTime;
-    Log.notice("WatchDog\n");
-  }
+  Driver::watchDog();
   trackers.update();
 }
