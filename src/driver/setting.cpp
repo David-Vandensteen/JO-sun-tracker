@@ -27,8 +27,8 @@ bool isValidSetting(Setting *setting) {
       LOG_ERROR("LDR day.down pin == 0");
       return false;
     }
-    if (setting->board.pin.tracker[i].ldr.night == 0) {
-      LOG_ERROR("LDR night pin == 0");
+    if (setting->board.pin.tracker[i].ldr.back == 0) {
+      LOG_ERROR("LDR back pin == 0");
       return false;
     }
     if (setting->board.pin.tracker[i].motors.ena == 0) {
@@ -102,7 +102,7 @@ void logSetting(Setting *setting) {
     LOG_DEBUGF("  - Tracker %d:", i);
     LOG_DEBUGF("    - LDR day up pin: %d", setting->board.pin.tracker[i].ldr.day.up);
     LOG_DEBUGF("    - LDR day down pin: %d", setting->board.pin.tracker[i].ldr.day.down);
-    LOG_DEBUGF("    - LDR night pin: %d", setting->board.pin.tracker[i].ldr.night);
+    LOG_DEBUGF("    - LDR back pin: %d", setting->board.pin.tracker[i].ldr.back);
     LOG_DEBUGF("    - Motor ENA pin: %d", setting->board.pin.tracker[i].motors.ena);
     LOG_DEBUGF("    - Motor IN1 pin: %d", setting->board.pin.tracker[i].motors.in1);
     LOG_DEBUGF("    - Motor IN2 pin: %d", setting->board.pin.tracker[i].motors.in2);

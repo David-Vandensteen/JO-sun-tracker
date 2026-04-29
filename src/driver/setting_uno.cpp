@@ -51,7 +51,7 @@ void settingInit(Setting *setting) {
   setting->board.serial.baudRate = SETTING_BOARD_SERIAL_BAUD_RATE;
   setting->board.pin.tracker[TRACKER_1].ldr.day.up = A0;
   setting->board.pin.tracker[TRACKER_1].ldr.day.down = A1;
-  setting->board.pin.tracker[TRACKER_1].ldr.night = A2;
+  setting->board.pin.tracker[TRACKER_1].ldr.back = A2;
   setting->board.pin.tracker[TRACKER_1].motors.ena = 10;
   setting->board.pin.tracker[TRACKER_1].motors.in1 = 8;
   setting->board.pin.tracker[TRACKER_1].motors.in2 = 9;

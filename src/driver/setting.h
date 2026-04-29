@@ -28,11 +28,11 @@ typedef struct SettingBoardPinTrackerLDRDay {
   uint8_t down;
 } SettingBoardPinTrackerLDRDay;
 
-typedef uint8_t SettingBoardPinTrackerLDRNight;
+typedef uint8_t SettingBoardPinTrackerLDRBack;
 
 typedef struct SettingBoardPinTrackerLDR {
   SettingBoardPinTrackerLDRDay day;
-  SettingBoardPinTrackerLDRNight night;
+  SettingBoardPinTrackerLDRBack back;
 } SettingBoardPinTrackerLDR;
 
 typedef struct SettingBoardPinButton {
