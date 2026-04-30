@@ -16,8 +16,8 @@ void Command::init() {
   pinMode(_buttonPin->scan, INPUT_PULLUP);
   pinMode(_buttonPin->selectedTracker, INPUT_PULLUP);
   _state = State::Idle;
-  _scanButtonState.previous = false;
-  _scanButtonState.current = false;
+  _autoButtonState.previous = false;
+  _autoButtonState.current = false;
 }
 
 bool Command::isDeployButtonPressed() {
@@ -36,20 +36,20 @@ bool Command::isRetractButtonPressed() {
   return pressed;
 }
 
-bool Command::isScanButtonPressed() {
-  if (!digitalRead(_buttonPin->scan) != _scanButtonState.current) {
-    _scanButtonState.previous = _scanButtonState.current;
-    _scanButtonState.current = !digitalRead(_buttonPin->scan);
-    if (_scanButtonState.current) {
+bool Command::isAutoButtonPressed() {
+  if (!digitalRead(_buttonPin->scan) != _autoButtonState.current) {
+    _autoButtonState.previous = _autoButtonState.current;
+    _autoButtonState.current = !digitalRead(_buttonPin->scan);
+    if (_autoButtonState.current) {
       Log.trace("Command::isScanButtonPressed state: scanning\n");
-      _state = (_state == State::Scanning) ? State::Idle : State::Scanning;
+      _state = (_state == State::Auto) ? State::Idle : State::Auto;
     }
   }
-  return _scanButtonState.current;
+  return _autoButtonState.current;
 }
 
-bool Command::isScanning() {
-  return _state == State::Scanning;
+bool Command::isAuto() {
+  return _state == State::Auto;
 }
 
 uint8_t Command::getSelectedTrackerId() {

@@ -47,10 +47,10 @@ void Trackers::update() {
   Tracker selectedTracker = _trackers[_command.getSelectedTrackerId()];
   bool deploy = _command.isDeployButtonPressed();
   bool retract = _command.isRetractButtonPressed();
-  bool scan = _command.isScanButtonPressed();
+  bool autoMode = _command.isAutoButtonPressed();
 
-  if (scan) {
-    Log.trace("Trackers::update scan button pressed\n");
+  if (autoMode) {
+    Log.trace("Trackers::update auto button pressed\n");
     selectedTracker.scan();
   }
 

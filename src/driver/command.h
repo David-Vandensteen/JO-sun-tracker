@@ -10,8 +10,8 @@ public:
   void init();
   bool isDeployButtonPressed();
   bool isRetractButtonPressed();
-  bool isScanButtonPressed();
-  bool isScanning();
+  bool isAutoButtonPressed();
+  bool isAuto();
   uint8_t getSelectedTrackerId();
   void log();
 
@@ -20,14 +20,14 @@ private:
     Idle,
     Deploying,
     Retracting,
-    Scanning
+    Auto
   };
   struct ButtonState {
     bool previous = false;
     bool current = false;
   };
   SettingBoardPinButton *_buttonPin;
-  ButtonState _scanButtonState;
+  ButtonState _autoButtonState;
   State _state = State::Idle;
 };
 

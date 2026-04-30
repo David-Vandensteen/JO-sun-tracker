@@ -10,7 +10,7 @@ void Driver::serial(unsigned long baudRate, int logLevel) {
 }
 
 void Driver::log(char *version) {
-  Log.trace("setup\n");
+  Log.trace("Driver::log\n");
   Log.notice("Starting program\n");
   Log.notice("JO Sun Tracker - version %s\n", version);
 }
@@ -23,4 +23,3 @@ void Driver::watchDog() {
     Log.notice("WatchDog\n");
   }
 }
-
