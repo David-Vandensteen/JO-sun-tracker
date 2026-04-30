@@ -61,8 +61,14 @@ void Trackers::update() {
   }
 
   if (deploy || retract) {
-    if (deploy) Log.trace("Trackers::update deploy button pressed\n");
-    if (retract) Log.trace("Trackers::update retract button pressed\n");
+    if (deploy) {
+      Log.trace("Trackers::update deploy button pressed\n");
+      Log.notice("Deploying tracker %d\n", _command.getSelectedTrackerId());
+    }
+    if (retract) {
+      Log.trace("Trackers::update retract button pressed\n");
+      Log.notice("Retracting tracker %d\n", _command.getSelectedTrackerId());
+    }
     selectedTracker.setAutoMode(false);
     deploy ? selectedTracker.deploy() : selectedTracker.retract();
   }

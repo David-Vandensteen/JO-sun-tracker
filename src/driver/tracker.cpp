@@ -60,6 +60,7 @@ void Tracker::retract() {
 
 void Tracker::scan() {
   Log.trace("Tracker::scan\n");
+  Log.notice("Scanning tracker\n");
   setAutoMode(true);
   // Implement scan functionality here
 }
