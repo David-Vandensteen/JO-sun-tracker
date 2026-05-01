@@ -22,7 +22,6 @@ Trackers::Trackers(Setting *setting)
 void Trackers::init() {
   Log.trace("Trackers::init\n");
   Log.notice("Initializing trackers\n");
-  _ledProtocol.init();
   #if defined(BOARD_UNO) || defined(BOARD_NANO)
     pinMode(LED_BUILTIN, OUTPUT);
   #endif

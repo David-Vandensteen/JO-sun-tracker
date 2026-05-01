@@ -34,8 +34,8 @@
 // #define LOG_LEVEL LOG_LEVEL_FATAL
 // #define LOG_LEVEL LOG_LEVEL_ERROR
 // #define LOG_LEVEL LOG_LEVEL_WARNING
-#define LOG_LEVEL LOG_LEVEL_NOTICE
-// #define LOG_LEVEL LOG_LEVEL_TRACE
+// #define LOG_LEVEL LOG_LEVEL_NOTICE
+#define LOG_LEVEL LOG_LEVEL_TRACE
 // #define LOG_LEVEL LOG_LEVEL_VERBOSE
 
 // Memory optimization for Arduino Uno/Nano: disable debug logs for setting validation
