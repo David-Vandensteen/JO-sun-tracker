@@ -4,33 +4,47 @@
 #include "led_blink.h"
 #include "led_protocol.h"
 
-
 LedProtocol::LedProtocol() : _pin(0) {
+  Log.trace("LedProtocol::LedProtocol\n");
   _state = State::Idle;
-  _ledBlink = LedBlink(_pin);
+  _led = LedBlink(_pin);
+  #if defined(BOARD_UNO) || defined(BOARD_NANO)
+    _ledBuiltin = LedBlink(LED_BUILTIN);
+  #endif
 }
 
 LedProtocol::LedProtocol(uint8_t pin)
   : _pin(pin) {
     Log.trace("LedProtocol::LedProtocol\n");
+    LedProtocol::LedProtocol();
     _state = State::Idle;
-    _ledBlink = LedBlink(_pin);
+    _led = LedBlink(_pin);
   }
 
-void LedProtocol::invalidSetting() {
+void LedProtocol::blink(unsigned long interval, uint8_t iteration) {
+  _led = LedBlink(_pin, interval, iteration);
+  #if defined(BOARD_UNO) || defined(BOARD_NANO)
+    _ledBuiltin = LedBlink(LED_BUILTIN, interval, iteration);
+  #endif
+}
+
+void LedProtocol::fatalError() {
   Log.fatal("Invalid setting");
   _state = State::Error;
-  _ledBlink = LedBlink(_pin, 500, 10);
+  LedProtocol::blink(500, 10);
   while (true) {
     LedProtocol::update();
   }
 }
 
-void LedProtocol::waitReady() {
+void LedProtocol::waiting() {
   _state = State::Waiting;
-  _ledBlink = LedBlink(_pin, 1000, 5);
+  LedProtocol::blink(1000, 15);
 }
 
 void LedProtocol::update() {
-  _ledBlink.update();
+  _led.update();
+  #if defined(BOARD_UNO) || defined(BOARD_NANO)
+    _ledBuiltin.update();
+  #endif
 }

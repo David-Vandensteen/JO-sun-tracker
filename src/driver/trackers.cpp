@@ -27,14 +27,14 @@ void Trackers::init() {
   #endif
   if (!isValidSetting(_setting)) {
     Log.fatal("Invalid setting");
-    _ledProtocol.invalidSetting();
+    _ledProtocol.fatalError();
   }
   Log.notice("Setting is valid\n");
   #ifdef BOARD_ESP32_WROOM_32S
   logSetting(_setting);
   #endif
   Log.notice("Waiting before starting...\n");
-  _ledProtocol.waitReady();
+  _ledProtocol.waiting();
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _trackers[i].init();
   }
