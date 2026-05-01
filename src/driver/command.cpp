@@ -1,7 +1,7 @@
 #include <Arduino.h>
+#include <ArduinoLog.h>
 #include "setting.h"
 #include "command.h"
-#include <ArduinoLog.h>
 
 Command::Command()
   : _buttonPin(nullptr) {}
@@ -11,6 +11,7 @@ Command::Command(SettingBoardPinButton *buttonPin)
 
 void Command::init() {
   Log.trace("Command::init\n");
+  Log.notice("Initializing command\n");
   pinMode(_buttonPin->deploy, INPUT_PULLUP);
   pinMode(_buttonPin->retract, INPUT_PULLUP);
   pinMode(_buttonPin->scan, INPUT_PULLUP);

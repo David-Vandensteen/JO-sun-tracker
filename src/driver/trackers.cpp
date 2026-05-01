@@ -36,11 +36,11 @@ void Trackers::init() {
   #endif
   Log.notice("Waiting before starting...\n");
   _ledProtocol.waitReady();
-  Log.notice("Now is ready\n");
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _trackers[i].init();
   }
   _command.init();
+  Log.notice ("Selected tracker: %d\n", _command.getSelectedTrackerId());
 }
 
 void Trackers::update() {
