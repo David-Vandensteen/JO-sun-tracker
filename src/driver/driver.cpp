@@ -16,10 +16,16 @@ void Driver::log(char *version) {
 }
 
 void Driver::watchDog() {
-  unsigned long currentTime = millis();
-  static unsigned long lastTime = 0;
-  if (currentTime - lastTime >= 30000) {
-    lastTime = currentTime;
-    Log.notice("WatchDog\n");
+  #if defined(WATCHDOG_INTERVAL)
+  if (LOG && WATCHDOG) {
+    unsigned long currentTime = millis();
+    static unsigned long lastTime = 0;
+    if (currentTime - lastTime >= WATCHDOG_INTERVAL) {
+      lastTime = currentTime;
+      if (LOG) {
+        Serial.println("Watchdog");
+      }
+    }
   }
+  #endif
 }

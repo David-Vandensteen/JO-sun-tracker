@@ -45,6 +45,9 @@
   #define LOG_FATAL_SETTING true
 #endif
 
+#define WATCHDOG true
+#define WATCHDOG_INTERVAL 30000
+
 typedef struct SettingBoardPinTrackerLDRDay {
   uint8_t up;
   uint8_t down;
