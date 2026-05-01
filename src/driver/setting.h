@@ -5,22 +5,15 @@
 
 #define VERSION "0.0.1"
 
+#define TRACKER_MAX 1
+#define TRACKER_1 0
+
+// ------------------
+//  BOARD
+// ------------------
 // #define BOARD_NANO
 #define BOARD_UNO
 // #define BOARD_ESP32_WROOM_32S
-
-#define LOG true
-// #define LOG false
-// #define LOG_LEVEL LOG_LEVEL_SILENT
-// #define LOG_LEVEL LOG_LEVEL_FATAL
-// #define LOG_LEVEL LOG_LEVEL_ERROR
-// #define LOG_LEVEL LOG_LEVEL_WARNING
-#define LOG_LEVEL LOG_LEVEL_NOTICE
-// #define LOG_LEVEL LOG_LEVEL_TRACE
-// #define LOG_LEVEL LOG_LEVEL_VERBOSE
-
-#define TRACKER_MAX 1
-#define TRACKER_1 0
 
 #ifdef BOARD_UNO
 #undef TRACKER_MAX
@@ -30,6 +23,26 @@
 #ifdef BOARD_NANO
 #undef TRACKER_MAX
 #define TRACKER_MAX 1
+#endif
+
+// ------------------
+//  LOG
+// ------------------
+#define LOG true
+
+// #define LOG_LEVEL LOG_LEVEL_SILENT
+// #define LOG_LEVEL LOG_LEVEL_FATAL
+// #define LOG_LEVEL LOG_LEVEL_ERROR
+// #define LOG_LEVEL LOG_LEVEL_WARNING
+#define LOG_LEVEL LOG_LEVEL_NOTICE
+// #define LOG_LEVEL LOG_LEVEL_TRACE
+// #define LOG_LEVEL LOG_LEVEL_VERBOSE
+
+// Memory optimization for Arduino Uno/Nano: disable debug logs for setting validation
+#if defined(BOARD_UNO) || defined(BOARD_NANO)
+  #define LOG_FATAL_SETTING false
+#else
+  #define LOG_FATAL_SETTING true
 #endif
 
 typedef struct SettingBoardPinTrackerLDRDay {
@@ -109,6 +122,7 @@ typedef struct Setting {
   SettingProgram program;
 } Setting;
 
+void logFatal(const char* message);
 void settingInit(Setting *setting);
 bool isValidSetting(Setting *setting);
 

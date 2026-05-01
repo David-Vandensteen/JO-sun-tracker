@@ -1,91 +1,97 @@
 #include <ArduinoLog.h>
 #include "setting.h"
 
+void logFatal(const char* message) {
+  #if LOG_FATAL_SETTING
+  Log.fatal(message);
+  #endif
+}
+
 bool isValidSetting(Setting *setting) {
   if (setting == nullptr) {
-    Log.fatal("Setting pointer is null");
+    logFatal("Setting pointer is null");
     return false;
   }
   if (setting->board.adc.resolution <= 0) {
-    Log.fatal("ADC resolution <= 0");
+    logFatal("ADC resolution <= 0");
     return false;
   }
   if (setting->board.pwm.resolution <= 0) {
-    Log.fatal("PWM resolution <= 0");
+    logFatal("PWM resolution <= 0");
     return false;
   }
   if (setting->board.serial.baudRate <= 0) {
-    Log.fatal("Serial baudRate <= 0");
+    logFatal("Serial baudRate <= 0");
     return false;
   }
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     if (setting->board.pin.tracker[i].ldr.day.up == 0) {
-      Log.fatal("LDR day.up pin == 0");
+      logFatal("LDR day.up pin == 0");
       return false;
     }
     if (setting->board.pin.tracker[i].ldr.day.down == 0) {
-      Log.fatal("LDR day.down pin == 0");
+      logFatal("LDR day.down pin == 0");
       return false;
     }
     if (setting->board.pin.tracker[i].ldr.back == 0) {
-      Log.fatal("LDR back pin == 0");
+      logFatal("LDR back pin == 0");
       return false;
     }
     if (setting->board.pin.tracker[i].motors.ena == 0) {
-      Log.fatal("Motor ENA pin == 0");
+      logFatal("Motor ENA pin == 0");
       return false;
     }
     if (setting->board.pin.tracker[i].motors.in1 == 0) {
-      Log.fatal("Motor IN1 pin == 0");
+      logFatal("Motor IN1 pin == 0");
       return false;
     }
     if (setting->board.pin.tracker[i].motors.in2 == 0) {
-      Log.fatal("Motor IN2 pin == 0");
+      logFatal("Motor IN2 pin == 0");
       return false;
     }
     if (setting->board.pin.tracker[i].motors.enb == 0) {
-      Log.fatal("Motor ENB pin == 0");
+      logFatal("Motor ENB pin == 0");
       return false;
     }
     if (setting->board.pin.tracker[i].motors.in3 == 0) {
-      Log.fatal("Motor IN3 pin == 0");
+      logFatal("Motor IN3 pin == 0");
       return false;
     }
     if (setting->board.pin.tracker[i].motors.in4 == 0) {
-      Log.fatal("Motor IN4 pin == 0");
+      logFatal("Motor IN4 pin == 0");
       return false;
     }
   }
   if (setting->board.pin.button.deploy == 0) {
-    Log.fatal("Deploy button pin == 0");
+    logFatal("Deploy button pin == 0");
     return false;
   }
   if (setting->board.pin.button.retract == 0) {
-    Log.fatal("Retract button pin == 0");
+    logFatal("Retract button pin == 0");
     return false;
   }
   if (setting->board.pin.button.scan == 0) {
-    Log.fatal("Scan button pin == 0");
+    logFatal("Scan button pin == 0");
     return false;
   }
   if (setting->board.pin.button.selectedTracker == 0) {
-    Log.fatal("SelectedTracker button pin == 0");
+    logFatal("SelectedTracker button pin == 0");
     return false;
   }
   if (setting->board.pin.ledStatus == 0) {
-    Log.fatal("LED status pin == 0");
+    logFatal("LED status pin == 0");
     return false;
   }
   if (setting->program.version == nullptr || setting->program.version[0] == '\0') {
-    Log.fatal("Program version is null or empty");
+    logFatal("Program version is null or empty");
     return false;
   }
   if (setting->program.ldr.threshold < 0 || setting->program.ldr.threshold > setting->board.adc.resolution) {
-    Log.fatal("LDR threshold out of range");
+    logFatal("LDR threshold out of range");
     return false;
   }
   if (setting->program.motor.speed < 0 || setting->program.motor.speed > setting->board.pwm.resolution) {
-    Log.fatal("Motor speed out of range");
+    logFatal("Motor speed out of range");
     return false;
   }
 
