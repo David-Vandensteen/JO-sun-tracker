@@ -22,9 +22,7 @@ void Driver::watchDog() {
     static unsigned long lastTime = 0;
     if (currentTime - lastTime >= WATCHDOG_INTERVAL) {
       lastTime = currentTime;
-      if (LOG) {
-        Serial.println("Watchdog");
-      }
+      Serial.println("Watchdog");
     }
   }
   #endif
