@@ -4,7 +4,6 @@
   JO Sun Tracker - Driver code for Arduino Uno/Nano/ESP32 WROOM 32S
   @2026
 */
-
 #include <Arduino.h>
 #include "driver.h"
 #include "setting.h"
