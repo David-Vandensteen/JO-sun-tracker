@@ -44,6 +44,7 @@ void Trackers::init() {
 }
 
 void Trackers::update() {
+  _ledProtocol.update();
   Tracker selectedTracker = _trackers[_command.getSelectedTrackerId()];
   bool deploy = _command.isDeployButtonPressed();
   bool retract = _command.isRetractButtonPressed();
