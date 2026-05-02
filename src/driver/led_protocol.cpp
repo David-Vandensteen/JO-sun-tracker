@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
+#include <dv_led_blink.h>
 #include "setting.h"
-#include "dv_led_blink.h"
 #include "led_protocol.h"
 
 LedProtocol::LedProtocol() : _pin(0) {

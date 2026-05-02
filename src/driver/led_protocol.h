@@ -1,8 +1,8 @@
 #ifndef LED_PROTOCOL_H
 #define LED_PROTOCOL_H
 #include <Arduino.h>
+#include <dv_led_blink.h>
 #include "setting.h"
-#include "dv_led_blink.h"
 
 class LedProtocol {
 public:
