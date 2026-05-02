@@ -31,7 +31,7 @@ void LedProtocol::blink(unsigned long interval, uint8_t iteration) {
 void LedProtocol::fatalError() {
   Log.fatal("Invalid setting");
   _state = State::Error;
-  LedProtocol::blink(100, DV_LED_BLINK_INFINITE);
+  LedProtocol::blink(100, DV_LedBlink::FOREVER);
   while (true) {
     LedProtocol::update();
   }
