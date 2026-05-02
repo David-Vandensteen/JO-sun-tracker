@@ -1,15 +1,15 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include "setting.h"
-#include "led_blink.h"
+#include "dv_led_blink.h"
 #include "led_protocol.h"
 
 LedProtocol::LedProtocol() : _pin(0) {
   Log.trace("LedProtocol::LedProtocol\n");
   _state = State::Idle;
-  _led = LedBlink(_pin);
+  _led = DV_LedBlink(_pin);
   #if defined(BOARD_UNO) || defined(BOARD_NANO)
-    _ledBuiltin = LedBlink(LED_BUILTIN);
+    _ledBuiltin = DV_LedBlink(LED_BUILTIN);
   #endif
 }
 
@@ -18,20 +18,20 @@ LedProtocol::LedProtocol(uint8_t pin)
     Log.trace("LedProtocol::LedProtocol\n");
     LedProtocol::LedProtocol();
     _state = State::Idle;
-    _led = LedBlink(_pin);
+    _led = DV_LedBlink(_pin);
   }
 
 void LedProtocol::blink(unsigned long interval, uint8_t iteration) {
-  _led = LedBlink(_pin, interval, iteration);
+  _led = DV_LedBlink(_pin, interval, iteration);
   #if defined(BOARD_UNO) || defined(BOARD_NANO)
-    _ledBuiltin = LedBlink(LED_BUILTIN, interval, iteration);
+    _ledBuiltin = DV_LedBlink(LED_BUILTIN, interval, iteration);
   #endif
 }
 
 void LedProtocol::fatalError() {
   Log.fatal("Invalid setting");
   _state = State::Error;
-  LedProtocol::blink(500, 10);
+  LedProtocol::blink(100, DV_LED_BLINK_INFINITE);
   while (true) {
     LedProtocol::update();
   }

@@ -2,7 +2,7 @@
 #define LED_PROTOCOL_H
 #include <Arduino.h>
 #include "setting.h"
-#include "led_blink.h"
+#include "dv_led_blink.h"
 
 class LedProtocol {
 public:
@@ -18,9 +18,9 @@ private:
     Waiting,
     Error,
   };
-  LedBlink _led;
+  DV_LedBlink _led;
   #if defined(BOARD_UNO) || defined(BOARD_NANO)
-    LedBlink _ledBuiltin = LedBlink(LED_BUILTIN);
+    DV_LedBlink _ledBuiltin = DV_LedBlink(LED_BUILTIN);
   #endif
   uint8_t _pin;
   State _state = State::Idle;
