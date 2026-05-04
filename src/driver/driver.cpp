@@ -2,11 +2,16 @@
 #include <ArduinoLog.h>
 #include "setting.h"
 #include "driver.h"
+#include "led_protocol.h"
 
 void Driver::serial(unsigned long baudRate, int logLevel) {
   Serial.begin(baudRate);
   Log.begin(logLevel, &Serial);
   delay(2000);
+}
+
+LedProtocol Driver::createLedProtocol(uint8_t pin) {
+  return LedProtocol(pin);
 }
 
 void Driver::log(char *version) {

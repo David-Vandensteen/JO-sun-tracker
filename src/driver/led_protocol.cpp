@@ -6,7 +6,6 @@
 
 LedProtocol::LedProtocol(uint8_t pin)
   : _pin(pin) {
-    Log.trace("LedProtocol::LedProtocol\n");
     _state = State::Idle;
     _led = DV_LedBlink(_pin);
   }

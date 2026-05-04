@@ -7,7 +7,7 @@
 
 class Trackers {
 public:
-  explicit Trackers(Setting *setting);
+  explicit Trackers(Setting *setting, LedProtocol *ledProtocol);
   void init();
   void update();
 

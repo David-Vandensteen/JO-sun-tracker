@@ -7,10 +7,12 @@
 #include <Arduino.h>
 #include "driver.h"
 #include "setting.h"
+#include "led_protocol.h"
 #include "trackers.h"
 
 static Setting setting;
-static Trackers trackers(&setting);
+static LedProtocol ledProtocol = Driver::createLedProtocol(setting.board.pin.ledStatus);
+static Trackers trackers(&setting, &ledProtocol);
 
 void setup() {
   settingInit(&setting);

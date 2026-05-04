@@ -4,7 +4,7 @@
 #include "led_protocol.h"
 #include "trackers.h"
 
-Trackers::Trackers(Setting *setting) : _setting(setting) {}
+Trackers::Trackers(Setting *setting, LedProtocol *ledProtocol) : _setting(setting), _ledProtocol(ledProtocol) {}
 
 void Trackers::init() {
   Log.trace("Trackers::init\n");
@@ -18,13 +18,12 @@ void Trackers::init() {
       _setting->program.ldr.threshold
     );
   }
-  _ledProtocol = new LedProtocol(_setting->board.pin.ledStatus);
   _command = new Command(&_setting->board.pin.button);
 
   #if defined(BOARD_UNO) || defined(BOARD_NANO)
     pinMode(LED_BUILTIN, OUTPUT);
   #endif
-  if (!isValidSetting(_setting)) {
+  if (!isValidSetting(_setting)) { // TODO move to driver or main
     Log.fatal("Invalid setting");
     _ledProtocol->fatalError();
   }
