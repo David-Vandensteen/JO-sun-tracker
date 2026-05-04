@@ -6,12 +6,6 @@
 #include "motor.h"
 #include <ArduinoLog.h>
 
-Tracker::Tracker()
-  : _trackerPin(nullptr), _adcResolution(0), _pwmResolution(0), _motorSpeedPercent(0), _ldrThreshold(0),
-    _ldrs(LDR(0,0), LDR(0,0), LDR(0,0)),
-    _motors(Motor(0,0,0,0), Motor(0,0,0,0))
-{}
-
 Tracker::Tracker(SettingBoardPinTracker* trackerPin, int adcResolution, int pwmResolution, int motorSpeedPercent, uint16_t ldrThreshold)
   : _trackerPin(trackerPin),
     _adcResolution(adcResolution),

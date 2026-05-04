@@ -6,7 +6,6 @@
 
 class Tracker {
 public:
-  explicit Tracker();
   explicit Tracker(SettingBoardPinTracker* trackerPin, int adcResolution, int pwmResolution, int motorSpeedPercent, uint16_t ldrThreshold);
   void init();
   bool isAutoMode();

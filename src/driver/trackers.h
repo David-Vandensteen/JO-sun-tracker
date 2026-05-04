@@ -13,9 +13,9 @@ public:
 
 private:
   Setting *_setting;
-  Tracker _trackers[TRACKER_MAX];
-  Command _command;
-  LedProtocol _ledProtocol;
+  Tracker *_trackers[TRACKER_MAX];
+  Command *_command;
+  LedProtocol *_ledProtocol;
 };
 
 #endif

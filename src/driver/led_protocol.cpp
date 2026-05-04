@@ -4,19 +4,9 @@
 #include "setting.h"
 #include "led_protocol.h"
 
-LedProtocol::LedProtocol() : _pin(0) {
-  Log.trace("LedProtocol::LedProtocol\n");
-  _state = State::Idle;
-  _led = DV_LedBlink(_pin);
-  #if defined(BOARD_UNO) || defined(BOARD_NANO)
-    _ledBuiltin = DV_LedBlink(LED_BUILTIN);
-  #endif
-}
-
 LedProtocol::LedProtocol(uint8_t pin)
   : _pin(pin) {
     Log.trace("LedProtocol::LedProtocol\n");
-    LedProtocol::LedProtocol();
     _state = State::Idle;
     _led = DV_LedBlink(_pin);
   }

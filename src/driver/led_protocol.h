@@ -6,7 +6,6 @@
 
 class LedProtocol {
 public:
-  explicit LedProtocol();
   explicit LedProtocol(uint8_t pin);
   void waiting();
   void fatalError();

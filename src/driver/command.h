@@ -5,7 +5,6 @@
 
 class Command {
 public:
-  explicit Command();
   explicit Command(SettingBoardPinButton *buttonPin);
   void init();
   bool isDeployButtonPressed();

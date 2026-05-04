@@ -3,9 +3,6 @@
 #include "setting.h"
 #include "command.h"
 
-Command::Command()
-  : _buttonPin(nullptr) {}
-
 Command::Command(SettingBoardPinButton *buttonPin)
   : _buttonPin(buttonPin) {}
 
