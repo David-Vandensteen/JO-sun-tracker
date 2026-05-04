@@ -20,7 +20,7 @@ void LedProtocol::blink(unsigned long interval, uint8_t iteration) {
 
 void LedProtocol::fatalError() {
   _state = State::Error;
-  LedProtocol::blink(100, DV_LedBlink::FOREVER);
+  LedProtocol::blink(250, DV_LedBlink::FOREVER);
   while (true) {
     LedProtocol::update();
   }
