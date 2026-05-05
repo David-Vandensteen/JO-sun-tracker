@@ -1,13 +1,19 @@
 #ifndef DRIVER_H
 #define DRIVER_H
 #include <Arduino.h>
+#include "setting.h"
 #include "led_protocol.h"
+#include "trackers.h"
 
 class Driver {
 public:
-  static LedProtocol createLedProtocol(uint8_t pin);
-  static void serial(unsigned long baudRate, int logLevel);
-  static void log(char *version);
+  static void init(Setting *setting);
+  static void update();
+
+private:
+  static Setting *_setting;
+  static LedProtocol *_ledProtocol;
+  static Trackers *_trackers;
   static void watchDog();
 };
 

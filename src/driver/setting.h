@@ -127,7 +127,7 @@ typedef struct Setting {
 
 void logFatal(const char* message);
 void settingInit(Setting *setting);
-bool isValidSetting(Setting *setting);
+bool assertSetting(Setting *setting);
 
 #if BOARD_ESP32_WROOM_32S
 void logSetting(Setting *setting);

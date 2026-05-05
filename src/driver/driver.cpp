@@ -4,24 +4,35 @@
 #include "driver.h"
 #include "led_protocol.h"
 
-void Driver::serial(unsigned long baudRate, int logLevel) {
-  Serial.begin(baudRate);
-  Log.begin(logLevel, &Serial);
-  delay(2000);
-}
+Setting *Driver::_setting;
+LedProtocol *Driver::_ledProtocol;
+Trackers *Driver::_trackers;
 
-LedProtocol Driver::createLedProtocol(uint8_t pin) {
-  return LedProtocol(pin);
-}
-
-void Driver::log(char *version) {
-  Log.trace("Driver::log\n");
+void Driver::init(Setting *setting) {
+  _setting = setting;
+  _ledProtocol = new LedProtocol(_setting->board.pin.ledStatus);
+  if (!assertSetting(_setting)) {
+    Log.fatal("Invalid setting");
+    _ledProtocol->fatalError();
+  }
+  Log.notice("Setting is valid\n");
+  #ifdef BOARD_ESP32_WROOM_32S
+  logSetting(_setting);
+  #endif
+   Log.notice("Waiting before starting...\n");
+  _ledProtocol->waiting();
+  _trackers = new Trackers(_setting, _ledProtocol);
+  _trackers->init();
+  if (LOG) {
+    Serial.begin(_setting->board.serial.baudRate);
+    Log.begin(LOG_LEVEL, &Serial);
+    delay(2000);
+  }
   Log.notice("Starting program\n");
-  Log.notice("JO Sun Tracker - version %s\n", version);
+  Log.notice("JO Sun Tracker - version %s\n", _setting->program.version);
 }
 
 void Driver::watchDog() {
-  #if defined(WATCHDOG_INTERVAL)
   if (LOG && WATCHDOG) {
     unsigned long currentTime = millis();
     static unsigned long lastTime = 0;
@@ -30,5 +41,11 @@ void Driver::watchDog() {
       Serial.println("Watchdog");
     }
   }
+}
+
+void Driver::update() {
+  _trackers->update();
+  #if defined(WATCHDOG_INTERVAL)
+    watchDog();
   #endif
 }

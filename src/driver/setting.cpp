@@ -7,7 +7,7 @@ void logFatal(const char* message) {
   #endif
 }
 
-bool isValidSetting(Setting *setting) {
+bool assertSetting(Setting *setting) {
   if (setting == nullptr) {
     logFatal("Setting pointer is null");
     return false;

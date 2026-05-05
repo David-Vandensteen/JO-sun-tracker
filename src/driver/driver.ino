@@ -11,19 +11,14 @@
 #include "trackers.h"
 
 static Setting setting;
-static LedProtocol ledProtocol = Driver::createLedProtocol(setting.board.pin.ledStatus);
-static Trackers trackers(&setting, &ledProtocol);
+static LedProtocol *ledProtocol;
+static Trackers *trackers;
 
 void setup() {
   settingInit(&setting);
-  if (LOG) {
-    Driver::serial(setting.board.serial.baudRate, LOG_LEVEL);
-    Driver::log(setting.program.version);
-  }
-  trackers.init();
+  Driver::init(&setting);
 }
 
 void loop() {
-  Driver::watchDog();
-  trackers.update();
+  Driver::update();
 }
