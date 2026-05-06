@@ -78,8 +78,8 @@ bool assertSetting(Setting *setting) {
     logFatal("SelectedTracker button pin == 0");
     return false;
   }
-  if (setting->board.pin.ledStatus == 0) {
-    logFatal("LED status pin == 0");
+  if (setting->board.pin.led == 0) {
+    logFatal("LED pin == 0");
     return false;
   }
   if (setting->program.version == nullptr || setting->program.version[0] == '\0') {

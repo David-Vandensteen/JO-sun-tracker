@@ -18,15 +18,12 @@ void Trackers::init() {
       _setting->program.ldr.threshold
     );
   }
-  _command = new Command(&_setting->board.pin.button); // TODO: move to Driver::init
-
-  #if defined(BOARD_UNO) || defined(BOARD_NANO)
+  #if defined(BOARD_UNO) || defined(BOARD_NANO) // TODO
     pinMode(LED_BUILTIN, OUTPUT);
   #endif
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _trackers[i]->init();
   }
-  _command->init(); // TODO: move to Driver::init
   Log.notice ("Selected tracker: %d\n", _command->getSelectedTrackerId());
 }
 

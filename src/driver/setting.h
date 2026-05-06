@@ -84,7 +84,7 @@ typedef struct SettingBoardPinTracker {
 typedef struct SettingBoardPin {
   SettingBoardPinTracker tracker[TRACKER_MAX];
   SettingBoardPinButton button;
-  uint8_t ledStatus;
+  uint8_t led;
 } SettingBoardPin;
 
 typedef struct SettingBoardADC {

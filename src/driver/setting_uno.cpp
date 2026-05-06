@@ -58,11 +58,11 @@ void settingInit(Setting *setting) {
   setting->board.pin.tracker[TRACKER_1].motors.enb = 13;
   setting->board.pin.tracker[TRACKER_1].motors.in3 = 11;
   setting->board.pin.tracker[TRACKER_1].motors.in4 = 12;
-	setting->board.pin.button.deploy = 2;
+	setting->board.pin.button.deploy = 2; // TODO: renname to command
 	setting->board.pin.button.retract = 3;
 	setting->board.pin.button.scan = 5;
   setting->board.pin.button.selectedTracker = 4;
-	setting->board.pin.ledStatus = 6;
+	setting->board.pin.led = 6;
 	setting->program.version = VERSION;
 	setting->program.ldr.threshold = SETTING_PROGRAM_LDR_THRESHOLD;
 	setting->program.motor.speed = SETTING_PROGRAM_MOTOR_SPEED;

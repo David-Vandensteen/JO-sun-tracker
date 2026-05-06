@@ -3,14 +3,18 @@
 #include "setting.h"
 #include "driver.h"
 #include "led_protocol.h"
+#include "command.h"
+#include "trackers.h"
 
 Setting *Driver::_setting;
 LedProtocol *Driver::_ledProtocol;
+Command *Driver::_command;
 Trackers *Driver::_trackers;
 
 void Driver::init(Setting *setting) {
   _setting = setting;
-  _ledProtocol = new LedProtocol(_setting->board.pin.ledStatus);
+  _command = new Command(&_setting->board.pin.button);
+  _ledProtocol = new LedProtocol(_setting->board.pin.led);
   if (!assertSetting(_setting)) {
     Log.fatal("Invalid setting");
     _ledProtocol->fatalError();
@@ -21,6 +25,7 @@ void Driver::init(Setting *setting) {
   #endif
    Log.notice("Waiting before starting...\n");
   _ledProtocol->waiting();
+  _command->init();
   _trackers = new Trackers(_setting, _ledProtocol);
   _trackers->init();
   if (LOG) {
