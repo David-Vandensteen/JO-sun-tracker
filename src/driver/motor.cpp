@@ -8,7 +8,10 @@ Motor::Motor(uint8_t in1, uint8_t in2, uint8_t en, int pwmResolution)
     : _in1(in1), _in2(in2), _en(en), _pwmResolution(pwmResolution) {}
 
 void Motor::init() {
-    Log.trace("Motor::init\n");
+  Log.trace("Motor::init\n");
+  pinMode(_in1, OUTPUT);
+  pinMode(_in2, OUTPUT);
+  pinMode(_en, OUTPUT);
   stop();
 }
 bool Motor::isBusy() {
