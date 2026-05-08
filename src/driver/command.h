@@ -12,7 +12,9 @@ public:
   bool isAutoButtonPressed();
   bool isAuto();
   uint8_t getSelectedTrackerId();
+  #if LOG
   void log();
+  #endif
 
 private:
   enum class State {

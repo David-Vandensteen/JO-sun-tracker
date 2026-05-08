@@ -39,7 +39,7 @@ bool Command::isAutoButtonPressed() {
     _autoButtonState.previous = _autoButtonState.current;
     _autoButtonState.current = !digitalRead(_buttonPin->scan);
     if (_autoButtonState.current) {
-      Log.trace("Command::isScanButtonPressed state: scanning\n");
+      Log.trace("Command::isAutoButtonPressed state: scanning\n");
       _state = (_state == State::Auto) ? State::Idle : State::Auto;
     }
   }
@@ -54,12 +54,13 @@ uint8_t Command::getSelectedTrackerId() {
   return digitalRead(_buttonPin->selectedTracker);
 }
 
+#if LOG
 void Command::log() {
-  Log.trace("Command:"); // TODO
-  // LOG_TRACEF("- Deploy button: %s", isDeployButtonPressed() ? "pressed" : "not pressed");
-  // LOG_TRACEF("- Retract button: %s", isRetractButtonPressed() ? "pressed" : "not pressed");
-  // LOG_TRACEF("- Scan button: %s", isScanButtonPressed() ? "pressed" : "not pressed");
-  // LOG_TRACEF("- Selected tracker ID: %d", getSelectedTrackerId());
-  // LOG_TRACEF("- State: %d", static_cast<int>(_state));
+  Log.trace("Command:");
+  Log.trace("- Deploy button: %s", isDeployButtonPressed() ? "pressed" : "not pressed");
+  Log.trace("- Retract button: %s", isRetractButtonPressed() ? "pressed" : "not pressed");
+  Log.trace("- Auto button: %s", isAutoButtonPressed() ? "pressed" : "not pressed");
+  Log.trace("- Selected tracker ID: %d", getSelectedTrackerId());
+  Log.trace("- State: %d", static_cast<int>(_state));
 }
-
+#endif
