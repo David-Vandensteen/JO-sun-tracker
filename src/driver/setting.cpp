@@ -62,19 +62,19 @@ bool assertSetting(Setting *setting) {
       return false;
     }
   }
-  if (setting->board.pin.button.deploy == 0) {
+  if (setting->board.pin.command.deploy == 0) {
     logFatal("Deploy button pin == 0");
     return false;
   }
-  if (setting->board.pin.button.retract == 0) {
+  if (setting->board.pin.command.retract == 0) {
     logFatal("Retract button pin == 0");
     return false;
   }
-  if (setting->board.pin.button.scan == 0) {
+  if (setting->board.pin.command.scan == 0) {
     logFatal("Scan button pin == 0");
     return false;
   }
-  if (setting->board.pin.button.selectedTracker == 0) {
+  if (setting->board.pin.command.selectedTracker == 0) {
     logFatal("SelectedTracker button pin == 0");
     return false;
   }
@@ -117,10 +117,10 @@ void logSetting(Setting *setting) {
     Log.trace("    - Motor IN3 pin: %d\n", setting->board.pin.tracker[i].motors.in3);
     Log.trace("    - Motor IN4 pin: %d\n", setting->board.pin.tracker[i].motors.in4);
   }
-  Log.trace("  - Button deploy pin: %d\n", setting->board.pin.button.deploy);
-  Log.trace("  - Button retract pin: %d\n", setting->board.pin.button.retract);
-  Log.trace("  - Button scan pin: %d\n", setting->board.pin.button.scan);
-  Log.trace("  - Button selectedTracker pin: %d\n", setting->board.pin.button.selectedTracker);
+  Log.trace("  - Command deploy pin: %d\n", setting->board.pin.command.deploy);
+  Log.trace("  - Command retract pin: %d\n", setting->board.pin.command.retract);
+  Log.trace("  - Command scan pin: %d\n", setting->board.pin.command.scan);
+  Log.trace("  - Command selectedTracker pin: %d\n", setting->board.pin.command.selectedTracker);
   Log.trace("  - LED status pin: %d\n", setting->board.pin.ledStatus);
   Log.trace("- Program:\n");
   Log.trace("  - Version: %s\n", setting->program.version);

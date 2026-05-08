@@ -13,7 +13,7 @@ Trackers *Driver::_trackers;
 
 void Driver::init(Setting *setting) {
   _setting = setting;
-  _command = new Command(&_setting->board.pin.button);
+  _command = new Command(&_setting->board.pin.command);
   _ledProtocol = new LedProtocol(_setting->board.pin.led);
   if (!assertSetting(_setting)) {
     Log.fatal("Invalid setting");

@@ -5,7 +5,7 @@
 
 class Command {
 public:
-  explicit Command(SettingBoardPinButton *buttonPin);
+  explicit Command(SettingBoardPinCommand *buttonPin);
   void init();
   bool isDeployButtonPressed();
   bool isRetractButtonPressed();
@@ -25,7 +25,7 @@ private:
     bool previous = false;
     bool current = false;
   };
-  SettingBoardPinButton *_buttonPin;
+  SettingBoardPinCommand *_buttonPin;
   ButtonState _autoButtonState;
   State _state = State::Idle;
 };

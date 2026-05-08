@@ -60,12 +60,12 @@ typedef struct SettingBoardPinTrackerLDR {
   SettingBoardPinTrackerLDRBack back;
 } SettingBoardPinTrackerLDR;
 
-typedef struct SettingBoardPinButton {
+typedef struct SettingBoardPinCommand {
   uint8_t deploy;
   uint8_t retract;
   uint8_t scan;
   uint8_t selectedTracker;
-} SettingBoardPinButton;
+} SettingBoardPinCommand;
 
 typedef struct SettingBoardPinMotors {
   uint8_t ena;
@@ -83,7 +83,7 @@ typedef struct SettingBoardPinTracker {
 
 typedef struct SettingBoardPin {
   SettingBoardPinTracker tracker[TRACKER_MAX];
-  SettingBoardPinButton button;
+  SettingBoardPinCommand command;
   uint8_t led;
 } SettingBoardPin;
 

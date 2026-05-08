@@ -3,7 +3,7 @@
 #include "setting.h"
 #include "command.h"
 
-Command::Command(SettingBoardPinButton *buttonPin)
+Command::Command(SettingBoardPinCommand *buttonPin)
   : _buttonPin(buttonPin) {}
 
 void Command::init() {
