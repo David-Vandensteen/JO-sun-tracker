@@ -2,11 +2,11 @@
 #define LDR_H
 #include <Arduino.h>
 
-class LDR {
+class Ldr {
 public:
   int raw;
   int percent;
-  explicit LDR(uint8_t pin, int analogResolution);
+  explicit Ldr(uint8_t pin, int analogResolution);
   void init();
   void update();
 private:
@@ -14,12 +14,12 @@ private:
   int _analogResolution;
 };
 
-class LDRs {
+class Ldrs {
 public:
-  LDR dayUp;
-  LDR dayDown;
-  LDR back;
-  explicit LDRs(LDR dayUp, LDR dayDown, LDR back);
+  Ldr dayUp;
+  Ldr dayDown;
+  Ldr back;
+  explicit Ldrs(Ldr dayUp, Ldr dayDown, Ldr back);
   void init();
   void update();
   bool isDayUpDifferentFromDayDown(long threshold);

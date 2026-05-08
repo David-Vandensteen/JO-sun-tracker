@@ -23,7 +23,7 @@ private:
   bool _isAutoMode = true;
   uint16_t _ldrThreshold;
   SettingBoardPinTracker *_trackerPin;
-  LDRs _ldrs;
+  Ldrs _ldrs;
   Motors _motors;
 };
 
