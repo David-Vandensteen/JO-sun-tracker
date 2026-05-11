@@ -1,37 +1,17 @@
 # JO-sun-tracker
 
-## Matériel pour un groupe de panneaux solaire
-- 1 carte ESP32 Dev Module ou Arduino UNO\NANO
-- 1 shield screw bornier pour ESP32 ou UNO\NANO
-- 1 module L298N (peut piloter 2 moteurs 12v)
-- 2 modules LDR LM393 (photocellule) (prévoir l'étanchéité)
+## Matériel pour deux groupes de panneaux solaire
+- 1 carte ESP32
+- 1 shield screw bornier pour ESP32
+- 2 modules L298N (peut piloter 2 moteurs 12v par module)
+- 4 modules LDR LM393 (photocellule) (prévoir l'étanchéité)
 - 1 anémomètre (ref ?)
-- 3 boutons poussoir
-- 1 bouton switch
-- 2 vérins 650mm 12v
-- Connecteurs JST
-- 1 LED verte
-- 1 resistance 220 Ohms
-- Wago
-- Gaines thermorétractable
-
-## Asservissement, monitoring et pilotage à distance
-Dans un second temps, il est prévu d'ajouter une carte de type Raspberry Pi ou ESP32, équipée d'un écran tactile, afin de superviser et piloter le groupe de cartes Arduino via un bus série et un protocole de communication adapté.
-Cette évolution permettra également le pilotage et la supervision à distance, nécessitant donc une capacité Wi-Fi sur la carte ajoutée.
-Les cartes Arduino devront conserver une logique de repli autonome en cas de dysfonctionnement de cette couche supérieure.
-
-```mermaid
-graph TD
-  A[Utilisateurs à distance Wi-Fi] -->|Supervision/Pilotage| B(Raspberry Pi / ESP32)
-  B -->|Bus série & protocole| C1[Carte Arduino 1]
-  B -->|Bus série & protocole| C2[Carte Arduino 2]
-  C1 -->|Contrôle| D1[Panneaux solaires 1]
-  C2 -->|Contrôle| D2[Panneaux solaires 2]
-  B -->|Écran tactile| E[Interface locale]
-  C1 -->|Fallback autonome| F1[Logique de repli 1]
-  C2 -->|Fallback autonome| F2[Logique de repli 2]
-```
-
+- 6 boutons poussoir (NO)
+- 1 écran OLED
+- 2 accéléromètre avec gyroscope MPU-6500
+- 4 vérins 650mm 12v
+- 3 LED verte
+- 3 resistances
 
 ## Programme
 Le code source est en cours de développement ici :
