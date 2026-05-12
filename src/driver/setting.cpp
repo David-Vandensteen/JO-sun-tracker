@@ -25,11 +25,11 @@ bool assertSetting(Setting *setting) {
     return false;
   }
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
-    if (setting->board.pin.tracker[i].ldr.day.up == 0) {
+    if (setting->board.pin.tracker[i].ldr.up == 0) {
       logFatal("LDR day.up pin == 0");
       return false;
     }
-    if (setting->board.pin.tracker[i].ldr.day.down == 0) {
+    if (setting->board.pin.tracker[i].ldr.down == 0) {
       logFatal("LDR day.down pin == 0");
       return false;
     }

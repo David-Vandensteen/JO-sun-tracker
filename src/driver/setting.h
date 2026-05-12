@@ -48,13 +48,9 @@
 #define WATCHDOG true
 #define WATCHDOG_INTERVAL 30000
 
-typedef struct SettingBoardPinTrackerLDRDay {
+typedef struct SettingBoardPinTrackerLDR {
   uint8_t up;
   uint8_t down;
-} SettingBoardPinTrackerLDRDay;
-
-typedef struct SettingBoardPinTrackerLDR {
-  SettingBoardPinTrackerLDRDay day;
 } SettingBoardPinTrackerLDR;
 
 typedef struct SettingBoardPinCommand {

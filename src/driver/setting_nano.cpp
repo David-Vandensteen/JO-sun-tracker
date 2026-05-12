@@ -46,8 +46,8 @@ void settingInit(Setting *setting) {
 	setting->board.adc.resolution = SETTING_BOARD_ADC_RESOLUTION;
 	setting->board.pwm.resolution = SETTING_BOARD_PWM_RESOLUTION;
   setting->board.serial.baudRate = SETTING_BOARD_SERIAL_BAUD_RATE;
-  setting->board.pin.tracker[TRACKER_1].ldr.day.up = A0;
-  setting->board.pin.tracker[TRACKER_1].ldr.day.down = A1;
+  setting->board.pin.tracker[TRACKER_1].ldr.up = A0;
+  setting->board.pin.tracker[TRACKER_1].ldr.down = A1;
   setting->board.pin.tracker[TRACKER_1].motors.ena = 10;
   setting->board.pin.tracker[TRACKER_1].motors.in1 = 8;
   setting->board.pin.tracker[TRACKER_1].motors.in2 = 9;
