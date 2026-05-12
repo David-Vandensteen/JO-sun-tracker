@@ -1,10 +1,9 @@
 #include <Arduino.h>
-
+#include <ArduinoLog.h>
 #include "setting.h"
 #include "tracker.h"
 #include "ldr.h"
 #include "motor.h"
-#include <ArduinoLog.h>
 
 Tracker::Tracker(SettingBoardPinTracker* trackerPin, int adcResolution, int pwmResolution, int motorSpeedPercent, uint16_t ldrThreshold)
   : _trackerPin(trackerPin),
