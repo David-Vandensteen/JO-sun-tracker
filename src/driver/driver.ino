@@ -1,7 +1,7 @@
 /*
   David Vandensteen
   MIT License
-  JO Sun Tracker - Driver code for Arduino Uno/Nano/ESP32 WROOM 32S
+  JO Sun Tracker - Driver code for Arduino Uno/Nano/ESP32
   @2026
 */
 #include <Arduino.h>
