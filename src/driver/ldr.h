@@ -18,8 +18,7 @@ class Ldrs {
 public:
   Ldr dayUp;
   Ldr dayDown;
-  Ldr back;
-  explicit Ldrs(Ldr dayUp, Ldr dayDown, Ldr back);
+  explicit Ldrs(Ldr dayUp, Ldr dayDown);
   void init();
   void update();
   bool isDayUpDifferentFromDayDown(long threshold);

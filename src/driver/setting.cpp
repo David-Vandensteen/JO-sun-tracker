@@ -33,10 +33,6 @@ bool assertSetting(Setting *setting) {
       logFatal("LDR day.down pin == 0");
       return false;
     }
-    if (setting->board.pin.tracker[i].ldr.back == 0) {
-      logFatal("LDR back pin == 0");
-      return false;
-    }
     if (setting->board.pin.tracker[i].motors.ena == 0) {
       logFatal("Motor ENA pin == 0");
       return false;
@@ -109,7 +105,6 @@ void logSetting(Setting *setting) {
     Log.trace("  - Tracker %d:\n", i);
     Log.trace("    - LDR day up pin: %d\n", setting->board.pin.tracker[i].ldr.day.up);
     Log.trace("    - LDR day down pin: %d\n", setting->board.pin.tracker[i].ldr.day.down);
-    Log.trace("    - LDR back pin: %d\n", setting->board.pin.tracker[i].ldr.back);
     Log.trace("    - Motor ENA pin: %d\n", setting->board.pin.tracker[i].motors.ena);
     Log.trace("    - Motor IN1 pin: %d\n", setting->board.pin.tracker[i].motors.in1);
     Log.trace("    - Motor IN2 pin: %d\n", setting->board.pin.tracker[i].motors.in2);

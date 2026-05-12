@@ -14,8 +14,7 @@ Tracker::Tracker(SettingBoardPinTracker* trackerPin, int adcResolution, int pwmR
     _ldrThreshold(ldrThreshold),
     _ldrs(
       Ldr(trackerPin->ldr.day.up, adcResolution),
-      Ldr(trackerPin->ldr.day.down, adcResolution),
-      Ldr(trackerPin->ldr.back, adcResolution)
+      Ldr(trackerPin->ldr.day.down, adcResolution)
     ),
     _motors(
       Motor(trackerPin->motors.in1, trackerPin->motors.in2, trackerPin->motors.ena, pwmResolution),

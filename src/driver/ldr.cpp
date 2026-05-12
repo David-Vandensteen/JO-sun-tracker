@@ -21,24 +21,21 @@ void Ldr::update() {
   percent = map(raw, 0, _analogResolution, 100, 0);
 }
 
-Ldrs::Ldrs(Ldr dayUp, Ldr dayDown, Ldr back)
+Ldrs::Ldrs(Ldr dayUp, Ldr dayDown)
   : dayUp(dayUp),
-    dayDown(dayDown),
-    back(back)
+    dayDown(dayDown)
 {}
 
 void Ldrs::init() {
   Log.trace("Ldrs::init\n");
   dayUp.init();
   dayDown.init();
-  back.init();
 }
 
 void Ldrs::update() {
   Log.trace("Ldrs::update\n");
   dayUp.update();
   dayDown.update();
-  back.update();
 }
 
 bool Ldrs::isDayUpDifferentFromDayDown(long threshold) {
@@ -52,4 +49,3 @@ bool Ldrs::isDayUpBrighterThanDayDown(long threshold) {
 bool Ldrs::isDayDownBrighterThanDayUp(long threshold) {
   return dayDown.percent > dayUp.percent && isDayUpDifferentFromDayDown(threshold);
 }
-
