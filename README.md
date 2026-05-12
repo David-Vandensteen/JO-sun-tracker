@@ -31,6 +31,10 @@ Le code source est en cours de développement ici :
   - **dv_led_blink** (David Vandensteen)  
     (Outils → Gérer les bibliothèques… → Rechercher « dv_led_blink » → Installer)
 
+- Paramétrage board dans l'IDE Arduine
+  - **ESP32 Dev Module**
+  - Tools -> Upload Speed -> 115200
+  
 ## Scénarios de test (montage + code)
 - [Fonctionnement basique du L298N](tests/L298N/01-basic)
 - [Client WIFI basique sur ESP32](tests/wifi)
