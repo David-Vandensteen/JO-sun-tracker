@@ -8,7 +8,7 @@ Motor::Motor(uint8_t in1, uint8_t in2, uint8_t en, int pwmResolution)
     : _in1(in1), _in2(in2), _en(en), _pwmResolution(pwmResolution) {}
 
 void Motor::init() {
-  Log.trace("Motor::init\n");
+  Log.traceln("Motor::init");
   pinMode(_in1, OUTPUT);
   pinMode(_in2, OUTPUT);
   pinMode(_en, OUTPUT);
@@ -19,7 +19,7 @@ bool Motor::isBusy() {
 }
 
 void Motor::deploy(int speedPercent) {
-    Log.trace("Motor::deploy\n");
+    Log.traceln("Motor::deploy");
     digitalWrite(_in1, HIGH);
     digitalWrite(_in2, LOW);
     analogWrite(_en, map(speedPercent, 0, 100, 0, _pwmResolution));
@@ -27,7 +27,7 @@ void Motor::deploy(int speedPercent) {
 }
 
 void Motor::retract(int speedPercent) {
-    Log.trace("Motor::retract\n");
+    Log.traceln("Motor::retract");
     digitalWrite(_in1, LOW);
     digitalWrite(_in2, HIGH);
     analogWrite(_en, map(speedPercent, 0, 100, 0, _pwmResolution));
@@ -35,7 +35,7 @@ void Motor::retract(int speedPercent) {
 }
 
 void Motor::stop() {
-    Log.trace("Motor::stop\n");
+    Log.traceln("Motor::stop");
     digitalWrite(_in1, LOW);
     digitalWrite(_in2, LOW);
     analogWrite(_en, 0);
@@ -64,4 +64,3 @@ void Motors::stop() {
     motor1.stop();
     motor2.stop();
 }
-

@@ -12,7 +12,7 @@ Ldr::Ldr(uint8_t pin, int analogResolution)
 {}
 
 void Ldr::init() {
-  Log.trace("Ldr::init\n");
+  Log.traceln("Ldr::init");
   pinMode(_pin, INPUT);
 }
 
@@ -27,13 +27,13 @@ Ldrs::Ldrs(Ldr dayUp, Ldr dayDown)
 {}
 
 void Ldrs::init() {
-  Log.trace("Ldrs::init\n");
+  Log.traceln("Ldrs::init");
   dayUp.init();
   dayDown.init();
 }
 
 void Ldrs::update() {
-  Log.trace("Ldrs::update\n");
+  Log.traceln("Ldrs::update");
   dayUp.update();
   dayDown.update();
 }

@@ -7,8 +7,8 @@
 Trackers::Trackers(Setting *setting, LedProtocol *ledProtocol) : _setting(setting), _ledProtocol(ledProtocol) {}
 
 void Trackers::init() {
-  Log.trace("Trackers::init\n");
-  Log.notice("Initializing trackers\n");
+  Log.traceln("Trackers::init");
+  Log.noticeln("Initializing trackers");
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _trackers[i] = new Tracker(
       &_setting->board.pin.tracker[i],
@@ -24,7 +24,7 @@ void Trackers::init() {
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _trackers[i]->init();
   }
-  Log.notice ("Selected tracker: %d\n", _command->getSelectedTrackerId());
+  Log.noticeln("Selected tracker: %d", _command->getSelectedTrackerId());
 }
 
 void Trackers::update() {
@@ -35,24 +35,24 @@ void Trackers::update() {
   bool autoMode = _command->isAutoButtonPressed();
 
   if (autoMode) {
-    Log.trace("Trackers::update auto button pressed\n");
+    Log.traceln("Trackers::update auto button pressed");
     selectedTracker->scan();
   }
 
   if (deploy && retract) {
-    Log.trace("Trackers::update both deploy and retract buttons pressed, stopping\n");
+    Log.traceln("Trackers::update both deploy and retract buttons pressed, stopping tracker");
     selectedTracker->setAutoMode(false);
     selectedTracker->stop();
   }
 
   if (deploy || retract) {
     if (deploy) {
-      Log.trace("Trackers::update deploy button pressed\n");
-      Log.notice("Deploying tracker %d\n", _command->getSelectedTrackerId());
+      Log.traceln("Trackers::update deploy button pressed");
+      Log.noticeln("Deploying tracker %d", _command->getSelectedTrackerId());
     }
     if (retract) {
-      Log.trace("Trackers::update retract button pressed\n");
-      Log.notice("Retracting tracker %d\n", _command->getSelectedTrackerId());
+      Log.traceln("Trackers::update retract button pressed");
+      Log.noticeln("Retracting tracker %d", _command->getSelectedTrackerId());
     }
     selectedTracker->setAutoMode(false);
     deploy ? selectedTracker->deploy() : selectedTracker->retract();

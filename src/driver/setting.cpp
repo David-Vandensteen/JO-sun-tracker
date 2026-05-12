@@ -96,30 +96,30 @@ bool assertSetting(Setting *setting) {
 
 #ifdef BOARD_ESP32
 void logSetting(Setting *setting) {
-  Log.trace("Setting:\n");
-  Log.trace("- Board:\n");
-  Log.trace("  - ADC resolution: %d\n", setting->board.adc.resolution);
-  Log.trace("  - PWM resolution: %d\n", setting->board.pwm.resolution);
-  Log.trace("  - Serial baud rate: %lu\n", setting->board.serial.baudRate);
+  Log.traceln("Setting:");
+  Log.traceln("- Board:");
+  Log.traceln("  - ADC resolution: %d", setting->board.adc.resolution);
+  Log.traceln("  - PWM resolution: %d", setting->board.pwm.resolution);
+  Log.traceln("  - Serial baud rate: %lu", setting->board.serial.baudRate);
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
-    Log.trace("  - Tracker %d:\n", i);
-    Log.trace("    - LDR day up pin: %d\n", setting->board.pin.tracker[i].ldr.day.up);
-    Log.trace("    - LDR day down pin: %d\n", setting->board.pin.tracker[i].ldr.day.down);
-    Log.trace("    - Motor ENA pin: %d\n", setting->board.pin.tracker[i].motors.ena);
-    Log.trace("    - Motor IN1 pin: %d\n", setting->board.pin.tracker[i].motors.in1);
-    Log.trace("    - Motor IN2 pin: %d\n", setting->board.pin.tracker[i].motors.in2);
-    Log.trace("    - Motor ENB pin: %d\n", setting->board.pin.tracker[i].motors.enb);
-    Log.trace("    - Motor IN3 pin: %d\n", setting->board.pin.tracker[i].motors.in3);
-    Log.trace("    - Motor IN4 pin: %d\n", setting->board.pin.tracker[i].motors.in4);
+    Log.traceln("  - Tracker %d:", i);
+    Log.traceln("    - LDR day up pin: %d", setting->board.pin.tracker[i].ldr.day.up);
+    Log.traceln("    - LDR day down pin: %d", setting->board.pin.tracker[i].ldr.day.down);
+    Log.traceln("    - Motor ENA pin: %d", setting->board.pin.tracker[i].motors.ena);
+    Log.traceln("    - Motor IN1 pin: %d", setting->board.pin.tracker[i].motors.in1);
+    Log.traceln("    - Motor IN2 pin: %d", setting->board.pin.tracker[i].motors.in2);
+    Log.traceln("    - Motor ENB pin: %d", setting->board.pin.tracker[i].motors.enb);
+    Log.traceln("    - Motor IN3 pin: %d", setting->board.pin.tracker[i].motors.in3);
+    Log.traceln("    - Motor IN4 pin: %d", setting->board.pin.tracker[i].motors.in4);
   }
-  Log.trace("  - Command deploy pin: %d\n", setting->board.pin.command.deploy);
-  Log.trace("  - Command retract pin: %d\n", setting->board.pin.command.retract);
-  Log.trace("  - Command scan pin: %d\n", setting->board.pin.command.scan);
-  Log.trace("  - Command selectedTracker pin: %d\n", setting->board.pin.command.selectedTracker);
-  Log.trace("  - LED status pin: %d\n", setting->board.pin.ledStatus);
-  Log.trace("- Program:\n");
-  Log.trace("  - Version: %s\n", setting->program.version);
-  Log.trace("  - LDR threshold: %d\n", setting->program.ldr.threshold);
-  Log.trace("  - Motor speed: %d\n", setting->program.motor.speed);
+  Log.traceln("  - Command deploy pin: %d", setting->board.pin.command.deploy);
+  Log.traceln("  - Command retract pin: %d", setting->board.pin.command.retract);
+  Log.traceln("  - Command scan pin: %d", setting->board.pin.command.scan);
+  Log.traceln("  - Command selectedTracker pin: %d", setting->board.pin.command.selectedTracker);
+  Log.traceln("  - LED status pin: %d", setting->board.pin.ledStatus);
+  Log.traceln("- Program:");
+  Log.traceln("  - Version: %s", setting->program.version);
+  Log.traceln("  - LDR threshold: %d", setting->program.ldr.threshold);
+  Log.traceln("  - Motor speed: %d", setting->program.motor.speed);
 }
 #endif

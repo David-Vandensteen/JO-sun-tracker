@@ -19,11 +19,11 @@ void Driver::init(Setting *setting) {
     Log.fatal("Invalid setting");
     _ledProtocol->fatalError();
   }
-  Log.notice("Setting is valid\n");
+  Log.noticeln("Setting is valid");
   #ifdef BOARD_ESP32
   logSetting(_setting);
   #endif
-   Log.notice("Waiting before starting...\n");
+   Log.noticeln("Waiting before starting...");
   _ledProtocol->waiting();
   _command->init();
   _trackers = new Trackers(_setting, _ledProtocol);
@@ -33,8 +33,8 @@ void Driver::init(Setting *setting) {
     Log.begin(LOG_LEVEL, &Serial);
     delay(2000);
   }
-  Log.notice("Starting program\n");
-  Log.notice("JO Sun Tracker - version %s\n", _setting->program.version);
+  Log.noticeln("Starting program");
+  Log.noticeln("JO Sun Tracker - version %s", _setting->program.version);
 }
 
 void Driver::watchDog() {
