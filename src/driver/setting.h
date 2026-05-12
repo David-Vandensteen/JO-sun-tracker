@@ -13,7 +13,7 @@
 // ------------------
 // #define BOARD_NANO
 #define BOARD_UNO
-// #define BOARD_ESP32_WROOM_32S
+// #define BOARD_ESP32
 
 #ifdef BOARD_UNO
 #undef TRACKER_MAX
@@ -129,7 +129,7 @@ void logFatal(const char* message);
 void settingInit(Setting *setting);
 bool assertSetting(Setting *setting);
 
-#if BOARD_ESP32_WROOM_32S
+#if BOARD_ESP32
 void logSetting(Setting *setting);
 #endif
 

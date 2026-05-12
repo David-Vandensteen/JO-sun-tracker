@@ -98,7 +98,7 @@ bool assertSetting(Setting *setting) {
   return true;
 }
 
-#ifdef BOARD_ESP32_WROOM_32S
+#ifdef BOARD_ESP32
 void logSetting(Setting *setting) {
   Log.trace("Setting:\n");
   Log.trace("- Board:\n");

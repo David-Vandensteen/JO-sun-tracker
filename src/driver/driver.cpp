@@ -20,7 +20,7 @@ void Driver::init(Setting *setting) {
     _ledProtocol->fatalError();
   }
   Log.notice("Setting is valid\n");
-  #ifdef BOARD_ESP32_WROOM_32S
+  #ifdef BOARD_ESP32
   logSetting(_setting);
   #endif
    Log.notice("Waiting before starting...\n");
