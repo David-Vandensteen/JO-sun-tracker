@@ -23,6 +23,7 @@ Tracker::Tracker(SettingBoardPinTracker* trackerPin, int adcResolution, int pwmR
 
 void Tracker::init() {
   Log.traceln("Tracker::init");
+  _state = State::Idle;
   _ldrs.init();
   _motors.init();
 }
@@ -42,11 +43,13 @@ void Tracker::setAutoMode(bool autoMode) {
 
 void Tracker::deploy() {
   Log.traceln("Tracker::deploy");
+  _state = State::Deploying;
   _motors.deploy(_motorSpeedPercent);
 }
 
 void Tracker::retract() {
   Log.traceln("Tracker::retract");
+  _state = State::Retracting;
   _motors.retract(_motorSpeedPercent);
 }
 
@@ -59,6 +62,7 @@ void Tracker::scan() {
 
 void Tracker::stop() {
   Log.traceln("Tracker::stop");
+  _state = State::Idle;
   _motors.stop();
 }
 

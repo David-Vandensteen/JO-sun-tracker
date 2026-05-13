@@ -17,6 +17,12 @@ public:
   void stop();
 
 private:
+  enum class State {
+    Idle,
+    Deploying,
+    Retracting,
+    Auto
+  };
   int _adcResolution;
   int _pwmResolution;
   int _motorSpeedPercent;
@@ -25,6 +31,7 @@ private:
   SettingBoardPinTracker *_trackerPin;
   Ldrs _ldrs;
   Motors _motors;
+  State _state = State::Idle;
 };
 
 #endif

@@ -17,19 +17,19 @@ public:
   #endif
 
 private:
-  enum class State {
-    Idle,
-    Deploying,
-    Retracting,
-    Auto
-  };
   struct ButtonState {
     bool previous = false;
     bool current = false;
   };
+  struct State { // TODO: dv_hold_watcher
+    ButtonState button;
+    unsigned long pressStart = 0;
+    unsigned long sustain = 1000;
+  };
   SettingBoardPinCommand *_buttonPin;
-  ButtonState _autoButtonState;
-  State _state = State::Idle;
+  State _deployButtonState;
+  State _retractButtonState;
+  State _autoButtonState;
 };
 
 #endif
