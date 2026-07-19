@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "author": "David Vandensteen",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-relay-module", "id": "relay1", "top": 161, "left": 64.5, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc1", "top": 75.16, "left": 64.5, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd1", "top": 237.6, "left": 54.3, "attrs": {} },
+    {
+      "type": "wokwi-led-bar-graph",
+      "id": "bargraph1",
+      "top": 60,
+      "left": 107.7,
+      "attrs": { "color": "lime" }
+    },
+    { "type": "wokwi-slide-switch", "id": "sw1", "top": 136.4, "left": 10, "attrs": {} }
+  ],
+  "connections": [
+    [ "gnd1:GND", "relay1:GND", "black", [ "v-28.8", "h-48", "v-18.8" ] ],
+    [ "vcc1:VCC", "relay1:VCC", "red", [ "v48", "h-19.2", "v28.8" ] ],
+    [ "gnd1:GND", "relay1:COM", "black", [ "v-9.6", "h134.4", "v-37" ] ],
+    [ "relay1:VCC", "sw1:3", "red", [ "h0" ] ],
+    [ "sw1:2", "relay1:IN", "green", [ "v0" ] ],
+    [ "relay1:GND", "sw1:1", "black", [ "h-48", "v-10" ] ],
+    [ "bargraph1:A10", "bargraph1:A9", "red", [ "h0" ] ],
+    [ "vcc1:VCC", "bargraph1:A10", "red", [ "v48", "h115.2" ] ],
+    [ "relay1:NC", "bargraph1:C10", "violet", [ "h30", "v-29.99" ] ],
+    [ "bargraph1:C9", "relay1:NO", "gold", [ "h77.02", "v59.39" ] ]
+  ],
+  "dependencies": {}
+}
