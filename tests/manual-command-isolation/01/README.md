@@ -32,4 +32,4 @@ Selon la position de l'interrupteur :
 ## Fichiers associes
 
 - Simulation Wokwi : [wokwi/diagram.json](wokwi/diagram.json)
-- Sketch de test : [wokwi/wokwi.ino](wokwi/wokwi.ino)
+- Sketch de test : [wokwi/wokwi.ino](wokwi/sketch.ino)
