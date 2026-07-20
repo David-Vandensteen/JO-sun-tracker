@@ -66,3 +66,4 @@ Choisir une seule source d'alimentation a la fois. Une double alimentation peut 
 ## Fichier associe
 
 - Simulation Wokwi : [wokwi/diagram.json](wokwi/diagram.json)
+- Sketch de test : [wokwi/wokwi.ino](wokwi/sketch.ino)
