@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "author": "David Vandensteen",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-relay-module", "id": "relay1", "top": 161, "left": 64.5, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc1", "top": 106.36, "left": 48, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd1", "top": 211.2, "left": 9, "attrs": {} },
+    { "type": "wokwi-slide-switch", "id": "sw1", "top": 136.4, "left": 10, "attrs": {} },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": 188.4,
+      "left": 205.4,
+      "attrs": { "color": "red" }
+    },
+    { "type": "wokwi-vcc", "id": "vcc2", "top": 192.76, "left": 259.2, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd2", "top": 240, "left": 287.4, "attrs": {} },
+    { "type": "wokwi-text", "id": "text1", "top": 96, "left": 76.8, "attrs": { "text": "5 V" } },
+    {
+      "type": "wokwi-text",
+      "id": "text2",
+      "top": 192,
+      "left": 307.2,
+      "attrs": { "text": "12 V" }
+    }
+  ],
+  "connections": [
+    [ "gnd1:GND", "relay1:GND", "black", [ "v-30.8" ] ],
+    [ "vcc1:VCC", "relay1:VCC", "red", [ "v48", "v26.4" ] ],
+    [ "relay1:VCC", "sw1:3", "red", [ "h0" ] ],
+    [ "sw1:2", "relay1:IN", "green", [ "v0" ] ],
+    [ "relay1:GND", "sw1:1", "black", [ "h-48", "v-10" ] ],
+    [ "led1:A", "vcc2:VCC", "red", [ "h86.4" ] ],
+    [ "gnd2:GND", "relay1:COM", "black", [ "v-67.2", "h-86.4", "v18.2" ] ],
+    [ "led1:C", "relay1:NO", "green", [ "h-89.9" ] ]
+  ],
+  "dependencies": {}
+}
