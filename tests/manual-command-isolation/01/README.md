@@ -16,7 +16,7 @@ L'idee est de pouvoir piloter la meme charge (la LED de test) soit par le microc
 
 - GPIO15 de l'ESP32 : sortie de commande (clignotement dans le sketch de test)
 - Resistance 220 ohms + LED : charge de test visuelle
-- Bouton poussoir : commande manuelle qui envoie VCC
+- Bouton poussoir : commande manuelle qui envoie VCC (issu de l'ESP32 alimente en USB)
 - Interrupteur coulissant : selection de la source de commande
 
 Selon la position de l'interrupteur :
@@ -31,13 +31,11 @@ Selon la position de l'interrupteur :
 
 ## Point d'attention alimentation
 
-Ne pas alimenter l'ESP32 en meme temps par :
-- USB
-- et l'entree 5 V externe du montage
+Dans cette version du test, l'ESP32 est alimente uniquement par USB.
 
-Choisir une seule source d'alimentation a la fois. Une double alimentation peut provoquer des retours de courant entre sources, des comportements instables, voire endommager la carte ou le port USB.
+Ne pas reconnecter une alimentation 5 V externe en parallele de l'USB. Garder une seule source d'alimentation a la fois pour eviter les retours de courant, les instabilites et les risques de dommage materiel.
 
 ## Fichiers associes
 
 - Simulation Wokwi : [wokwi/diagram.json](wokwi/diagram.json)
-- Sketch de test : [wokwi/wokwi.ino](wokwi/sketch.ino)
+- Sketch de test : [wokwi/sketch.ino](wokwi/sketch.ino)
