@@ -10,7 +10,7 @@ Ce montage valide une commande manuelle avec isolation sur deux points :
 - la source qui pilote la charge (LED),
 - la source qui pilote une entree logique de l'ESP32.
 
-Le but est de pouvoir basculer entre mode automatique (ESP32) et mode manuel, sans mettre en conflit des sorties entre elles.
+Le but est de pouvoir basculer entre mode automatique (ESP32) et mode manuel, sans mettre en conflit des sorties entre elles, avec une alimentation unique via l'USB de l'ESP32.
 
 ## Composants
 
@@ -18,7 +18,7 @@ Le but est de pouvoir basculer entre mode automatique (ESP32) et mode manuel, sa
 - 1 bouton poussoir
 - 1 LED + 1 resistance 220 ohms
 - 2 interrupteurs coulissants (SPDT)
-- alimentation 5 V et GND
+- alimentation USB de l'ESP32 (source unique)
 
 ## Fonctionnement du montage
 
@@ -51,11 +51,9 @@ Sur le montage final, les selections ne seront pas faites avec deux interrupteur
 
 ## Point d'attention alimentation
 
-Ne pas alimenter l'ESP32 en meme temps par :
-- USB
-- et l'entree 5 V externe du montage
+Dans cette version simplifiee, l'ESP32 est alimente uniquement par USB.
 
-Choisir une seule source d'alimentation a la fois. Une double alimentation peut provoquer des retours de courant entre sources, des comportements instables, voire endommager la carte ou le port USB.
+Ne pas ajouter une alimentation 5 V externe en parallele de l'USB. Garder une seule source d'alimentation a la fois pour eviter les retours de courant, les instabilites et les risques de dommage materiel.
 
 ## Verification rapide
 
@@ -66,4 +64,4 @@ Choisir une seule source d'alimentation a la fois. Une double alimentation peut 
 ## Fichier associe
 
 - Simulation Wokwi : [wokwi/diagram.json](wokwi/diagram.json)
-- Sketch de test : [wokwi/wokwi.ino](wokwi/sketch.ino)
+- Sketch de test : [wokwi/sketch.ino](wokwi/sketch.ino)

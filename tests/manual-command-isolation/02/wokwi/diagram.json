@@ -4,8 +4,6 @@
   "editor": "wokwi",
   "parts": [
     { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 48, "left": -91.16, "attrs": {} },
-    { "type": "wokwi-vcc", "id": "vcc1", "top": -56.84, "left": -182.4, "attrs": {} },
-    { "type": "wokwi-gnd", "id": "gnd1", "top": 19.2, "left": -183, "attrs": {} },
     {
       "type": "wokwi-pushbutton",
       "id": "btn1",
@@ -33,13 +31,6 @@
     { "type": "wokwi-slide-switch", "id": "sw2", "top": 129.2, "left": 175.9, "attrs": {} },
     {
       "type": "wokwi-text",
-      "id": "text1",
-      "top": -67.2,
-      "left": -153.6,
-      "attrs": { "text": "5 V" }
-    },
-    {
-      "type": "wokwi-text",
       "id": "text2",
       "top": 134.4,
       "left": 220.8,
@@ -49,17 +40,15 @@
   "connections": [
     [ "esp:TX", "$serialMonitor:RX", "", [] ],
     [ "esp:RX", "$serialMonitor:TX", "", [] ],
-    [ "vcc1:VCC", "esp:5V", "red", [ "v9.6", "h-19.2", "v336" ] ],
-    [ "gnd1:GND", "esp:GND.1", "black", [ "v-19.2", "h48", "v201.6", "h28.8" ] ],
     [ "esp:15", "sw1:3", "gold", [ "h38.4", "v-28.8", "h105.4" ] ],
     [ "sw1:2", "r1:2", "green", [ "v19.2", "h-47.9" ] ],
     [ "r1:1", "led1:A", "green", [ "h0" ] ],
-    [ "led1:C", "gnd1:GND", "black", [ "v-47.6", "h-268.8" ] ],
     [ "sw1:1", "btn1:2.l", "purple", [ "v9.6", "h-9.6", "v-86.6" ] ],
-    [ "btn1:1.l", "vcc1:VCC", "red", [ "h-48", "v-86.4", "h-316.8" ] ],
-    [ "esp:3V3", "sw2:3", "red", [ "h-67.05", "v192", "h355" ] ],
+    [ "esp:3V3", "sw2:3", "red", [ "h-47.85", "v192", "h335.8" ] ],
     [ "sw2:2", "esp:17", "violet", [ "v86.4", "h-163.1", "v-76.8" ] ],
-    [ "esp:GND.2", "sw2:1", "black", [ "h28.8", "v153.6", "h144" ] ]
+    [ "esp:GND.2", "sw2:1", "black", [ "h28.8", "v153.6", "h144" ] ],
+    [ "led1:C", "esp:GND.2", "black", [ "v-9.2", "h-57.6", "v38.4" ] ],
+    [ "esp:5V", "btn1:1.l", "red", [ "h-19.05", "v-240", "h288", "v57.6" ] ]
   ],
   "dependencies": {}
 }
