@@ -29,6 +29,14 @@ Selon la position de l'interrupteur :
 - Permet un mode secours/maintenance meme si le code ne repond pas.
 - Valide le principe de bypass manuel avant integration sur le systeme final.
 
+## Point d'attention alimentation
+
+Ne pas alimenter l'ESP32 en meme temps par :
+- USB
+- et l'entree 5 V externe du montage
+
+Choisir une seule source d'alimentation a la fois. Une double alimentation peut provoquer des retours de courant entre sources, des comportements instables, voire endommager la carte ou le port USB.
+
 ## Fichiers associes
 
 - Simulation Wokwi : [wokwi/diagram.json](wokwi/diagram.json)
