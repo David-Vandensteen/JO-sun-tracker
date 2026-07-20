@@ -35,6 +35,15 @@
       "top": 134.4,
       "left": 220.8,
       "attrs": { "text": "PDT" }
+    },
+    { "type": "wokwi-vcc", "id": "vcc1", "top": -56.84, "left": 153.6, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd1", "top": 0, "left": 133.8, "attrs": {} },
+    {
+      "type": "wokwi-text",
+      "id": "text1",
+      "top": -57.6,
+      "left": 182.4,
+      "attrs": { "text": "3.3v" }
     }
   ],
   "connections": [
@@ -44,11 +53,12 @@
     [ "sw1:2", "r1:2", "green", [ "v19.2", "h-47.9" ] ],
     [ "r1:1", "led1:A", "green", [ "h0" ] ],
     [ "sw1:1", "btn1:2.l", "purple", [ "v9.6", "h-9.6", "v-86.6" ] ],
-    [ "esp:3V3", "sw2:3", "red", [ "h-47.85", "v192", "h335.8" ] ],
     [ "sw2:2", "esp:17", "violet", [ "v86.4", "h-163.1", "v-76.8" ] ],
     [ "esp:GND.2", "sw2:1", "black", [ "h28.8", "v153.6", "h144" ] ],
     [ "led1:C", "esp:GND.2", "black", [ "v-9.2", "h-57.6", "v38.4" ] ],
-    [ "esp:5V", "btn1:1.l", "red", [ "h-19.05", "v-240", "h288", "v57.6" ] ]
+    [ "vcc1:VCC", "btn1:1.l", "red", [ "v0" ] ],
+    [ "vcc1:VCC", "sw2:3", "red", [ "v76.8", "h144", "v134.4", "h-105.8" ] ],
+    [ "gnd1:GND", "esp:GND.2", "black", [ "v-9.6", "h-105.6", "v86.4" ] ]
   ],
   "dependencies": {}
 }
