@@ -66,10 +66,6 @@ bool assertSetting(Setting *setting) {
     logFatal("Retract button pin == 0");
     return false;
   }
-  if (setting->board.pin.command.selectedTracker == 0) {
-    logFatal("SelectedTracker button pin == 0");
-    return false;
-  }
   if (setting->board.pin.led == 0) {
     logFatal("LED pin == 0");
     return false;
@@ -110,7 +106,6 @@ void logSetting(Setting *setting) {
   }
   Log.traceln("  - Command deploy pin: %d", setting->board.pin.command.deploy);
   Log.traceln("  - Command retract pin: %d", setting->board.pin.command.retract);
-  Log.traceln("  - Command selectedTracker pin: %d", setting->board.pin.command.selectedTracker);
   Log.traceln("  - LED status pin: %d", setting->board.pin.ledStatus);
   Log.traceln("- Program:");
   Log.traceln("  - Version: %s", setting->program.version);

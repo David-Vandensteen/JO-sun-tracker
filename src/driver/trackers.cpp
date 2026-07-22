@@ -24,31 +24,23 @@ void Trackers::init() {
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _trackers[i]->init();
   }
-  Log.noticeln("Selected tracker: %d", _command->getSelectedTrackerId());
 }
 
 void Trackers::update() {
   _ledProtocol->update();
-  Tracker *selectedTracker = _trackers[_command->getSelectedTrackerId()];
   bool deploy = _command->isDeployButtonPressed();
   bool retract = _command->isRetractButtonPressed();
 
   if (deploy && retract) {
     Log.traceln("Trackers::update both deploy and retract buttons pressed, stopping tracker");
-    selectedTracker->setAutoMode(false);
-    selectedTracker->stop();
   }
 
   if (deploy || retract) {
     if (deploy) {
       Log.traceln("Trackers::update deploy button pressed");
-      Log.noticeln("Deploying tracker %d", _command->getSelectedTrackerId());
     }
     if (retract) {
       Log.traceln("Trackers::update retract button pressed");
-      Log.noticeln("Retracting tracker %d", _command->getSelectedTrackerId());
     }
-    selectedTracker->setAutoMode(false);
-    deploy ? selectedTracker->deploy() : selectedTracker->retract();
   }
 }
