@@ -14,7 +14,6 @@ public:
 private:
   static Setting *_setting;
   static LedProtocol *_ledProtocol;
-  static Command *_command;
   static Trackers *_trackers;
   static void watchDog();
 };

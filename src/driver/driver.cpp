@@ -8,7 +8,6 @@
 
 Setting *Driver::_setting;
 LedProtocol *Driver::_ledProtocol;
-Command *Driver::_command;
 Trackers *Driver::_trackers;
 
 void Driver::init(Setting *setting) {
@@ -36,19 +35,17 @@ void Driver::init(Setting *setting) {
 }
 
 void Driver::watchDog() {
-  if (LOG && WATCHDOG) {
-    unsigned long currentTime = millis();
-    static unsigned long lastTime = 0;
-    if (currentTime - lastTime >= WATCHDOG_INTERVAL) {
-      lastTime = currentTime;
-      Serial.println("Watchdog");
-    }
+  unsigned long currentTime = millis();
+  static unsigned long lastTime = 0;
+  if (currentTime - lastTime >= WATCHDOG_INTERVAL) {
+    lastTime = currentTime;
+    Serial.println("Watchdog");
   }
 }
 
 void Driver::update() {
   _trackers->update();
   #if defined(WATCHDOG_INTERVAL)
-    watchDog();
+    if (LOG && WATCHDOG) { watchDog(); }
   #endif
 }
