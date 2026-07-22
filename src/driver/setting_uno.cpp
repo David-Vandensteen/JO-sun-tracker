@@ -58,6 +58,7 @@ void settingInit(Setting *setting) {
   setting->board.pin.tracker[TRACKER_1].motors.in3 = 11;
   setting->board.pin.tracker[TRACKER_1].motors.in4 = 12;
   setting->board.pin.tracker[TRACKER_1].command.stop = 4;
+  setting->board.pin.tracker[TRACKER_1].led = LED_BUILTIN;
 	setting->board.pin.led = 6;
 	setting->program.version = VERSION;
 	setting->program.ldr.threshold = SETTING_PROGRAM_LDR_THRESHOLD;

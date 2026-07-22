@@ -26,44 +26,48 @@ bool assertSetting(Setting *setting) {
   }
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     if (setting->board.pin.tracker[i].ldr.up <= 0) {
-      logFatal("LDR day.up pin == 0");
+      logFatal("LDR day.up is invalid");
       return false;
     }
     if (setting->board.pin.tracker[i].ldr.down <= 0) {
-      logFatal("LDR day.down pin == 0");
+      logFatal("LDR day.down is invalid");
       return false;
     }
     if (setting->board.pin.tracker[i].motors.ena <= 0) {
-      logFatal("Motor ENA pin == 0");
+      logFatal("Motor ENA pin is invalid");
       return false;
     }
     if (setting->board.pin.tracker[i].motors.in1 <= 0) {
-      logFatal("Motor IN1 pin == 0");
+      logFatal("Motor IN1 pin is invalid");
       return false;
     }
     if (setting->board.pin.tracker[i].motors.in2 <= 0) {
-      logFatal("Motor IN2 pin == 0");
+      logFatal("Motor IN2 pin is invalid");
       return false;
     }
     if (setting->board.pin.tracker[i].motors.enb <= 0) {
-      logFatal("Motor ENB pin == 0");
+      logFatal("Motor ENB pin is invalid");
       return false;
     }
     if (setting->board.pin.tracker[i].motors.in3 <= 0) {
-      logFatal("Motor IN3 pin == 0");
+      logFatal("Motor IN3 pin is invalid");
       return false;
     }
     if (setting->board.pin.tracker[i].motors.in4 <= 0) {
-      logFatal("Motor IN4 pin == 0");
+      logFatal("Motor IN4 pin is invalid");
       return false;
     }
     if (setting->board.pin.tracker[i].command.stop <= 0) {
-      logFatal("Tracker stop command pin == 0");
+      logFatal("Tracker stop command pin is invalid");
+      return false;
+    }
+    if (setting->board.pin.tracker[i].led <= 0) {
+      logFatal("Tracker LED pin is invalid");
       return false;
     }
   }
   if (setting->board.pin.led <= 0) {
-    logFatal("LED pin == 0");
+    logFatal("LED pin is invalid");
     return false;
   }
   if (setting->program.version == nullptr || setting->program.version[0] == '\0') {
@@ -100,8 +104,9 @@ void logSetting(Setting *setting) {
     Log.traceln("    - Motor IN3 pin: %d", setting->board.pin.tracker[i].motors.in3);
     Log.traceln("    - Motor IN4 pin: %d", setting->board.pin.tracker[i].motors.in4);
     Log.traceln("    - Tracker stop command pin: %d", setting->board.pin.tracker[i].command.stop);
+    Log.traceln("    - Tracker LED pin: %d", setting->board.pin.tracker[i].led);
   }
-  Log.traceln("  - LED status pin: %d", setting->board.pin.ledStatus);
+  Log.traceln("  - LED status pin: %d", setting->board.pin.led);
   Log.traceln("- Program:");
   Log.traceln("  - Version: %s", setting->program.version);
   Log.traceln("  - LDR threshold: %d", setting->program.ldr.threshold);

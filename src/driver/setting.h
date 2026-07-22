@@ -70,6 +70,7 @@ typedef struct SettingBoardPinTracker {
   SettingBoardPinTrackerLDR ldr;
   SettingBoardPinMotors motors;
   SettingBoardPinTrackerCommand command;
+  uint8_t led;
 } SettingBoardPinTracker;
 
 typedef struct SettingBoardPin {
