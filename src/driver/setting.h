@@ -79,11 +79,11 @@ typedef struct SettingBoardPin {
 } SettingBoardPin;
 
 typedef struct SettingBoardADC {
-  int resolution;
+  uint16_t resolution;
 } SettingBoardADC;
 
 typedef struct SettingBoardPWM {
-  int resolution;
+  uint8_t resolution;
 } SettingBoardPWM;
 
 typedef struct SettingBoardSerial {
@@ -102,7 +102,7 @@ typedef struct SettingProgramLDR {
 } SettingProgramLDR;
 
 typedef struct SettingProgramMotor {
-  int speed;
+  uint8_t speed;
 } SettingProgramMotor;
 
 typedef struct SettingProgram {

@@ -1,12 +1,11 @@
 #include <Arduino.h>
-
+#include <ArduinoLog.h>
 #include "ldr.h"
 #include "setting.h"
-#include <ArduinoLog.h>
 
-Ldr::Ldr(uint8_t pin, int analogResolution)
+Ldr::Ldr(uint8_t pin, uint16_t adcResolution)
   : _pin(pin),
-    _analogResolution(analogResolution),
+    _adcResolution(adcResolution),
     raw(0),
     percent(0)
 {}
@@ -18,7 +17,7 @@ void Ldr::init() {
 
 void Ldr::update() {
   raw = analogRead(_pin);
-  percent = map(raw, 0, _analogResolution, 100, 0);
+  percent = map(raw, 0, _adcResolution, 100, 0);
 }
 
 Ldrs::Ldrs(Ldr dayUp, Ldr dayDown)
@@ -36,16 +35,4 @@ void Ldrs::update() {
   Log.traceln("Ldrs::update");
   dayUp.update();
   dayDown.update();
-}
-
-bool Ldrs::isDayUpDifferentFromDayDown(long threshold) {
-  return abs(dayUp.percent - dayDown.percent) > threshold;
-}
-
-bool Ldrs::isDayUpBrighterThanDayDown(long threshold) {
-  return dayUp.percent > dayDown.percent && isDayUpDifferentFromDayDown(threshold);
-}
-
-bool Ldrs::isDayDownBrighterThanDayUp(long threshold) {
-  return dayDown.percent > dayUp.percent && isDayUpDifferentFromDayDown(threshold);
 }

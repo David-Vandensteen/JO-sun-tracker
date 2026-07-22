@@ -1,19 +1,24 @@
 #ifndef TRACKER_H
 #define TRACKER_H
 #include <Arduino.h>
+#include "command.h"
 #include "ldr.h"
 #include "motor.h"
 
 class Tracker {
 public:
-  explicit Tracker(SettingBoardPinTracker* trackerPin, int adcResolution, int pwmResolution, int motorSpeedPercent, uint16_t ldrThreshold);
+  explicit Tracker(
+    SettingBoardPinTracker* trackerPin,
+    SettingBoardPinTrackerCommand* commandPin,
+    uint16_t adcResolution,
+    uint16_t pwmResolution,
+    uint16_t ldrThreshold,
+    uint8_t motorSpeedPercent
+  );
   void init();
-  bool isAutoMode();
-  void setAutoMode(bool autoMode);
   void deploy();
   void retract();
-  void scan();
-  void updateAutoMode();
+  void update();
   void stop();
 
 private:
@@ -21,16 +26,14 @@ private:
     Idle,
     Deploying,
     Retracting,
-    Auto
   };
-  int _adcResolution;
-  int _pwmResolution;
-  int _motorSpeedPercent;
-  bool _isAutoMode = true;
+  uint16_t _adcResolution;
   uint16_t _ldrThreshold;
   SettingBoardPinTracker *_trackerPin;
   Ldrs _ldrs;
   Motors _motors;
+  uint8_t _pwmResolution;
+  uint8_t _motorSpeedPercent;
   State _state = State::Idle;
 };
 

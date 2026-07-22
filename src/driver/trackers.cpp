@@ -12,10 +12,11 @@ void Trackers::init() {
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _trackers[i] = new Tracker(
       &_setting->board.pin.tracker[i],
+      &_setting->board.pin.tracker[i].command,
       _setting->board.adc.resolution,
       _setting->board.pwm.resolution,
-      _setting->program.motor.speed,
-      _setting->program.ldr.threshold
+      _setting->program.ldr.threshold,
+      _setting->program.motor.speed
     );
   }
   #if defined(BOARD_UNO) || defined(BOARD_NANO) // TODO

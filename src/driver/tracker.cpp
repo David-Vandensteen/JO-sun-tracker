@@ -1,11 +1,19 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
+#include "command.h"
 #include "setting.h"
 #include "tracker.h"
 #include "ldr.h"
 #include "motor.h"
 
-Tracker::Tracker(SettingBoardPinTracker* trackerPin, int adcResolution, int pwmResolution, int motorSpeedPercent, uint16_t ldrThreshold)
+Tracker::Tracker(
+  SettingBoardPinTracker* trackerPin,
+  SettingBoardPinTrackerCommand* commandPin,
+  uint16_t adcResolution,
+  uint16_t pwmResolution,
+  uint16_t ldrThreshold,
+  uint8_t motorSpeedPercent
+)
   : _trackerPin(trackerPin),
     _adcResolution(adcResolution),
     _pwmResolution(pwmResolution),
@@ -19,26 +27,13 @@ Tracker::Tracker(SettingBoardPinTracker* trackerPin, int adcResolution, int pwmR
       Motor(trackerPin->motors.in1, trackerPin->motors.in2, trackerPin->motors.ena, pwmResolution),
       Motor(trackerPin->motors.in3, trackerPin->motors.in4, trackerPin->motors.enb, pwmResolution)
     )
-{}
+{};
 
 void Tracker::init() {
   Log.traceln("Tracker::init");
   _state = State::Idle;
   _ldrs.init();
   _motors.init();
-}
-
-bool Tracker::isAutoMode() {
-  return _isAutoMode;
-}
-
-void Tracker::setAutoMode(bool autoMode) {
-  _isAutoMode = autoMode;
-  if (_isAutoMode) {
-    Log.traceln("Tracker::setAutoMode auto mode");
-  } else {
-    Log.traceln("Tracker::setAutoMode manual mode");
-  }
 }
 
 void Tracker::deploy() {
@@ -53,36 +48,16 @@ void Tracker::retract() {
   _motors.retract(_motorSpeedPercent);
 }
 
-void Tracker::scan() {
-  Log.traceln("Tracker::scan");
-  Log.noticeln("Scanning tracker");
-  setAutoMode(true);
-  // Implement scan functionality here
-}
-
 void Tracker::stop() {
   Log.traceln("Tracker::stop");
   _state = State::Idle;
   _motors.stop();
 }
 
-void Tracker::updateAutoMode() {
+void Tracker::update() {
   unsigned long now = millis();
   unsigned long lastIterationTime = 0;
   if (now - lastIterationTime <= 1000) {
     _ldrs.update();
-    bool isLDRDifferent = _ldrs.isDayUpDifferentFromDayDown(_ldrThreshold);
-
-    if (isLDRDifferent) Log.traceln("LDR values are different");
-
-    if (isLDRDifferent) {
-      if (_ldrs.isDayUpBrighterThanDayDown(_ldrThreshold)) {
-        deploy();
-      } else if (_ldrs.isDayDownBrighterThanDayUp(_ldrThreshold)) {
-        retract();
-      }
-    } else {
-      stop();
-    }
   }
 }

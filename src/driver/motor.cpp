@@ -4,7 +4,7 @@
 #include "setting.h"
 #include <ArduinoLog.h>
 
-Motor::Motor(uint8_t in1, uint8_t in2, uint8_t en, int pwmResolution)
+Motor::Motor(uint8_t in1, uint8_t in2, uint8_t en, uint8_t pwmResolution)
     : _in1(in1), _in2(in2), _en(en), _pwmResolution(pwmResolution) {}
 
 void Motor::init() {
