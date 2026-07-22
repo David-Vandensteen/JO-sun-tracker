@@ -2,7 +2,6 @@
 #define TRACKERS_H
 #include "setting.h"
 #include "tracker.h"
-#include "command.h"
 #include "led_protocol.h"
 
 class Trackers {
@@ -14,7 +13,6 @@ public:
 private:
   Setting *_setting;
   Tracker *_trackers[TRACKER_MAX];
-  Command *_command;
   LedProtocol *_ledProtocol;
 };
 
