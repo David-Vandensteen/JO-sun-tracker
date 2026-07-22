@@ -15,6 +15,7 @@ void Ldrs::init() {
 }
 
 void Ldrs::update() {
-  up.update(millis());
-  down.update(millis());
+  unsigned long now = millis();
+  up.update(now);
+  down.update(now);
 }
