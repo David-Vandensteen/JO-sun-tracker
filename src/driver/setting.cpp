@@ -78,7 +78,7 @@ bool assertSetting(Setting *setting) {
     logFatal("LDR threshold out of range");
     return false;
   }
-  if (setting->program.ldr.sampling.interval <= 0) {
+  if (setting->program.ldr.sampling.interval == 0) {
     logFatal("LDR sampling interval must be greater than 0");
     return false;
   }
