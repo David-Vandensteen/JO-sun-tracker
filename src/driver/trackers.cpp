@@ -28,19 +28,5 @@ void Trackers::init() {
 
 void Trackers::update() {
   _ledProtocol->update();
-  bool deploy = _command->isDeployButtonPressed();
-  bool retract = _command->isRetractButtonPressed();
-
-  if (deploy && retract) {
-    Log.traceln("Trackers::update both deploy and retract buttons pressed, stopping tracker");
-  }
-
-  if (deploy || retract) {
-    if (deploy) {
-      Log.traceln("Trackers::update deploy button pressed");
-    }
-    if (retract) {
-      Log.traceln("Trackers::update retract button pressed");
-    }
-  }
+  // TODO command stop/reset
 }

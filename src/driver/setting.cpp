@@ -58,14 +58,6 @@ bool assertSetting(Setting *setting) {
       return false;
     }
   }
-  if (setting->board.pin.command.deploy == 0) {
-    logFatal("Deploy button pin == 0");
-    return false;
-  }
-  if (setting->board.pin.command.retract == 0) {
-    logFatal("Retract button pin == 0");
-    return false;
-  }
   if (setting->board.pin.led == 0) {
     logFatal("LED pin == 0");
     return false;
@@ -104,8 +96,6 @@ void logSetting(Setting *setting) {
     Log.traceln("    - Motor IN3 pin: %d", setting->board.pin.tracker[i].motors.in3);
     Log.traceln("    - Motor IN4 pin: %d", setting->board.pin.tracker[i].motors.in4);
   }
-  Log.traceln("  - Command deploy pin: %d", setting->board.pin.command.deploy);
-  Log.traceln("  - Command retract pin: %d", setting->board.pin.command.retract);
   Log.traceln("  - LED status pin: %d", setting->board.pin.ledStatus);
   Log.traceln("- Program:");
   Log.traceln("  - Version: %s", setting->program.version);

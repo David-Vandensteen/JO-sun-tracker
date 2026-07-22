@@ -13,7 +13,7 @@ Trackers *Driver::_trackers;
 
 void Driver::init(Setting *setting) {
   _setting = setting;
-  _command = new Command(&_setting->board.pin.command);
+  // _command = new Command(&_setting->board.pin.command); TODO stop/reset command
   _ledProtocol = new LedProtocol(_setting->board.pin.led);
   if (!assertSetting(_setting)) {
     Log.fatal("Invalid setting");
@@ -25,7 +25,7 @@ void Driver::init(Setting *setting) {
   #endif
    Log.noticeln("Waiting before starting...");
   _ledProtocol->waiting();
-  _command->init();
+  // _command->init(); // TODO stop/reset command
   _trackers = new Trackers(_setting, _ledProtocol);
   _trackers->init();
   if (LOG) {
