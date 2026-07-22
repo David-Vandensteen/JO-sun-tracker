@@ -4,10 +4,15 @@
 
 class Motor {
 public:
-	explicit Motor(uint8_t in1, uint8_t in2, uint8_t en, uint8_t pwmResolution);
+	explicit Motor(
+    uint8_t in1,
+    uint8_t in2,
+    uint8_t en,
+    uint8_t pwmResolution
+  );
   void init();
-	void deploy(int speedPercent);
-	void retract(int speedPercent);
+	void deploy(uint8_t speedPercent);
+	void retract(uint8_t speedPercent);
 	void stop();
 	bool isBusy();
 

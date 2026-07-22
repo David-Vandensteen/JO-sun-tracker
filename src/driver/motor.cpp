@@ -4,7 +4,10 @@
 #include "setting.h"
 
 Motor::Motor(uint8_t in1, uint8_t in2, uint8_t en, uint8_t pwmResolution)
-    : _in1(in1), _in2(in2), _en(en), _pwmResolution(pwmResolution) {}
+    : _in1(in1),
+      _in2(in2),
+      _en(en),
+      _pwmResolution(pwmResolution) {}
 
 void Motor::init() {
   Log.traceln("Motor::init");
@@ -16,7 +19,7 @@ void Motor::init() {
 
 bool Motor::isBusy() { return _isBusy; }
 
-void Motor::deploy(int speedPercent) {
+void Motor::deploy(uint8_t speedPercent) {
   Log.traceln("Motor::deploy");
   digitalWrite(_in1, HIGH);
   digitalWrite(_in2, LOW);
@@ -24,7 +27,7 @@ void Motor::deploy(int speedPercent) {
   _isBusy = true;
 }
 
-void Motor::retract(int speedPercent) {
+void Motor::retract(uint8_t speedPercent) {
   Log.traceln("Motor::retract");
   digitalWrite(_in1, LOW);
   digitalWrite(_in2, HIGH);
