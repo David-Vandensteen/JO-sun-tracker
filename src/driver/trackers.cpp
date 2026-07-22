@@ -13,6 +13,7 @@ void Trackers::init() {
     _trackers[i] = new Tracker(
       &_setting->board.pin.tracker[i],
       &_setting->board.pin.tracker[i].command,
+      _setting->program.ldr.sampling.interval,
       _setting->board.adc.resolution,
       _setting->board.pwm.resolution,
       _setting->program.ldr.threshold,

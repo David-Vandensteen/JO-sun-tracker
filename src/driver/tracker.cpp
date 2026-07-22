@@ -9,6 +9,7 @@
 Tracker::Tracker(
   SettingBoardPinTracker* trackerPin,
   SettingBoardPinTrackerCommand* commandPin,
+  unsigned long samplingInterval,
   uint16_t adcResolution,
   uint16_t pwmResolution,
   uint16_t ldrThreshold,
@@ -20,8 +21,8 @@ Tracker::Tracker(
     _motorSpeedPercent(motorSpeedPercent),
     _ldrThreshold(ldrThreshold),
     _ldrs(
-      Ldr(trackerPin->ldr.up, adcResolution),
-      Ldr(trackerPin->ldr.down, adcResolution)
+      Ldr(trackerPin->ldr.up, adcResolution, samplingInterval),
+      Ldr(trackerPin->ldr.down, adcResolution, samplingInterval)
     ),
     _motors(
       Motor(trackerPin->motors.in1, trackerPin->motors.in2, trackerPin->motors.ena, pwmResolution),

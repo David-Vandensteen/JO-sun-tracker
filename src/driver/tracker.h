@@ -10,6 +10,7 @@ public:
   explicit Tracker(
     SettingBoardPinTracker* trackerPin,
     SettingBoardPinTrackerCommand* commandPin,
+    unsigned long samplingInterval,
     uint16_t adcResolution,
     uint16_t pwmResolution,
     uint16_t ldrThreshold,

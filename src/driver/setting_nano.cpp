@@ -40,6 +40,7 @@ LDR 2 - sun sensor 2:
 #define SETTING_BOARD_PWM_RESOLUTION 255
 #define SETTING_BOARD_SERIAL_BAUD_RATE 115200
 #define SETTING_PROGRAM_LDR_THRESHOLD 10
+#define SETTING_PROGRAM_LDR_SAMPLING_INTERVAL 1000
 #define SETTING_PROGRAM_MOTOR_SPEED 30
 
 void settingInit(Setting *setting) {
@@ -59,6 +60,7 @@ void settingInit(Setting *setting) {
 	setting->board.pin.led = LED_BUILTIN;
 	setting->program.version = VERSION;
 	setting->program.ldr.threshold = SETTING_PROGRAM_LDR_THRESHOLD;
+  setting->program.ldr.sampling.interval = SETTING_PROGRAM_LDR_SAMPLING_INTERVAL;
 	setting->program.motor.speed = SETTING_PROGRAM_MOTOR_SPEED;
 }
 

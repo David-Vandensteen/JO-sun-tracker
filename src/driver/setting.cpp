@@ -78,6 +78,10 @@ bool assertSetting(Setting *setting) {
     logFatal("LDR threshold out of range");
     return false;
   }
+  if (setting->program.ldr.sampling.interval <= 0) {
+    logFatal("LDR sampling interval must be greater than 0");
+    return false;
+  }
   if (setting->program.motor.speed < 0 || setting->program.motor.speed > 100) {
     logFatal("Motor speed out of range");
     return false;
@@ -112,6 +116,7 @@ void logSetting(Setting *setting) {
   Log.traceln("- Program:");
   Log.traceln("  - Version: %s", setting->program.version);
   Log.traceln("  - LDR threshold: %d", setting->program.ldr.threshold);
+  Log.traceln("  - LDR sampling interval: %lu", setting->program.ldr.sampling.interval);
   Log.traceln("  - Motor speed: %d", setting->program.motor.speed);
 }
 #endif

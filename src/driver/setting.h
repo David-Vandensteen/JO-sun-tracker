@@ -97,8 +97,13 @@ typedef struct SettingBoard {
   SettingBoardSerial serial;
 } SettingBoard;
 
+typedef struct SettingProgramLDRSampling {
+  unsigned long interval;
+} SettingProgramLDRSampling;
+
 typedef struct SettingProgramLDR {
   uint16_t threshold;
+  SettingProgramLDRSampling sampling;
 } SettingProgramLDR;
 
 typedef struct SettingProgramMotor {
