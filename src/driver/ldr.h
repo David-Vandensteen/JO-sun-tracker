@@ -14,13 +14,4 @@ private:
   uint8_t _pin;
 };
 
-class Ldrs {
-public:
-  Ldr up;
-  Ldr down;
-  explicit Ldrs(Ldr up, Ldr down);
-  void init();
-  void update();
-};
-
 #endif

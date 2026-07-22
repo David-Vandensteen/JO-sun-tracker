@@ -19,20 +19,3 @@ void Ldr::update() {
   raw = analogRead(_pin);
   percent = map(raw, 0, _adcResolution, 100, 0);
 }
-
-Ldrs::Ldrs(Ldr up, Ldr down)
-  : up(up),
-    down(down)
-{}
-
-void Ldrs::init() {
-  Log.traceln("Ldrs::init");
-  up.init();
-  down.init();
-}
-
-void Ldrs::update() {
-  Log.traceln("Ldrs::update");
-  up.update();
-  down.update();
-}

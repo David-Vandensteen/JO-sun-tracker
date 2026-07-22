@@ -2,7 +2,7 @@
 #define TRACKER_H
 #include <Arduino.h>
 #include "command.h"
-#include "ldr.h"
+#include "ldrs.h"
 #include "motor.h"
 
 class Tracker {

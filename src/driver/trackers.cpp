@@ -29,5 +29,8 @@ void Trackers::init() {
 
 void Trackers::update() {
   _ledProtocol->update();
+  for (uint8_t i = 0; i < TRACKER_MAX; i++) {
+    _trackers[i]->update();
+  }
   // TODO command stop/reset
 }

@@ -55,9 +55,5 @@ void Tracker::stop() {
 }
 
 void Tracker::update() {
-  unsigned long now = millis();
-  unsigned long lastIterationTime = 0;
-  if (now - lastIterationTime <= 1000) {
-    _ldrs.update();
-  }
+  _ldrs.update();
 }
