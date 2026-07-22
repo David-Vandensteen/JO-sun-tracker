@@ -27,14 +27,14 @@ private:
     Deploying,
     Retracting,
   };
-  uint16_t _adcResolution;
-  uint16_t _ldrThreshold;
   SettingBoardPinTracker *_trackerPin;
   Ldrs _ldrs;
   Motors _motors;
-  uint8_t _pwmResolution;
-  uint8_t _motorSpeedPercent;
   State _state = State::Idle;
+  uint16_t _ldrThreshold;
+  uint16_t _pwmResolution;
+  uint16_t _adcResolution;
+  uint8_t _motorSpeedPercent;
 };
 
 #endif

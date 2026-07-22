@@ -15,7 +15,6 @@ void Ldrs::init() {
 }
 
 void Ldrs::update() {
-  Log.traceln("Ldrs::update");
   up.update();
   down.update();
 }
