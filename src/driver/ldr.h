@@ -16,9 +16,9 @@ private:
 
 class Ldrs {
 public:
-  Ldr dayUp;
-  Ldr dayDown;
-  explicit Ldrs(Ldr dayUp, Ldr dayDown);
+  Ldr up;
+  Ldr down;
+  explicit Ldrs(Ldr up, Ldr down);
   void init();
   void update();
 };

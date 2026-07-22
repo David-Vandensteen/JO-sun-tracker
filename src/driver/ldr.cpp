@@ -20,19 +20,19 @@ void Ldr::update() {
   percent = map(raw, 0, _adcResolution, 100, 0);
 }
 
-Ldrs::Ldrs(Ldr dayUp, Ldr dayDown)
-  : dayUp(dayUp),
-    dayDown(dayDown)
+Ldrs::Ldrs(Ldr up, Ldr down)
+  : up(up),
+    down(down)
 {}
 
 void Ldrs::init() {
   Log.traceln("Ldrs::init");
-  dayUp.init();
-  dayDown.init();
+  up.init();
+  down.init();
 }
 
 void Ldrs::update() {
   Log.traceln("Ldrs::update");
-  dayUp.update();
-  dayDown.update();
+  up.update();
+  down.update();
 }

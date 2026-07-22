@@ -26,11 +26,11 @@ bool assertSetting(Setting *setting) {
   }
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     if (setting->board.pin.tracker[i].ldr.up <= 0) {
-      logFatal("LDR day.up is invalid");
+      logFatal("LDR up is invalid");
       return false;
     }
     if (setting->board.pin.tracker[i].ldr.down <= 0) {
-      logFatal("LDR day.down is invalid");
+      logFatal("LDR down is invalid");
       return false;
     }
     if (setting->board.pin.tracker[i].motors.ena <= 0) {
@@ -78,7 +78,7 @@ bool assertSetting(Setting *setting) {
     logFatal("LDR threshold out of range");
     return false;
   }
-  if (setting->program.motor.speed < 0 || setting->program.motor.speed > setting->board.pwm.resolution) {
+  if (setting->program.motor.speed < 0 || setting->program.motor.speed > 100) {
     logFatal("Motor speed out of range");
     return false;
   }
@@ -87,6 +87,8 @@ bool assertSetting(Setting *setting) {
 }
 
 #ifdef BOARD_ESP32
+// Must be compiled only for ESP32 board, it's a memory optimization for Arduino boards
+
 void logSetting(Setting *setting) {
   Log.traceln("Setting:");
   Log.traceln("- Board:");
@@ -95,8 +97,8 @@ void logSetting(Setting *setting) {
   Log.traceln("  - Serial baud rate: %lu", setting->board.serial.baudRate);
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     Log.traceln("  - Tracker %d:", i);
-    Log.traceln("    - LDR day up pin: %d", setting->board.pin.tracker[i].ldr.day.up);
-    Log.traceln("    - LDR day down pin: %d", setting->board.pin.tracker[i].ldr.day.down);
+    Log.traceln("    - LDR up pin: %d", setting->board.pin.tracker[i].ldr.up);
+    Log.traceln("    - LDR down pin: %d", setting->board.pin.tracker[i].ldr.down);
     Log.traceln("    - Motor ENA pin: %d", setting->board.pin.tracker[i].motors.ena);
     Log.traceln("    - Motor IN1 pin: %d", setting->board.pin.tracker[i].motors.in1);
     Log.traceln("    - Motor IN2 pin: %d", setting->board.pin.tracker[i].motors.in2);

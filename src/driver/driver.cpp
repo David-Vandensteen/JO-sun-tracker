@@ -14,6 +14,11 @@ Trackers *Driver::_trackers;
 void Driver::init(Setting *setting) {
   _setting = setting;
   _ledProtocol = new LedProtocol(_setting->board.pin.led);
+  if (LOG) {
+    Serial.begin(_setting->board.serial.baudRate);
+    Log.begin(LOG_LEVEL, &Serial);
+    delay(2000);
+  }
   if (!assertSetting(_setting)) {
     Log.fatal("Invalid setting");
     _ledProtocol->fatalError();
@@ -26,11 +31,6 @@ void Driver::init(Setting *setting) {
   _ledProtocol->waiting();
   _trackers = new Trackers(_setting, _ledProtocol);
   _trackers->init();
-  if (LOG) {
-    Serial.begin(_setting->board.serial.baudRate);
-    Log.begin(LOG_LEVEL, &Serial);
-    delay(2000);
-  }
   Log.noticeln("Starting program");
   Log.noticeln("JO Sun Tracker - version %s", _setting->program.version);
 }
