@@ -3,11 +3,11 @@
 #include "setting.h"
 #include "command.h"
 
-Command::Command(SettingBoardPinTrackerCommand *buttonPin)
-  : _buttonPin(buttonPin) {}
+Command::Command(SettingBoardPinTrackerCommand *command)
+  : _command(command) {}
 
 void Command::init() {
   Log.traceln("Command::init");
   Log.noticeln("Initializing command");
-  pinMode(_buttonPin->stop, INPUT_PULLUP);
+  pinMode(_command->stop, INPUT_PULLUP);
 }

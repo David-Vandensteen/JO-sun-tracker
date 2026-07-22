@@ -5,14 +5,14 @@
 
 class Command {
 public:
-  explicit Command(SettingBoardPinTrackerCommand *buttonPin);
+  explicit Command(SettingBoardPinTrackerCommand *command);
   void init();
   #if LOG
   void log();
   #endif
 
 private:
-  SettingBoardPinTrackerCommand *_buttonPin;
+  SettingBoardPinTrackerCommand *_command;
   struct ButtonState {
     bool previous = false;
     bool current = false;
