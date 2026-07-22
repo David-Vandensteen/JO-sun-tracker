@@ -32,12 +32,6 @@ void Trackers::update() {
   Tracker *selectedTracker = _trackers[_command->getSelectedTrackerId()];
   bool deploy = _command->isDeployButtonPressed();
   bool retract = _command->isRetractButtonPressed();
-  bool autoMode = _command->isAutoButtonPressed();
-
-  if (autoMode) {
-    Log.traceln("Trackers::update auto button pressed");
-    selectedTracker->scan();
-  }
 
   if (deploy && retract) {
     Log.traceln("Trackers::update both deploy and retract buttons pressed, stopping tracker");

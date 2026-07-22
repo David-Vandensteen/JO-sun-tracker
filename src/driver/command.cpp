@@ -11,7 +11,6 @@ void Command::init() {
   Log.noticeln("Initializing command");
   pinMode(_buttonPin->deploy, INPUT_PULLUP);
   pinMode(_buttonPin->retract, INPUT_PULLUP);
-  pinMode(_buttonPin->scan, INPUT_PULLUP);
   pinMode(_buttonPin->selectedTracker, INPUT_PULLUP);
   _autoButtonState.button.previous = false;
   _autoButtonState.button.current = false;
@@ -59,28 +58,6 @@ bool Command::isRetractButtonPressed() {
   return false;
 }
 
-bool Command::isAutoButtonPressed() {
-  bool pressed = !digitalRead(_buttonPin->scan);
-  if (pressed) {
-    if (_autoButtonState.pressStart == 0) _autoButtonState.pressStart = millis();
-    if (millis() - _autoButtonState.pressStart >= _autoButtonState.sustain) {
-      if (!_autoButtonState.button.current) {
-        _autoButtonState.button.previous = _autoButtonState.button.current;
-        _autoButtonState.button.current = true;
-        Log.traceln("Command::isAutoButtonPressed state: scanning");
-      }
-      return true;
-    }
-  } else {
-    _autoButtonState.pressStart = 0;
-    if (_autoButtonState.button.current) {
-      _autoButtonState.button.previous = _autoButtonState.button.current;
-      _autoButtonState.button.current = false;
-    }
-  }
-  return false;
-}
-
 uint8_t Command::getSelectedTrackerId() {
   return digitalRead(_buttonPin->selectedTracker);
 }
@@ -90,7 +67,6 @@ void Command::log() {
   Log.traceln("Command:");
   Log.traceln("- Deploy button: %s", isDeployButtonPressed() ? "pressed" : "not pressed");
   Log.traceln("- Retract button: %s", isRetractButtonPressed() ? "pressed" : "not pressed");
-  Log.traceln("- Auto button: %s", isAutoButtonPressed() ? "pressed" : "not pressed");
   Log.traceln("- Selected tracker ID: %d", getSelectedTrackerId());
 }
 #endif
