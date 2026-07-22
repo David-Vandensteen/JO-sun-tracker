@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include "command.h"
 #include "ldrs.h"
-#include "motor.h"
+#include "motors.h"
 
 class Tracker {
 public:

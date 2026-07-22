@@ -9,6 +9,7 @@ public:
   explicit Ldr(uint8_t pin, uint16_t adcResolution);
   void init();
   void update();
+
 private:
   uint16_t _adcResolution;
   uint8_t _pin;

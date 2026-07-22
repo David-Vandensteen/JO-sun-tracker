@@ -1,6 +1,5 @@
 #ifndef LDRS_H
 #define LDRS_H
-
 #include "ldr.h"
 
 class Ldrs {

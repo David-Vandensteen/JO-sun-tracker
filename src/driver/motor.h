@@ -10,21 +10,12 @@ public:
 	void retract(int speedPercent);
 	void stop();
 	bool isBusy();
+
 private:
 	uint8_t _in1, _in2, _en;
   uint8_t _pwmResolution;
   bool _isBusy = false;
 };
 
-class Motors {
-public:
-	explicit Motors(Motor m1, Motor m2);
-  void init();
-	void deploy(int speedPercent);
-	void retract(int speedPercent);
-  void stop();
-	Motor motor1;
-	Motor motor2;
-};
 
 #endif
