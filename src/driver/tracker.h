@@ -4,16 +4,16 @@
 #include "command.h"
 #include "ldrs.h"
 #include "motors.h"
+#include "setting.h"
 
 class Tracker {
 public:
   explicit Tracker(
     SettingBoardPinTracker* trackerPin,
     SettingBoardPinTrackerCommand* commandPin,
-    unsigned long samplingInterval,
+    SettingProgramLDR ldrSetting,
     uint16_t adcResolution,
     uint16_t pwmResolution,
-    uint16_t ldrThreshold,
     uint8_t motorSpeedPercent
   );
   void init();
@@ -32,7 +32,7 @@ private:
   Ldrs _ldrs;
   Motors _motors;
   State _state = State::Idle;
-  uint16_t _ldrThreshold;
+  SettingProgramLDR _ldrSetting;
   uint16_t _pwmResolution;
   uint16_t _adcResolution;
   uint8_t _motorSpeedPercent;
