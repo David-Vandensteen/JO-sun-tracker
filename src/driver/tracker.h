@@ -31,6 +31,7 @@ private:
   Motors _motors;
   State _state = State::Idle;
   uint8_t _motorSpeedPercent;
+  bool isManualMode();
   void deploy();
   void retract();
   void stop();

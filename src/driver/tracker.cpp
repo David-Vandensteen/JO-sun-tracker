@@ -1,11 +1,14 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
+#include <ADebouncer.h>
 #include "command.h"
 #include "setting.h"
 #include "tracker.h"
 #include "ldr.h"
 #include "ldrs.h"
 #include "motor.h"
+
+ADebouncer manualModeDebouncer;
 
 Tracker::Tracker(
   SettingBoardPinTracker *trackerPin,
@@ -28,7 +31,8 @@ Tracker::Tracker(
         trackerPin->ldr.down,
         adcResolution,
         ldrSetting
-      )
+      ),
+      ldrSetting->threshold
     ),
     _motors(
       Motor(
@@ -71,17 +75,22 @@ void Tracker::stop() {
   _motors.stop();
 }
 
+bool Tracker::isManualMode() {
+  return digitalRead(_modePin->manual) == HIGH;
+}
+
 void Tracker::update() {
+  bool isManualMode = manualModeDebouncer.debounce(digitalRead(_modePin->manual));
   ldrsComparison comparison = _ldrs.update();
   switch (comparison)
   {
   case ldrsComparison::UpGreaterThanDown:
     Log.traceln("Tracker::update - LDR UpGreaterThanDown");
-    deploy();
+    if (!isManualMode) deploy();
     break;
   case ldrsComparison::DownGreaterThanUp:
     Log.traceln("Tracker::update - LDR DownGreaterThanUp");
-    retract();
+    if (!isManualMode) retract();
     break;
   case ldrsComparison::Deadband:
     Log.traceln("Tracker::update - LDR Deadband");
