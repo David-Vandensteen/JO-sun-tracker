@@ -11,16 +11,14 @@ public:
   explicit Tracker(
     SettingBoardPinTracker *trackerPin,
     SettingBoardPinTrackerCommand *commandPin,
+    SettingBoardPinMode *modePin,
     SettingProgramLDR *ldrSetting,
     uint16_t adcResolution,
     uint16_t pwmResolution,
     uint8_t motorSpeedPercent
   );
   void init();
-  void deploy();
-  void retract();
   void update();
-  void stop();
 
 private:
   enum class State {
@@ -28,10 +26,14 @@ private:
     Deploying,
     Retracting,
   };
+  SettingBoardPinMode *_modePin;
   Ldrs _ldrs;
   Motors _motors;
   State _state = State::Idle;
   uint8_t _motorSpeedPercent;
+  void deploy();
+  void retract();
+  void stop();
 };
 
 #endif

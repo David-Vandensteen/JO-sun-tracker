@@ -10,18 +10,22 @@
 Tracker::Tracker(
   SettingBoardPinTracker *trackerPin,
   SettingBoardPinTrackerCommand *commandPin,
+  SettingBoardPinMode *modePin,
   SettingProgramLDR *ldrSetting,
   uint16_t adcResolution,
   uint16_t pwmResolution,
   uint8_t motorSpeedPercent
 )
   : _motorSpeedPercent(motorSpeedPercent),
+    _modePin(modePin),
     _ldrs(
-      Ldr(trackerPin->ldr.up,
+      Ldr(
+        trackerPin->ldr.up,
         adcResolution,
         ldrSetting
       ),
-      Ldr(trackerPin->ldr.down,
+      Ldr(
+        trackerPin->ldr.down,
         adcResolution,
         ldrSetting
       )
