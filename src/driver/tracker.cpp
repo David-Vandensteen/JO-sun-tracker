@@ -7,18 +7,14 @@
 #include "motor.h"
 
 Tracker::Tracker(
-  SettingBoardPinTracker* trackerPin,
-  SettingBoardPinTrackerCommand* commandPin,
-  SettingProgramLDR ldrSetting,
+  SettingBoardPinTracker *trackerPin,
+  SettingBoardPinTrackerCommand *commandPin,
+  SettingProgramLDR *ldrSetting,
   uint16_t adcResolution,
   uint16_t pwmResolution,
   uint8_t motorSpeedPercent
 )
-  : _trackerPin(trackerPin),
-    _adcResolution(adcResolution),
-    _pwmResolution(pwmResolution),
-    _motorSpeedPercent(motorSpeedPercent),
-    _ldrSetting(ldrSetting),
+  : _motorSpeedPercent(motorSpeedPercent),
     _ldrs(
       Ldr(trackerPin->ldr.up,
         adcResolution,
@@ -30,8 +26,18 @@ Tracker::Tracker(
       )
     ),
     _motors(
-      Motor(trackerPin->motors.in1, trackerPin->motors.in2, trackerPin->motors.ena, pwmResolution),
-      Motor(trackerPin->motors.in3, trackerPin->motors.in4, trackerPin->motors.enb, pwmResolution)
+      Motor(
+        trackerPin->motors.in1,
+        trackerPin->motors.in2,
+        trackerPin->motors.ena,
+        pwmResolution
+      ),
+      Motor(
+        trackerPin->motors.in3,
+        trackerPin->motors.in4,
+        trackerPin->motors.enb,
+        pwmResolution
+      )
     )
 {};
 

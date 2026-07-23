@@ -7,7 +7,7 @@
 class Ldr {
 public:
   int raw;
-  explicit Ldr(uint8_t pin, uint16_t adcResolution, SettingProgramLDR ldrSetting);
+  explicit Ldr(uint8_t pin, uint16_t adcResolution, SettingProgramLDR *ldrSetting);
   void init();
   uint8_t update(unsigned long now);
 

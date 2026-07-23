@@ -126,7 +126,7 @@ typedef struct Setting {
   SettingProgram program;
 } Setting;
 
-void logFatal(const char* message);
+void logFatal(const char *message);
 void settingInit(Setting *setting);
 bool assertSetting(Setting *setting);
 

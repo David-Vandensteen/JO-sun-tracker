@@ -7,10 +7,8 @@
 #include <Arduino.h>
 #include "driver.h"
 #include "setting.h"
-#include "trackers.h"
 
 static Setting setting;
-static Trackers *trackers;
 
 void setup() {
   settingInit(&setting);

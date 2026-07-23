@@ -4,11 +4,11 @@
 #include "ldr.h"
 #include "setting.h"
 
-Ldr::Ldr(uint8_t pin, uint16_t adcResolution, SettingProgramLDR ldrSetting)
+Ldr::Ldr(uint8_t pin, uint16_t adcResolution, SettingProgramLDR *ldrSetting)
   : _pin(pin),
     _adcResolution(adcResolution),
-    _filter(ldrSetting.filter.smoothing),
-    _samplingInterval(ldrSetting.sampling.interval),
+    _filter(ldrSetting->filter.smoothing),
+    _samplingInterval(ldrSetting->sampling.interval),
     _lastUpdateTime(0)
 {}
 

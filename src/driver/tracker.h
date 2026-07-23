@@ -9,9 +9,9 @@
 class Tracker {
 public:
   explicit Tracker(
-    SettingBoardPinTracker* trackerPin,
-    SettingBoardPinTrackerCommand* commandPin,
-    SettingProgramLDR ldrSetting,
+    SettingBoardPinTracker *trackerPin,
+    SettingBoardPinTrackerCommand *commandPin,
+    SettingProgramLDR *ldrSetting,
     uint16_t adcResolution,
     uint16_t pwmResolution,
     uint8_t motorSpeedPercent
@@ -28,13 +28,9 @@ private:
     Deploying,
     Retracting,
   };
-  SettingBoardPinTracker *_trackerPin;
   Ldrs _ldrs;
   Motors _motors;
   State _state = State::Idle;
-  SettingProgramLDR _ldrSetting;
-  uint16_t _pwmResolution;
-  uint16_t _adcResolution;
   uint8_t _motorSpeedPercent;
 };
 
