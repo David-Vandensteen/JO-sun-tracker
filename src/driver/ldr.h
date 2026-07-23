@@ -9,7 +9,9 @@ public:
   int raw;
   explicit Ldr(uint8_t pin, uint16_t adcResolution, SettingProgramLDR *ldrSetting);
   void init();
-  uint8_t update(unsigned long now);
+  unsigned long getLastUpdateTime();
+  unsigned long getSamplingInterval();
+  uint8_t update();
 
 private:
   DV_IirFilter8 _filter;

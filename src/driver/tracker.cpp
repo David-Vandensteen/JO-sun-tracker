@@ -4,6 +4,7 @@
 #include "setting.h"
 #include "tracker.h"
 #include "ldr.h"
+#include "ldrs.h"
 #include "motor.h"
 
 Tracker::Tracker(
@@ -67,5 +68,21 @@ void Tracker::stop() {
 }
 
 void Tracker::update() {
-  _ldrs.update();
+  ldrsComparison comparison = _ldrs.update();
+  switch (comparison)
+  {
+  case ldrsComparison::UpGreaterThanDown:
+    Log.traceln("Tracker::update - LDR UpGreaterThanDown");
+    deploy();
+    break;
+  case ldrsComparison::DownGreaterThanUp:
+    Log.traceln("Tracker::update - LDR DownGreaterThanUp");
+    retract();
+    break;
+  case ldrsComparison::Deadband:
+    Log.traceln("Tracker::update - LDR Deadband");
+    break;
+  default:
+    break;
+  }
 }

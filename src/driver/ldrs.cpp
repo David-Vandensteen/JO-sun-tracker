@@ -14,8 +14,22 @@ void Ldrs::init() {
   down.init();
 }
 
-void Ldrs::update() {
-  unsigned long now = millis();
-  up.update(now);
-  down.update(now);
+ldrsComparison Ldrs::update() {
+  if (
+    millis() - up.getLastUpdateTime() < up.getSamplingInterval()
+    || millis() - down.getLastUpdateTime() < down.getSamplingInterval()
+  ) {
+    return ldrsComparison::NotUpdated;
+  }
+
+  uint8_t upValue = up.update();
+  uint8_t downValue = down.update();
+
+  if (upValue > downValue) {
+    return ldrsComparison::UpGreaterThanDown;
+  } else if (downValue > upValue) {
+    return ldrsComparison::DownGreaterThanUp;
+  } else {
+    return ldrsComparison::Deadband;
+  }
 }

@@ -12,16 +12,23 @@ Ldr::Ldr(uint8_t pin, uint16_t adcResolution, SettingProgramLDR *ldrSetting)
     _lastUpdateTime(0)
 {}
 
+unsigned long Ldr::getLastUpdateTime() {
+  return _lastUpdateTime;
+}
+
+unsigned long Ldr::getSamplingInterval() {
+  return _samplingInterval;
+}
+
+
 void Ldr::init() {
   Log.traceln("Ldr::init");
   pinMode(_pin, INPUT);
   _filter.reset();
 }
 
-uint8_t Ldr::update(unsigned long now) {
-  if (now - _lastUpdateTime < _samplingInterval) { return _filter.getValue(); }
-
-  _lastUpdateTime = now;
+uint8_t Ldr::update() {
+  _lastUpdateTime = millis();
   uint16_t rawInput = analogRead(_pin);
   uint8_t inputPercent = (uint8_t)(((uint32_t)rawInput * 100U) / _adcResolution);
   uint8_t filteredPercent = _filter.update(inputPercent);
