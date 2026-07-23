@@ -73,9 +73,14 @@ typedef struct SettingBoardPinTracker {
   uint8_t led;
 } SettingBoardPinTracker;
 
+typedef struct SettingBoardPinMode {
+  uint8_t manual;
+} SettingBoardPinMode;
+
 typedef struct SettingBoardPin {
   SettingBoardPinTracker tracker[TRACKER_MAX];
   uint8_t led;
+  SettingBoardPinMode mode;
 } SettingBoardPin;
 
 typedef struct SettingBoardADC {
@@ -116,7 +121,7 @@ typedef struct SettingProgramMotor {
 } SettingProgramMotor;
 
 typedef struct SettingProgram {
-  char* version;
+  char *version;
   SettingProgramLDR ldr;
   SettingProgramMotor motor;
 } SettingProgram;

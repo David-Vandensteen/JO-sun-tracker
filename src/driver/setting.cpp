@@ -12,69 +12,74 @@ bool assertSetting(Setting *setting) {
     logFatal("Setting pointer is null");
     return false;
   }
-  if (setting->board.adc.resolution <= 0) {
-    logFatal("ADC resolution <= 0");
+  if (setting->board.adc.resolution == 0) {
+    logFatal("ADC resolution is invalid");
     return false;
   }
-  if (setting->board.pwm.resolution <= 0) {
-    logFatal("PWM resolution <= 0");
+  if (setting->board.pwm.resolution == 0) {
+    logFatal("PWM resolution is invalid");
     return false;
   }
-  if (setting->board.serial.baudRate <= 0) {
-    logFatal("Serial baudRate <= 0");
+  if (setting->board.serial.baudRate == 0) {
+    logFatal("Serial baudRate is invalid");
     return false;
   }
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
-    if (setting->board.pin.tracker[i].ldr.up <= 0) {
+    if (setting->board.pin.tracker[i].ldr.up == 0) {
       logFatal("LDR up is invalid");
       return false;
     }
-    if (setting->board.pin.tracker[i].ldr.down <= 0) {
+    if (setting->board.pin.tracker[i].ldr.down == 0) {
       logFatal("LDR down is invalid");
       return false;
     }
-    if (setting->board.pin.tracker[i].motors.ena <= 0) {
+    if (setting->board.pin.tracker[i].motors.ena == 0) {
       logFatal("Motor ENA pin is invalid");
       return false;
     }
-    if (setting->board.pin.tracker[i].motors.in1 <= 0) {
+    if (setting->board.pin.tracker[i].motors.in1 == 0) {
       logFatal("Motor IN1 pin is invalid");
       return false;
     }
-    if (setting->board.pin.tracker[i].motors.in2 <= 0) {
+    if (setting->board.pin.tracker[i].motors.in2 == 0) {
       logFatal("Motor IN2 pin is invalid");
       return false;
     }
-    if (setting->board.pin.tracker[i].motors.enb <= 0) {
+    if (setting->board.pin.tracker[i].motors.enb == 0) {
       logFatal("Motor ENB pin is invalid");
       return false;
     }
-    if (setting->board.pin.tracker[i].motors.in3 <= 0) {
+    if (setting->board.pin.tracker[i].motors.in3 == 0) {
       logFatal("Motor IN3 pin is invalid");
       return false;
     }
-    if (setting->board.pin.tracker[i].motors.in4 <= 0) {
+    if (setting->board.pin.tracker[i].motors.in4 == 0) {
       logFatal("Motor IN4 pin is invalid");
       return false;
     }
-    if (setting->board.pin.tracker[i].command.stop <= 0) {
+    if (setting->board.pin.tracker[i].command.stop == 0) {
       logFatal("Tracker stop command pin is invalid");
       return false;
     }
-    if (setting->board.pin.tracker[i].led <= 0) {
+    if (setting->board.pin.tracker[i].led == 0) {
       logFatal("Tracker LED pin is invalid");
       return false;
     }
   }
-  if (setting->board.pin.led <= 0) {
+  if (setting->board.pin.led == 0) {
     logFatal("LED pin is invalid");
+    return false;
+  }
+  if (setting->board.pin.mode.manual == 0) {
+    logFatal("Manual mode pin is invalid");
     return false;
   }
   if (setting->program.version == nullptr || setting->program.version[0] == '\0') {
     logFatal("Program version is null or empty");
     return false;
   }
-  if (setting->program.ldr.threshold < 0 || setting->program.ldr.threshold > setting->board.adc.resolution) {
+  Log.traceln("LDR threshold: %d, ADC resolution: %d", setting->program.ldr.threshold, setting->board.adc.resolution);
+  if (setting->program.ldr.threshold > 100) {
     logFatal("LDR threshold out of range");
     return false;
   }
@@ -82,11 +87,11 @@ bool assertSetting(Setting *setting) {
     logFatal("LDR sampling interval must be greater than 0");
     return false;
   }
-  if (setting->program.ldr.filter.smoothing < 0 || setting->program.ldr.filter.smoothing > 255) {
+  if (setting->program.ldr.filter.smoothing > 255) {
     logFatal("LDR filter smoothing out of range");
     return false;
   }
-  if (setting->program.motor.speed < 0 || setting->program.motor.speed > 100) {
+  if (setting->program.motor.speed > 100) {
     logFatal("Motor speed out of range");
     return false;
   }
