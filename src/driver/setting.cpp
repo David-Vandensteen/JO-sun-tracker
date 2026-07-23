@@ -122,6 +122,7 @@ void logSetting(Setting *setting) {
     Log.traceln("    - Tracker LED pin: %d", setting->board.pin.tracker[i].led);
   }
   Log.traceln("  - LED status pin: %d", setting->board.pin.led);
+  Log.traceln("  - Manual mode pin: %d", setting->board.pin.mode.manual);
   Log.traceln("- Program:");
   Log.traceln("  - Version: %s", setting->program.version);
   Log.traceln("  - LDR threshold: %d", setting->program.ldr.threshold);
@@ -129,4 +130,5 @@ void logSetting(Setting *setting) {
   Log.traceln("  - LDR filter smoothing: %d", setting->program.ldr.filter.smoothing);
   Log.traceln("  - Motor speed: %d", setting->program.motor.speed);
 }
+
 #endif

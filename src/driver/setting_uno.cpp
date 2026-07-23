@@ -62,6 +62,7 @@ void settingInit(Setting *setting) {
   setting->board.pin.tracker[TRACKER_1].command.stop = 4;
   setting->board.pin.tracker[TRACKER_1].led = LED_BUILTIN;
 	setting->board.pin.led = 6;
+  setting->board.pin.mode.manual = 2;
 	setting->program.version = VERSION;
 	setting->program.ldr.threshold = SETTING_PROGRAM_LDR_THRESHOLD;
   setting->program.ldr.sampling.interval = SETTING_PROGRAM_LDR_SAMPLING_INTERVAL;
