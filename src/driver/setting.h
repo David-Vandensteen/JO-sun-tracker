@@ -101,9 +101,14 @@ typedef struct SettingProgramLDRSampling {
   unsigned long interval;
 } SettingProgramLDRSampling;
 
+typedef struct SettingProgramLDRFilter {
+  uint8_t smoothing;
+} SettingProgramLDRFilter;
+
 typedef struct SettingProgramLDR {
   uint16_t threshold;
   SettingProgramLDRSampling sampling;
+  SettingProgramLDRFilter filter;
 } SettingProgramLDR;
 
 typedef struct SettingProgramMotor {

@@ -82,6 +82,10 @@ bool assertSetting(Setting *setting) {
     logFatal("LDR sampling interval must be greater than 0");
     return false;
   }
+  if (setting->program.ldr.filter.smoothing < 0 || setting->program.ldr.filter.smoothing > 255) {
+    logFatal("LDR filter smoothing out of range");
+    return false;
+  }
   if (setting->program.motor.speed < 0 || setting->program.motor.speed > 100) {
     logFatal("Motor speed out of range");
     return false;
@@ -117,6 +121,7 @@ void logSetting(Setting *setting) {
   Log.traceln("  - Version: %s", setting->program.version);
   Log.traceln("  - LDR threshold: %d", setting->program.ldr.threshold);
   Log.traceln("  - LDR sampling interval: %lu", setting->program.ldr.sampling.interval);
+  Log.traceln("  - LDR filter smoothing: %d", setting->program.ldr.filter.smoothing);
   Log.traceln("  - Motor speed: %d", setting->program.motor.speed);
 }
 #endif

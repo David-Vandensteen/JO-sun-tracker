@@ -2,13 +2,14 @@
 #define LDR_H
 #include <Arduino.h>
 #include <dv_iir_filter8.h>
+#include "setting.h"
 
 class Ldr {
 public:
   int raw;
-  explicit Ldr(uint8_t pin, uint16_t adcResolution, unsigned long _samplingInterval);
+  explicit Ldr(uint8_t pin, uint16_t adcResolution, SettingProgramLDR ldrSetting);
   void init();
-  void update(unsigned long now);
+  uint8_t update(unsigned long now);
 
 private:
   DV_IirFilter8 _filter;

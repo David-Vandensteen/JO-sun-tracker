@@ -20,8 +20,14 @@ Tracker::Tracker(
     _motorSpeedPercent(motorSpeedPercent),
     _ldrSetting(ldrSetting),
     _ldrs(
-      Ldr(trackerPin->ldr.up, adcResolution, ldrSetting.sampling.interval),
-      Ldr(trackerPin->ldr.down, adcResolution, ldrSetting.sampling.interval)
+      Ldr(trackerPin->ldr.up,
+        adcResolution,
+        ldrSetting
+      ),
+      Ldr(trackerPin->ldr.down,
+        adcResolution,
+        ldrSetting
+      )
     ),
     _motors(
       Motor(trackerPin->motors.in1, trackerPin->motors.in2, trackerPin->motors.ena, pwmResolution),

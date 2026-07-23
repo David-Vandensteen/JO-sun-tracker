@@ -4,11 +4,11 @@
 #include "ldr.h"
 #include "setting.h"
 
-Ldr::Ldr(uint8_t pin, uint16_t adcResolution, unsigned long _samplingInterval)
+Ldr::Ldr(uint8_t pin, uint16_t adcResolution, SettingProgramLDR ldrSetting)
   : _pin(pin),
     _adcResolution(adcResolution),
-    _filter(0xFF),
-    _samplingInterval(_samplingInterval),
+    _filter(ldrSetting.filter.smoothing),
+    _samplingInterval(ldrSetting.sampling.interval),
     _lastUpdateTime(0)
 {}
 
@@ -18,8 +18,8 @@ void Ldr::init() {
   _filter.reset();
 }
 
-void Ldr::update(unsigned long now) {
-  if (now - _lastUpdateTime < _samplingInterval) { return; }
+uint8_t Ldr::update(unsigned long now) {
+  if (now - _lastUpdateTime < _samplingInterval) { return _filter.getValue(); }
 
   _lastUpdateTime = now;
   uint16_t rawInput = analogRead(_pin);
@@ -30,8 +30,9 @@ void Ldr::update(unsigned long now) {
     Serial.print("input-id"); Serial.print(_pin); Serial.print(":");  Serial.print(inputPercent);
     Serial.println("");
 
-    Serial.print("filtered-id"); Serial.print(_pin); Serial.print(":"); Serial.print(filteredPercent);
+    Serial.print("filtered-id"); Serial.print(_pin); Serial.print(":"); Serial.print(_filter.getValue());
     Serial.println("");
   }
 
+  return _filter.getValue();
 }

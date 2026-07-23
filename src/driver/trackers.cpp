@@ -19,7 +19,7 @@ void Trackers::init() {
       _setting->program.motor.speed
     );
   }
-  #if defined(BOARD_UNO) || defined(BOARD_NANO) // TODO
+  #if defined(BOARD_UNO) || defined(BOARD_NANO)
     pinMode(LED_BUILTIN, OUTPUT);
   #endif
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
