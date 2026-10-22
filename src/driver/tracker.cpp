@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <dv_every_interval.h>
-#include "command.h"
+#include "commands.h"
 #include "setting.h"
 #include "tracker.h"
 #include "ldr.h"

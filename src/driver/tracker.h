@@ -2,7 +2,7 @@
 #define TRACKER_H
 #include <Arduino.h>
 #include <dv_every_interval.h>
-#include "command.h"
+#include "commands.h"
 #include "ldrs.h"
 #include "motors.h"
 #include "setting.h"
@@ -31,7 +31,7 @@ private:
   Motors _motors;
   SettingProgramMotors *_settingProgramMotors;
   SettingProgramTrackers *_settingProgramTrackers;
-  Command _command;
+  Commands _command;
   DV_EveryInterval _everyInterval;
   State _state;
   bool isManualMode();

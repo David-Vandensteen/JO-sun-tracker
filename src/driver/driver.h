@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include "setting.h"
 #include "led_protocol.h"
-#include "command.h"
+#include "commands.h"
 #include "trackers.h"
 #include "state.h"
 
