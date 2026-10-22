@@ -12,6 +12,7 @@ void Command::onStopHold(void *ctx) {
   Command *self = static_cast<Command *>(ctx);
   Log.noticeln("Command::stop pressed");
   self->_state = self->_state.setStateStop();
+  // TODO: Implement stop command behavior
 }
 
 void Command::onResetHold(void *ctx) {
@@ -19,8 +20,16 @@ void Command::onResetHold(void *ctx) {
     return;
   }
   Command *self = static_cast<Command *>(ctx);
-  Log.noticeln("Command::stop reset");
+  Log.noticeln("Command::reset pressed");
   self->_state = self->_state.setStateReset();
+  #ifdef BOARD_ESP32
+  #include <esp_system.h>
+  ESP.restart();
+  #elif defined(BOARD_UNO) || defined(BOARD_NANO)
+  #include <avr/wdt.h>
+  wdt_enable(WDTO_15MS);
+  while (1) {}
+  #endif
 }
 
 Command::Command(SettingBoardPinTrackerCommand *command)
