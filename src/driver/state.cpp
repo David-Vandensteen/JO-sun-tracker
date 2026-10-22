@@ -1,16 +1,16 @@
 #include <Arduino.h>
 #include "state.h"
 
-State::State() : _stateType(StateType::INITIALIZING) {}
+State::State() : _stateType(StateType::INIT) {}
 
 State::State(StateType stateType) : _stateType(stateType) {}
 
-bool State::isStateInitializing() {
-  return _stateType == StateType::INITIALIZING;
+bool State::isStateInit() {
+  return _stateType == StateType::INIT;
 }
 
-bool State::isStateRunning() {
-  return _stateType == StateType::RUNNING;
+bool State::isStateRun() {
+  return _stateType == StateType::RUN;
 }
 
 bool State::isStateStopped() {
@@ -30,12 +30,12 @@ State State::setState(StateType stateType) {
   return *this;
 }
 
-State State::setStateInitializing() {
-  return setState(StateType::INITIALIZING);
+State State::setStateInit() {
+  return setState(StateType::INIT);
 }
 
-State State::setStateRunning() {
-  return setState(StateType::RUNNING);
+State State::setStateRun() {
+  return setState(StateType::RUN);
 }
 
 State State::setStateStopped() {

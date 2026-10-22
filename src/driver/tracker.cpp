@@ -63,7 +63,7 @@ void Tracker::init() {
   _everyInterval
     .setInterval(_settingProgramTrackers->interval)
     .setCallback(Tracker::onIntervalTick, this);
-  _state = _state.setStateInitializing();
+  _state = _state.setStateInit();
 }
 
 State Tracker::update() {
@@ -87,13 +87,13 @@ State Tracker::update() {
 // Private
 void Tracker::deploy() {
   Log.traceln("Tracker::deploy");
-  _state.setStateRunning();
+  _state.setStateRun();
   _motors.deploy();
 }
 
 void Tracker::retract() {
   Log.traceln("Tracker::retract");
-  _state.setStateRunning();
+  _state.setStateRun();
   _motors.retract();
 }
 
@@ -134,7 +134,7 @@ void Tracker::interval() {
   Log.traceln("Tracker::interval - mode: %s", isManualMode() ? "manual" : "automa");
   #endif
   if (isManualMode()) {
-    if (_state.isStateRunning()) {
+    if (_state.isStateRun()) {
       stop();
     }
     return;
@@ -158,7 +158,7 @@ void Tracker::interval() {
     #if LOG_TRACKER_INTERVAL
     Log.traceln("Tracker::interval - LDR DEADBAND");
     #endif
-    if (_state.isStateRunning()) {
+    if (_state.isStateRun()) {
       stop();
     }
     break;

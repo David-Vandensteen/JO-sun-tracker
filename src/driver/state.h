@@ -3,8 +3,8 @@
 #include <Arduino.h>
 
 enum class StateType {
-  INITIALIZING,
-  RUNNING,
+  INIT,
+  RUN,
   STOPPED,
   RESET,
   ERROR
@@ -14,19 +14,19 @@ class State {
 public:
   explicit State();
   explicit State(StateType stateType);
-  bool isStateInitializing();
-  bool isStateRunning();
+  bool isStateInit();
+  bool isStateRun();
   bool isStateStopped();
   bool isStateError();
   bool isStateReset();
   State setState(StateType stateType);
-  State setStateInitializing();
-  State setStateRunning();
+  State setStateInit();
+  State setStateRun();
   State setStateStopped();
   State setStateError();
   State setStateReset();
 
 private:
-  StateType _stateType = StateType::INITIALIZING;
+  StateType _stateType = StateType::INIT;
 };
 #endif
