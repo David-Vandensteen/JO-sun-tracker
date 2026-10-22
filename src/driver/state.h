@@ -6,6 +6,7 @@ enum class StateType {
   INITIALIZING,
   RUNNING,
   STOPPED,
+  RESET,
   ERROR
 };
 
@@ -17,11 +18,13 @@ public:
   bool isStateRunning();
   bool isStateStopped();
   bool isStateError();
+  bool isStateReset();
   State setState(StateType stateType);
   State setStateInitializing();
   State setStateRunning();
   State setStateStopped();
   State setStateError();
+  State setStateReset();
 
 private:
   StateType _stateType = StateType::INITIALIZING;

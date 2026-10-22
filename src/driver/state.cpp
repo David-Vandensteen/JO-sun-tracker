@@ -21,6 +21,10 @@ bool State::isStateError() {
   return _stateType == StateType::ERROR;
 }
 
+bool State::isStateReset() {
+  return _stateType == StateType::RESET;
+}
+
 State State::setState(StateType stateType) {
   _stateType = stateType;
   return *this;
@@ -40,4 +44,8 @@ State State::setStateStopped() {
 
 State State::setStateError() {
   return setState(StateType::ERROR);
+}
+
+State State::setStateReset() {
+  return setState(StateType::RESET);
 }
