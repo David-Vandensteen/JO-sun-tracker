@@ -49,8 +49,8 @@ LDR 3 - night sensor:
 #define SETTING_PROGRAM_MOTORS_SPEED 30
 #define SETTING_PROGRAM_MOTORS_TIMEOUT 1000
 
-void settingInit() {
-  setting = getSetting();
+Setting* settingInit() {
+  Setting *setting = getSetting();
 	setting->board.adc.resolution = SETTING_BOARD_ADC_RESOLUTION;
 	setting->board.pwm.resolution = SETTING_BOARD_PWM_RESOLUTION;
   setting->board.serial.baudRate = SETTING_BOARD_SERIAL_BAUD_RATE;
@@ -73,6 +73,7 @@ void settingInit() {
   setting->program.ldrs.night.cutoff = SETTING_PROGRAM_LDRS_NIGHT_CUTOFF;
   setting->program.motors.speed = SETTING_PROGRAM_MOTORS_SPEED;
   setting->program.motors.timeout = SETTING_PROGRAM_MOTORS_TIMEOUT;
+  return setting;
 }
 
 #endif
