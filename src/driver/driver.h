@@ -16,7 +16,7 @@ private:
   static Setting *_setting;
   static LedProtocol *_ledProtocol;
   static Trackers *_trackers;
-  static void watchDog();
+  static void heartBeat();
 };
 
 #endif

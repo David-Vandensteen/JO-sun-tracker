@@ -48,8 +48,8 @@
 #define LOG_LDR_INTERVAL true
 #define LOG_TRACKER_INTERVAL true
 
-#define WATCHDOG true
-#define WATCHDOG_INTERVAL 30000
+#define HEARTBEAT true
+#define HEARTBEAT_INTERVAL 30000
 
 // ------------------
 //  MOCK

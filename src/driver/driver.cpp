@@ -36,18 +36,18 @@ void Driver::init(Setting *setting) {
   Log.noticeln("JO Sun Tracker - version %s", _setting->program.version);
 }
 
-void Driver::watchDog() {
+void Driver::heartBeat() {
   unsigned long currentTime = millis();
   static unsigned long lastTime = 0;
-  if (currentTime - lastTime >= WATCHDOG_INTERVAL) {
+  if (currentTime - lastTime >= HEARTBEAT_INTERVAL) {
     lastTime = currentTime;
-    Serial.println("Watchdog");
+    Serial.println("Heartbeat");
   }
 }
 
 void Driver::update() {
   _trackers->update();
-  #if defined(WATCHDOG_INTERVAL)
-    if (LOG && WATCHDOG) { watchDog(); }
+  #if defined(HEARTBEAT_INTERVAL)
+    if (LOG && HEARTBEAT) { heartBeat(); }
   #endif
 }
