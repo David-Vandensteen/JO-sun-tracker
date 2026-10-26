@@ -29,6 +29,13 @@ This pass reviews runtime behavior, board configuration parity, and command/cont
 - Correction (ESP32) : boutons deploy/retract sur 18/19, stop sur 21, mode manuel sur 23, définis par des `#define` nommés. `assertSetting()` vérifie désormais l'unicité des broches (`assertPinsUnique()`) et indique les deux champs en conflit.
 - Uno/Nano (corrigé) : sur Uno, la LED tracker passe de `LED_BUILTIN` (13, conflit avec `motors.enb`) à GPIO 7. Sur Nano, la LED de statut passe de `LED_BUILTIN` (13, conflit avec `motors.enb`) à GPIO 5.
 
+### 4. Haut : commandes deploy/retract du tracker (corrigé sur ESP32)
+
+- Location: `src/driver/tracker_command.h`, `src/driver/tracker_command.cpp`, `src/driver/tracker_command_state.h`, `src/driver/tracker_command_state.cpp`, `src/driver/tracker.cpp`
+- Issue : `TrackerCommand::update()` lisait les boutons sans exploiter leur état, et ses `ADebouncer` n'étaient pas initialisés.
+- Correction : `TrackerCommand` suit le pattern `driver_command` (`init()`, `update()` renvoyant un `TrackerCommandState`, `ADebouncer` en membres par valeur). `Tracker` possède `_trackerCommand`, appelle `init()` et, en mode manuel, lance `deploy()`/`retract()` tant que le bouton est maintenu, puis `stop()` au relâchement. Le debounce est injecté via `SettingProgramTrackersCommand`.
+- Reste à faire : vérifier la compilation Uno et Nano (non compilées pour l'instant).
+
 ## Verified Improvements
 
 - Interval decision loop is connected: `Tracker::update()` advances `_everyInterval`, and decisions run in `Tracker::interval()`.

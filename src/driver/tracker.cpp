@@ -49,6 +49,7 @@ Tracker::Tracker(
       ),
       settingProgramMotors
     ),
+    _trackerCommand(&settingBoardPinTracker->command, &settingProgramTrackers->command),
     _settingProgramTrackers(settingProgramTrackers) {}
 
 void Tracker::init() {
@@ -56,6 +57,7 @@ void Tracker::init() {
   pinMode(_settingBoardPinMode->manual, INPUT);
   _ldrs.init();
   _motors.init();
+  _trackerCommand.init();
   _everyInterval
     .setInterval(_settingProgramTrackers->interval)
     .setCallback(Tracker::onIntervalTick, this);
@@ -65,9 +67,27 @@ void Tracker::update() {
   _everyInterval.update();
   _ldrs.update();
   _motors.update();
+  handleCommand();
 }
 
 // Private
+void Tracker::handleCommand() {
+  TrackerCommandState state = _trackerCommand.update();
+  if (!isManualMode()) {
+    _commandState = state;
+    return;
+  }
+
+  if (state.isDeploy()) {
+    deploy();
+  } else if (state.isRetract()) {
+    retract();
+  } else if (!_commandState.isIdle()) {
+    stop();
+  }
+  _commandState = state;
+}
+
 void Tracker::deploy() {
   Log.traceln("Tracker::deploy");
   _motors.deploy();

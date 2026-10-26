@@ -5,6 +5,7 @@
 #include "ldrs.h"
 #include "motors.h"
 #include "setting.h"
+#include "tracker_command.h"
 #include "tracker_state.h"
 
 class Tracker {
@@ -29,6 +30,8 @@ private:
   SettingBoardPinMode *_settingBoardPinMode;
   Ldrs _ldrs;
   Motors _motors;
+  TrackerCommand _trackerCommand;
+  TrackerCommandState _commandState;
   SettingProgramMotors *_settingProgramMotors;
   SettingProgramTrackers *_settingProgramTrackers;
   DV_EveryInterval _everyInterval;
@@ -36,6 +39,7 @@ private:
   bool isManualMode();
   void deploy();
   void retract();
+  void handleCommand();
   void interval();
 };
 
