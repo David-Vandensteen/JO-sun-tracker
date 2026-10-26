@@ -15,9 +15,9 @@ class DriverCommandState {
     bool isIdle();
     bool isStop();
     bool isReset();
-    DriverCommandStateType setIdle();
-    DriverCommandStateType setStop();
-    DriverCommandStateType setReset();
+    void setIdle();
+    void setStop();
+    void setReset();
 
   private:
     DriverCommandStateType _state;

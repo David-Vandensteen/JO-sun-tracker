@@ -22,17 +22,14 @@ bool DriverCommandState::isReset() {
   return _state == DriverCommandStateType::RESET;
 }
 
-DriverCommandStateType DriverCommandState::setReset() {
+void DriverCommandState::setReset() {
   _state = DriverCommandStateType::RESET;
-  return _state;
 }
 
-DriverCommandStateType DriverCommandState::setIdle() {
+void DriverCommandState::setIdle() {
   _state = DriverCommandStateType::IDLE;
-  return _state;
 }
 
-DriverCommandStateType DriverCommandState::setStop() {
+void DriverCommandState::setStop() {
   _state = DriverCommandStateType::STOP;
-  return _state;
 }

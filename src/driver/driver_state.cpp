@@ -22,17 +22,14 @@ bool DriverState::isStop() {
   return _state == DriverStateType::STOP;
 }
 
-DriverStateType DriverState::setIdle() {
+void DriverState::setIdle() {
   _state = DriverStateType::IDLE;
-  return _state;
 }
 
-DriverStateType DriverState::setReset() {
+void DriverState::setReset() {
   _state = DriverStateType::RESET;
-  return _state;
 }
 
-DriverStateType DriverState::setStop() {
+void DriverState::setStop() {
   _state = DriverStateType::STOP;
-  return _state;
 }
