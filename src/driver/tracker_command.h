@@ -6,12 +6,13 @@
 
 class TrackerCommand {
   public:
-    explicit TrackerCommand(SettingBoardPinTrackerCommand *pinCommand);
+    explicit TrackerCommand(SettingBoardPinTrackerCommand *settingBoardPinTrackerCommand, SettingProgramTrackersCommand *settingProgramTrackersCommand);
     void init();
     void update();
 
   private:
-    SettingBoardPinTrackerCommand *_pinCommand;
+    SettingBoardPinTrackerCommand *_settingBoardPinTrackerCommand;
+    SettingProgramTrackersCommand *_settingProgramTrackersCommand;
     ADebouncer *_deployButton;
     ADebouncer *_retractButton;
 };
