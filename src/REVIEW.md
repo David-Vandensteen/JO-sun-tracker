@@ -2,65 +2,65 @@
 
 Last review: 2026-08-31
 
-## Scope
+## Périmètre
 
-This pass reviews runtime behavior, board configuration parity, and command/control flow in `src/driver`.
+Cette revue porte sur le comportement à l'exécution, la cohérence de configuration entre cartes, et le flux de commandes/contrôle dans `src/driver`.
 
-## Findings
+## Constats
 
-### 1. High: Uno/Nano `settingInit()` implementations do not match the shared API
+### 1. Haut : les implémentations Uno/Nano de `settingInit()` ne respectent pas l'API commune
 
-- Location: `src/driver/setting.h`, `src/driver/setting_uno.cpp`, `src/driver/setting_nano.cpp`, `src/driver/driver.ino`
-- Issue: `setting.h` declares `Setting* settingInit()` and `driver.ino` assigns its return value, but the Uno/Nano files implement `void settingInit()` and assign to `setting = getSetting();`. That `setting` symbol is not declared in those translation units.
-- Impact: selecting `BOARD_UNO` or `BOARD_NANO` is expected to fail compilation before runtime validation can run.
-- Verification: the ESP32 implementation returns `Setting*`, while Uno/Nano diverge from that signature and from the call site contract.
+- Emplacement : `src/driver/setting.h`, `src/driver/setting_uno.cpp`, `src/driver/setting_nano.cpp`, `src/driver/driver.ino`
+- Problème : `setting.h` déclare `Setting* settingInit()` et `driver.ino` en affecte la valeur de retour, mais les fichiers Uno/Nano implémentent `void settingInit()` et affectent `setting = getSetting();`. Le symbole `setting` n'est pas déclaré dans ces unités de compilation.
+- Impact : sélectionner `BOARD_UNO` ou `BOARD_NANO` devrait faire échouer la compilation avant que la validation à l'exécution ne puisse s'exécuter.
+- Vérification : l'implémentation ESP32 renvoie `Setting*`, alors que Uno/Nano diffèrent de cette signature et du contrat d'appel.
 
-### 2. Medium: command state is latched with no return to idle/running behavior
+### 2. Moyen : l'état des commandes reste verrouillé sans retour à idle/running
 
-- Location: `src/driver/command.cpp`, `src/driver/command_state.cpp`, `src/driver/tracker.cpp`
-- Issue: hold callbacks set `_state` to `STOP` or `RESET`, but `Command::update()` only updates hold timing and returns the current state. No path clears the command state back to `IDLE`.
-- Impact: once STOP is triggered, `Tracker::update()` keeps stopping and returning early. RESET currently stops the motors and then falls through with a TODO, but the command remains latched as RESET on later updates.
-- Verification: `CommandState` has `setStateIdle()`, but it is not called by `Command` or `Tracker` after a command is consumed.
+- Emplacement : `src/driver/command.cpp`, `src/driver/command_state.cpp`, `src/driver/tracker.cpp`
+- Problème : les callbacks de maintien passent `_state` à `STOP` ou `RESET`, mais `Command::update()` ne fait que mettre à jour la temporisation du maintien et renvoie l'état courant. Aucun chemin ne ramène l'état de commande à `IDLE`.
+- Impact : une fois STOP déclenché, `Tracker::update()` continue d'arrêter et de sortir tôt. RESET arrête actuellement les moteurs puis continue avec un TODO, mais la commande reste verrouillée sur RESET aux mises à jour suivantes.
+- Vérification : `CommandState` possède `setStateIdle()`, mais `Command` et `Tracker` ne l'appellent pas après qu'une commande a été consommée.
 
-### 3. Medium: GPIO conflicts in board pin map (ESP32 corrigé, Uno/Nano à traiter)
+### 3. Moyen : conflits de GPIO dans la table des broches (ESP32 corrigé, Uno/Nano à traiter)
 
-- Location: `src/driver/setting_esp32.cpp`, `src/driver/setting.cpp`, `src/driver/setting_uno.cpp`, `src/driver/setting_nano.cpp`
-- Issue (ESP32, corrigé) : les broches 25, 26, 27 et 32 étaient utilisées deux fois (moteurs et boutons de commande, LDR up et mode manuel).
+- Emplacement : `src/driver/setting_esp32.cpp`, `src/driver/setting.cpp`, `src/driver/setting_uno.cpp`, `src/driver/setting_nano.cpp`
+- Problème (ESP32, corrigé) : les broches 25, 26, 27 et 32 étaient utilisées deux fois (moteurs et boutons de commande, LDR up et mode manuel).
 - Correction (ESP32) : boutons deploy/retract sur 18/19, stop sur 21, mode manuel sur 23, définis par des `#define` nommés. `assertSetting()` vérifie désormais l'unicité des broches (`assertPinsUnique()`) et indique les deux champs en conflit.
 - Uno/Nano (corrigé) : sur Uno, la LED tracker passe de `LED_BUILTIN` (13, conflit avec `motors.enb`) à GPIO 7. Sur Nano, la LED de statut passe de `LED_BUILTIN` (13, conflit avec `motors.enb`) à GPIO 5.
 
 ### 4. Haut : commandes deploy/retract du tracker (corrigé sur ESP32)
 
-- Location: `src/driver/tracker_command.h`, `src/driver/tracker_command.cpp`, `src/driver/tracker_command_state.h`, `src/driver/tracker_command_state.cpp`, `src/driver/tracker.cpp`
-- Issue : `TrackerCommand::update()` lisait les boutons sans exploiter leur état, et ses `ADebouncer` n'étaient pas initialisés.
+- Emplacement : `src/driver/tracker_command.h`, `src/driver/tracker_command.cpp`, `src/driver/tracker_command_state.h`, `src/driver/tracker_command_state.cpp`, `src/driver/tracker.cpp`
+- Problème : `TrackerCommand::update()` lisait les boutons sans exploiter leur état, et ses `ADebouncer` n'étaient pas initialisés.
 - Correction : `TrackerCommand` suit le pattern `driver_command` (`init()`, `update()` renvoyant un `TrackerCommandState`, `ADebouncer` en membres par valeur). `Tracker` possède `_trackerCommand`, appelle `init()` et, en mode manuel, lance `deploy()`/`retract()` tant que le bouton est maintenu, puis `stop()` au relâchement. Le debounce est injecté via `SettingProgramTrackersCommand`.
 - Reste à faire : vérifier la compilation Uno et Nano (non compilées pour l'instant).
 
-## Verified Improvements
+## Améliorations vérifiées
 
-- Interval decision loop is connected: `Tracker::update()` advances `_everyInterval`, and decisions run in `Tracker::interval()`.
-- One-cycle stale decision risk is reduced by sampling (`_ldrs.update()`) inside the interval callback.
-- Deadband now actively stops motion when tracker is moving.
-- Manual mode pin is explicitly initialized in `Tracker::init()`.
-- Manual mode forces stop and exits interval tick early, preventing residual motion after mode switch.
-- Motor movements use timeout-aware calls through `Motors::deploy()` and `Motors::retract()` when `program.motors.timeout` is configured.
-- `Ldr` callback wiring is AVR-safe via context callbacks in `DV_EveryInterval`.
-- Stale symbols were removed (`Ldr::raw`, `LdrsComparison::NOT_UPDATED`).
-- ESP32 settings initialize all currently validated program fields, including `program.trackers.interval`.
+- La boucle de décision par intervalle est connectée : `Tracker::update()` fait avancer `_everyInterval`, et les décisions sont prises dans `Tracker::interval()`.
+- Le risque de décision périmée d'un cycle est réduit par l'échantillonnage (`_ldrs.update()`) dans le callback d'intervalle.
+- La zone morte arrête activement le mouvement lorsque le tracker se déplace.
+- La broche du mode manuel est explicitement initialisée dans `Tracker::init()`.
+- Le mode manuel force l'arrêt et sort tôt du tick d'intervalle, ce qui évite un mouvement résiduel après un changement de mode.
+- Les mouvements des moteurs utilisent des appels avec timeout via `Motors::deploy()` et `Motors::retract()` lorsque `program.motors.timeout` est configuré.
+- Le câblage des callbacks `Ldr` est compatible AVR grâce aux callbacks avec contexte de `DV_EveryInterval`.
+- Les symboles obsolètes ont été supprimés (`Ldr::raw`, `LdrsComparison::NOT_UPDATED`).
+- Les réglages ESP32 initialisent tous les champs programme validés actuellement, y compris `program.trackers.interval`.
 
-## Test Gaps
+## Lacunes de tests
 
-- No automated compile matrix for `BOARD_ESP32`, `BOARD_UNO`, and `BOARD_NANO`.
-- No automated test for STOP/RESET consumption semantics, including whether STOP should latch permanently or return to IDLE after release.
+- Pas de matrice de compilation automatisée pour `BOARD_ESP32`, `BOARD_UNO` et `BOARD_NANO`.
+- Pas de test automatisé pour la consommation des commandes STOP/RESET, notamment pour savoir si STOP doit rester verrouillé ou revenir à IDLE après relâchement.
 - Aucun test automatisé pour les doublons de broches (la validation existe mais n'est pas testée).
-- No motor behavior test proving that timeout-aware deploy/retract calls keep motors active for the intended window.
+- Pas de test de comportement moteur prouvant que les appels deploy/retract avec timeout maintiennent les moteurs actifs pendant la fenêtre prévue.
 
-## Suggested Next Fixes
+## Prochaines corrections suggérées
 
-1. Align Uno/Nano `settingInit()` with the shared `Setting* settingInit()` contract.
-2. Decide whether command states are events or latches; if they are events, clear them after `Tracker` consumes STOP/RESET.
+1. Aligner les `settingInit()` Uno/Nano sur le contrat commun `Setting* settingInit()`.
+2. Décider si les états de commande sont des événements ou des verrous ; s'ils sont des événements, les effacer après que `Tracker` a consommé STOP/RESET.
 3. Vérifier la compilation Uno et Nano avec la validation des doublons de broches.
 
 ## Conclusion
 
-The tracker control loop is in better shape than the earlier review suggested, but the board matrix now needs attention. The highest-priority stabilization item is the Uno/Nano `settingInit()` API mismatch because it blocks those targets from compiling. After that, command-state consumption and ESP32 pin uniqueness are the main runtime risks to clarify.
+La boucle de contrôle du tracker est en meilleur état que ne le laissait penser la revue précédente, mais la matrice des cartes demande maintenant de l'attention. La correction de stabilisation la plus prioritaire est le décalage de l'API `settingInit()` Uno/Nano, car il empêche la compilation de ces cibles. Ensuite, la consommation des états de commande et l'unicité des broches ESP32 sont les principaux risques à l'exécution à clarifier.
