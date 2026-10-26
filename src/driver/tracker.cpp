@@ -1,14 +1,12 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <dv_every_interval.h>
-#include "commands.h"
 #include "setting.h"
 #include "tracker.h"
 #include "ldr.h"
 #include "ldrs.h"
 #include "motor.h"
 #include "state.h"
-#include "command_state.h"
 
 // Public
 Tracker::Tracker(
@@ -52,7 +50,6 @@ Tracker::Tracker(
       ),
       settingProgramMotors
     ),
-    _command(settingBoardPinDriverCommand),
     _settingProgramTrackers(settingProgramTrackers) {}
 
 void Tracker::init() {
@@ -60,7 +57,6 @@ void Tracker::init() {
   pinMode(_settingBoardPinMode->manual, INPUT);
   _ldrs.init();
   _motors.init();
-  _command.init();
   _everyInterval
     .setInterval(_settingProgramTrackers->interval)
     .setCallback(Tracker::onIntervalTick, this);
@@ -68,16 +64,6 @@ void Tracker::init() {
 }
 
 State Tracker::update() {
-  CommandState commandState = _command.update();
-  if (commandState.isStateStop()) {
-    Log.traceln("Tracker::update - Command STOP");
-    stop();
-    return _state.setStateStopped();
-  } else if (commandState.isStateReset()) {
-    Log.traceln("Tracker::update - Command RESET");
-    stop();
-    // TODO: reset behavior
-  }
   _everyInterval.update();
   _ldrs.update();
   _motors.update();

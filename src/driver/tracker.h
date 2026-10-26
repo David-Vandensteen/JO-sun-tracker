@@ -2,12 +2,10 @@
 #define TRACKER_H
 #include <Arduino.h>
 #include <dv_every_interval.h>
-#include "commands.h"
 #include "ldrs.h"
 #include "motors.h"
 #include "setting.h"
 #include "state.h"
-#include "command_state.h"
 
 class Tracker {
 public:
@@ -32,7 +30,6 @@ private:
   Motors _motors;
   SettingProgramMotors *_settingProgramMotors;
   SettingProgramTrackers *_settingProgramTrackers;
-  Commands _command;
   DV_EveryInterval _everyInterval;
   State _state;
   bool isManualMode();
