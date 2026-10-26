@@ -9,6 +9,7 @@ public:
   explicit Trackers(Setting *setting, LedProtocol *ledProtocol);
   void init();
   void update();
+  void stop();
 
 private:
   Setting *_setting;

@@ -69,6 +69,7 @@ DriverState Driver::update() {
 
 void Driver::stop() {
   Log.traceln("Driver::stop");
+  _trackers->stop();
   _state.setStop();
 }
 

@@ -22,6 +22,7 @@ public:
   );
   void init();
   State update();
+  void stop();
 
 private:
   static void onIntervalTick(void *ctx);
@@ -35,7 +36,6 @@ private:
   bool isManualMode();
   void deploy();
   void retract();
-  void stop();
   void interval();
 };
 

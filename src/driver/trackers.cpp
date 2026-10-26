@@ -36,3 +36,9 @@ void Trackers::update() {
     _trackers[i]->update();
   }
 }
+
+void Trackers::stop() {
+  for (uint8_t i = 0; i < TRACKER_MAX; i++) {
+    _trackers[i]->stop();
+  }
+}
