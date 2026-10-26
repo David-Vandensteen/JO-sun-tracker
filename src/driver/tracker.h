@@ -14,6 +14,7 @@ public:
   explicit Tracker(
     SettingBoardPinTracker *settingBoardPinTracker,
     SettingBoardPinMode *settingBoardPinMode,
+    SettingBoardPinDriverCommand *settingBoardPinDriverCommand,
     SettingProgramTrackers *settingProgramTrackers,
     SettingProgramLDR *settingProgramLDR,
     SettingProgramLDRs *settingProgramLDRs,

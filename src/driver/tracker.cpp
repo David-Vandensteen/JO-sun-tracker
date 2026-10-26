@@ -14,6 +14,7 @@
 Tracker::Tracker(
   SettingBoardPinTracker *settingBoardPinTracker,
   SettingBoardPinMode *settingBoardPinMode,
+  SettingBoardPinDriverCommand *settingBoardPinDriverCommand,
   SettingProgramTrackers *settingProgramTrackers,
   SettingProgramLDR *settingProgramLDR,
   SettingProgramLDRs *settingProgramLDRs,
@@ -51,7 +52,7 @@ Tracker::Tracker(
       ),
       settingProgramMotors
     ),
-    _command(&settingBoardPinTracker->command),
+    _command(settingBoardPinDriverCommand),
     _settingProgramTrackers(settingProgramTrackers) {}
 
 void Tracker::init() {
