@@ -6,13 +6,13 @@
 #define DEBOUNCE_THRESHOLD 1000
 
 DriverCommand::DriverCommand(SettingBoardPinDriverCommand *pinCommand) {
-  _pinCommand = pinCommand;
+  _settingBoardPinDriverCommand = pinCommand;
   _commandState = DriverCommandState();
 }
 
 void DriverCommand::init() {
-  pinMode(_pinCommand->stop, INPUT_PULLUP);
-  _stopButton = new OneButton(_pinCommand->stop, true, true);
+  pinMode(_settingBoardPinDriverCommand->stop, INPUT_PULLUP);
+  _stopButton = new OneButton(_settingBoardPinDriverCommand->stop, true, true);
   _stopButton->setPressMs(DEBOUNCE_THRESHOLD);
   _stopButton->attachLongPressStart([](void *param) {
     DriverCommand *self = static_cast<DriverCommand *>(param);
