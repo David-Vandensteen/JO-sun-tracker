@@ -60,34 +60,28 @@ void Tracker::init() {
   _everyInterval
     .setInterval(_settingProgramTrackers->interval)
     .setCallback(Tracker::onIntervalTick, this);
-  _state = _state.setStateInit();
 }
 
-State Tracker::update() {
+void Tracker::update() {
   _everyInterval.update();
   _ldrs.update();
   _motors.update();
-
-  return _state;
 }
 
 // Private
 void Tracker::deploy() {
   Log.traceln("Tracker::deploy");
-  _state.setStateRun();
   _motors.deploy();
 }
 
 void Tracker::retract() {
   Log.traceln("Tracker::retract");
-  _state.setStateRun();
   _motors.retract();
 }
 
 
 void Tracker::stop() {
   Log.traceln("Tracker::stop");
-  _state.setStateStopped();
   _motors.stop();
 }
 
@@ -109,9 +103,6 @@ void Tracker::interval() {
   Log.traceln("Tracker::interval - mode: %s", isManualMode() ? "manual" : "automa");
   #endif
   if (isManualMode()) {
-    if (_state.isStateRun()) {
-      stop();
-    }
     return;
   }
 
@@ -133,9 +124,6 @@ void Tracker::interval() {
     #if LOG_TRACKER_INTERVAL
     Log.traceln("Tracker::interval - LDR DEADBAND");
     #endif
-    if (_state.isStateRun()) {
-      stop();
-    }
     break;
   case LdrsComparison::NIGHT:
     #if LOG_TRACKER_INTERVAL

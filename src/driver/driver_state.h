@@ -2,7 +2,7 @@
 #define DRIVER_STATE_H
 #include <Arduino.h>
 
-enum DriverStateType {
+enum class DriverStateType {
   IDLE,
   RESET,
   STOP

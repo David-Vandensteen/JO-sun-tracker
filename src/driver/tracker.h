@@ -5,7 +5,7 @@
 #include "ldrs.h"
 #include "motors.h"
 #include "setting.h"
-#include "state.h"
+#include "tracker_state.h"
 
 class Tracker {
 public:
@@ -21,7 +21,7 @@ public:
     SettingProgramMotors *settingProgramMotors
   );
   void init();
-  State update();
+  void update();
   void stop();
 
 private:
@@ -32,7 +32,7 @@ private:
   SettingProgramMotors *_settingProgramMotors;
   SettingProgramTrackers *_settingProgramTrackers;
   DV_EveryInterval _everyInterval;
-  State _state;
+  TrackerState _state;
   bool isManualMode();
   void deploy();
   void retract();
