@@ -51,3 +51,15 @@ void Driver::update() {
     if (LOG && HEARTBEAT) { heartBeat(); }
   #endif
 }
+
+void Driver::reset() {
+  Log.traceln("Driver::reset");
+  #ifdef BOARD_ESP32
+  #include <esp_system.h>
+  ESP.restart();
+  #elif defined(BOARD_UNO) || defined(BOARD_NANO)
+  #include <avr/wdt.h>
+  wdt_enable(WDTO_15MS);
+  while (1) {}
+  #endif
+}

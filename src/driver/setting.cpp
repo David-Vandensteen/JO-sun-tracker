@@ -68,10 +68,6 @@ bool assertSetting() {
       logFatal("Tracker retract command pin is invalid");
       return false;
     }
-    if (setting->board.pin.tracker[i].command.stop == 0) {
-      logFatal("Tracker stop command pin is invalid");
-      return false;
-    }
     if (setting->board.pin.tracker[i].led == 0) {
       logFatal("Tracker LED pin is invalid");
       return false;
@@ -81,7 +77,7 @@ bool assertSetting() {
     logFatal("LED pin is invalid");
     return false;
   }
-  if (setting->board.pin.command.stop == 0) {
+  if (setting->board.pin.driver.command.stop == 0) {
     logFatal("Stop command pin is invalid");
     return false;
   }
@@ -146,11 +142,10 @@ void logSetting() {
     Log.traceln("    - Motor IN4 pin: %d", setting->board.pin.tracker[i].motors.in4);
     Log.traceln("    - Tracker deploy command pin: %d", setting->board.pin.tracker[i].command.deploy);
     Log.traceln("    - Tracker retract command pin: %d", setting->board.pin.tracker[i].command.retract);
-    Log.traceln("    - Tracker stop command pin: %d", setting->board.pin.tracker[i].command.stop);
     Log.traceln("    - Tracker LED pin: %d", setting->board.pin.tracker[i].led);
   }
   Log.traceln("  - LED status pin: %d", setting->board.pin.led);
-  Log.traceln("  - Stop command pin: %d", setting->board.pin.command.stop);
+  Log.traceln("  - Stop command pin: %d", setting->board.pin.driver.command.stop);
   Log.traceln("  - Manual mode pin: %d", setting->board.pin.mode.manual);
   Log.traceln("- Program:");
   Log.traceln("  - Version: %s", setting->program.version);

@@ -7,7 +7,7 @@
 
 class Commands {
 public:
-  explicit Commands(SettingBoardPinTrackerCommand *command);
+  explicit Commands(SettingBoardPinDriverCommand  *command);
   void init();
   CommandState getState();
   CommandState update();
@@ -15,7 +15,7 @@ public:
 private:
   DV_DualHoldState _hold;
   CommandState _state;
-  SettingBoardPinTrackerCommand *_command;
+  SettingBoardPinDriverCommand *_command;
   static void onStopHold(void *ctx);
   static void onResetHold(void *ctx);
 };

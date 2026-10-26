@@ -37,7 +37,6 @@ private:
   bool isManualMode();
   void deploy();
   void retract();
-  void reset();
   void stop();
   void interval();
 };

@@ -11,6 +11,7 @@ class Driver {
 public:
   static void init(Setting *setting);
   static void update();
+  void reset();
 
 private:
   static Setting *_setting;

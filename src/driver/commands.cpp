@@ -24,7 +24,7 @@ void Commands::onResetHold(void *ctx) {
   self->_state = self->_state.setStateReset();
 }
 
-Commands::Commands(SettingBoardPinTrackerCommand *command)
+Commands::Commands(SettingBoardPinDriverCommand *command)
   : _command(command) {}
 
 void Commands::init() {

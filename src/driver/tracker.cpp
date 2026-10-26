@@ -97,18 +97,6 @@ void Tracker::retract() {
   _motors.retract();
 }
 
-void Tracker::reset() {
-  Log.traceln("Tracker::reset");
-  _state.setStateReset();
-  #ifdef BOARD_ESP32
-  #include <esp_system.h>
-  ESP.restart();
-  #elif defined(BOARD_UNO) || defined(BOARD_NANO)
-  #include <avr/wdt.h>
-  wdt_enable(WDTO_15MS);
-  while (1) {}
-  #endif
-}
 
 void Tracker::stop() {
   Log.traceln("Tracker::stop");
