@@ -89,6 +89,10 @@ bool assertSetting() {
     logFatal("Program version is null or empty");
     return false;
   }
+  if (setting->program.command.stop.time == 0) {
+    logFatal("Stop command time must be greater than 0");
+    return false;
+  }
   if (setting->program.trackers.interval == 0) {
     logFatal("Trackers interval must be greater than 0");
     return false;

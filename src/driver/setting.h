@@ -150,12 +150,21 @@ typedef struct SettingProgramMotors {
   uint8_t speed;
 } SettingProgramMotors;
 
+typedef struct SettingProgramCommandStop {
+  unsigned int time;
+} SettingProgramCommandStop;
+
+typedef struct SettingProgramCommand {
+  SettingProgramCommandStop stop;
+} SettingProgramCommand;
+
 typedef struct SettingProgram {
   char *version;
   SettingProgramTrackers trackers;
   SettingProgramLDR ldr;
   SettingProgramLDRs ldrs;
   SettingProgramMotors motors;
+  SettingProgramCommand command;
 } SettingProgram;
 
 typedef struct Setting {

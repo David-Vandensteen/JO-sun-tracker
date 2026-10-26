@@ -11,6 +11,7 @@
 #define SETTING_PROGRAM_LDRS_NIGHT_CUTOFF 10
 #define SETTING_PROGRAM_MOTORS_SPEED 30
 #define SETTING_PROGRAM_MOTORS_TIMEOUT 1000
+#define SETTING_PROGRAM_COMMAND_STOP_TIME 1000
 
 Setting* settingInit() {
   Setting *setting = getSetting();
@@ -32,6 +33,7 @@ Setting* settingInit() {
   setting->board.pin.driver.command.stop = 27;
   setting->board.pin.mode.manual = 32; // TODO remove
   setting->program.version = VERSION;
+  setting->program.command.stop.time = SETTING_PROGRAM_COMMAND_STOP_TIME;
   setting->program.trackers.interval = SETTING_PROGRAM_TRACKERS_INTERVAL;
   setting->program.ldr.sampling.interval = SETTING_PROGRAM_LDR_SAMPLING_INTERVAL;
   setting->program.ldrs.threshold = SETTING_PROGRAM_LDRS_THRESHOLD;
