@@ -6,7 +6,6 @@
 #include "ldr.h"
 #include "ldrs.h"
 #include "motor.h"
-#include "state.h"
 
 // Public
 Tracker::Tracker(
