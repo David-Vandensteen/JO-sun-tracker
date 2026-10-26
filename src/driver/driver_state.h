@@ -1,0 +1,26 @@
+#ifndef DRIVER_STATE_H
+#define DRIVER_STATE_H
+#include <Arduino.h>
+
+enum DriverStateType {
+  IDLE,
+  RESET,
+  STOP
+};
+
+class DriverState {
+  public:
+    explicit DriverState();
+    explicit DriverState(DriverStateType type);
+    bool isIdle();
+    bool isReset();
+    bool isStop();
+    DriverStateType setIdle();
+    DriverStateType setReset();
+    DriverStateType setStop();
+
+  private:
+    DriverStateType _state;
+};
+
+#endif

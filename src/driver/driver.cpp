@@ -3,13 +3,15 @@
 #include "setting.h"
 #include "driver.h"
 #include "led_protocol.h"
-#include "commands.h"
 #include "trackers.h"
-#include "state.h"
+#include "driver_state.h"
+#include "driver_command_state.h"
 
 Setting *Driver::_setting;
 LedProtocol *Driver::_ledProtocol;
 Trackers *Driver::_trackers;
+DriverState Driver::_state;
+DriverCommand *Driver::_command;
 
 void Driver::init(Setting *setting) {
   _setting = setting;
@@ -34,6 +36,9 @@ void Driver::init(Setting *setting) {
   _trackers->init();
   Log.noticeln("Starting program");
   Log.noticeln("JO Sun Tracker - version %s", _setting->program.version);
+  _command = new DriverCommand(&_setting->board.pin.driver.command);
+  _command->init();
+  _state.setIdle();
 }
 
 void Driver::heartBeat() {
@@ -46,14 +51,29 @@ void Driver::heartBeat() {
 }
 
 void Driver::update() {
+  DriverCommandState commandState = _command->update();
+  if (commandState.isStop()) {
+    Log.traceln("Driver::update - Stop command received");
+    return Driver::stop();
+  }
+  if (commandState.isReset()) {
+    Log.traceln("Driver::update - Reset command received");
+    return Driver::reset();
+  }
   _trackers->update();
   #if defined(HEARTBEAT_INTERVAL)
     if (LOG && HEARTBEAT) { heartBeat(); }
   #endif
 }
 
+void Driver::stop() {
+  Log.traceln("Driver::stop");
+  _state.setStop();
+}
+
 void Driver::reset() {
   Log.traceln("Driver::reset");
+  _state.setReset();
   #ifdef BOARD_ESP32
   #include <esp_system.h>
   ESP.restart();
