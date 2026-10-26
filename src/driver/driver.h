@@ -10,7 +10,9 @@
 class Driver {
 public:
   static void init(Setting *setting);
-  static void update();
+  static DriverState update();
+  static void stop();
+  static void reset();
 
 private:
   static Setting *_setting;
@@ -18,10 +20,7 @@ private:
   static Trackers *_trackers;
   static DriverState _state;
   static DriverCommand *_command;
-
   static void heartBeat();
-  static void stop();
-  static void reset();
 };
 
 #endif

@@ -50,20 +50,21 @@ void Driver::heartBeat() {
   }
 }
 
-void Driver::update() {
+DriverState Driver::update() {
   DriverCommandState commandState = _command->update();
   if (commandState.isStop()) {
-    Log.traceln("Driver::update - Stop command received");
-    return Driver::stop();
+    _state.setStop();
+    return _state;
   }
   if (commandState.isReset()) {
-    Log.traceln("Driver::update - Reset command received");
-    return Driver::reset();
+    _state.setReset();
+    return _state;
   }
   _trackers->update();
   #if defined(HEARTBEAT_INTERVAL)
     if (LOG && HEARTBEAT) { heartBeat(); }
   #endif
+  return _state;
 }
 
 void Driver::stop() {

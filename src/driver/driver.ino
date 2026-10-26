@@ -6,6 +6,7 @@
 */
 #include <Arduino.h>
 #include "driver.h"
+#include "driver_state.h"
 #include "setting.h"
 
 static Setting *setting;
@@ -16,5 +17,11 @@ void setup() {
 }
 
 void loop() {
-  Driver::update();
+  DriverState state = Driver::update();
+  if (state.isStop()) {
+    Driver::stop();
+  }
+  if (state.isReset()) {
+    Driver::reset();
+  }
 }
