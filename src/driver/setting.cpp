@@ -9,6 +9,46 @@ void logFatal(const char* message) {
   #endif
 }
 
+// Returns false when the pin is already registered by another setting
+static bool registerPin(uint8_t pin, const char *name, uint8_t *pins, const char **names, uint8_t &count) {
+  for (uint8_t i = 0; i < count; i++) {
+    if (pins[i] == pin) {
+      #if LOG_FATAL_SETTING
+      Log.fatal("Pin %d used by both '%s' and '%s'", pin, names[i], name);
+      #endif
+      return false;
+    }
+  }
+  pins[count] = pin;
+  names[count] = name;
+  count++;
+  return true;
+}
+
+static bool assertPinsUnique(Setting *setting) {
+  uint8_t pins[TRACKER_MAX * 11 + 3];
+  const char *names[TRACKER_MAX * 11 + 3];
+  uint8_t count = 0;
+  for (uint8_t i = 0; i < TRACKER_MAX; i++) {
+    SettingBoardPinTracker &pin = setting->board.pin.tracker[i];
+    if (!registerPin(pin.ldr.up, "LDR up", pins, names, count)) return false;
+    if (!registerPin(pin.ldr.down, "LDR down", pins, names, count)) return false;
+    if (!registerPin(pin.motors.ena, "Motor ENA", pins, names, count)) return false;
+    if (!registerPin(pin.motors.in1, "Motor IN1", pins, names, count)) return false;
+    if (!registerPin(pin.motors.in2, "Motor IN2", pins, names, count)) return false;
+    if (!registerPin(pin.motors.enb, "Motor ENB", pins, names, count)) return false;
+    if (!registerPin(pin.motors.in3, "Motor IN3", pins, names, count)) return false;
+    if (!registerPin(pin.motors.in4, "Motor IN4", pins, names, count)) return false;
+    if (!registerPin(pin.command.deploy, "Tracker deploy command", pins, names, count)) return false;
+    if (!registerPin(pin.command.retract, "Tracker retract command", pins, names, count)) return false;
+    if (!registerPin(pin.led, "Tracker LED", pins, names, count)) return false;
+  }
+  if (!registerPin(setting->board.pin.led, "LED status", pins, names, count)) return false;
+  if (!registerPin(setting->board.pin.driver.command.stop, "Stop command", pins, names, count)) return false;
+  if (!registerPin(setting->board.pin.mode.manual, "Manual mode", pins, names, count)) return false;
+  return true;
+}
+
 bool assertSetting() {
   Setting *setting = getSetting();
   if (setting == nullptr) {
@@ -83,6 +123,10 @@ bool assertSetting() {
   }
   if (setting->board.pin.mode.manual == 0) {
     logFatal("Manual mode pin is invalid");
+    return false;
+  }
+  if (!assertPinsUnique(setting)) {
+    logFatal("Duplicate GPIO pin in board settings");
     return false;
   }
   if (setting->program.version == nullptr || setting->program.version[0] == '\0') {

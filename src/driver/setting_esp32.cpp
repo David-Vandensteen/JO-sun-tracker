@@ -14,6 +14,12 @@
 #define SETTING_PROGRAM_COMMAND_STOP_TIME 1000
 #define SETTING_PROGRAM_TRACKERS_COMMAND_DEBOUNCE 10
 
+// GPIO assignment: avoid boot strapping pins (0, 2, 12, 15), flash pins (6-11) and input-only pins (34-39) for buttons
+#define SETTING_PIN_TRACKER_COMMAND_DEPLOY 18
+#define SETTING_PIN_TRACKER_COMMAND_RETRACT 19
+#define SETTING_PIN_DRIVER_COMMAND_STOP 21
+#define SETTING_PIN_MODE_MANUAL 23
+
 Setting* settingInit() {
   Setting *setting = getSetting();
   setting->board.adc.resolution = SETTING_BOARD_ADC_RESOLUTION;
@@ -27,12 +33,12 @@ Setting* settingInit() {
   setting->board.pin.tracker[TRACKER_1].motors.enb = 14;
   setting->board.pin.tracker[TRACKER_1].motors.in3 = 12;
   setting->board.pin.tracker[TRACKER_1].motors.in4 = 13;
-  setting->board.pin.tracker[TRACKER_1].command.deploy = 25;
-  setting->board.pin.tracker[TRACKER_1].command.retract = 26;
+  setting->board.pin.tracker[TRACKER_1].command.deploy = SETTING_PIN_TRACKER_COMMAND_DEPLOY;
+  setting->board.pin.tracker[TRACKER_1].command.retract = SETTING_PIN_TRACKER_COMMAND_RETRACT;
   setting->board.pin.tracker[TRACKER_1].led = 4; // LED_BUILTIN
   setting->board.pin.led = 2; // LED_BUILTIN
-  setting->board.pin.driver.command.stop = 27;
-  setting->board.pin.mode.manual = 32; // TODO remove
+  setting->board.pin.driver.command.stop = SETTING_PIN_DRIVER_COMMAND_STOP;
+  setting->board.pin.mode.manual = SETTING_PIN_MODE_MANUAL; // TODO remove
   setting->program.version = VERSION;
   setting->program.command.stop.time = SETTING_PROGRAM_COMMAND_STOP_TIME;
   setting->program.trackers.interval = SETTING_PROGRAM_TRACKERS_INTERVAL;

@@ -62,7 +62,7 @@ Setting* settingInit() {
   setting->board.pin.tracker[TRACKER_1].motors.in4 = 12;
   setting->board.pin.tracker[TRACKER_1].command.stop = 2;
   setting->board.pin.tracker[TRACKER_1].led = 7;
-	setting->board.pin.led = LED_BUILTIN;
+	setting->board.pin.led = 5;
   setting->board.pin.mode.manual = 3;
 	setting->program.version = VERSION;
   setting->program.trackers.interval = SETTING_PROGRAM_TRACKERS_INTERVAL;
