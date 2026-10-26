@@ -36,7 +36,7 @@ void Driver::init(Setting *setting) {
   _trackers->init();
   Log.noticeln("Starting program");
   Log.noticeln("JO Sun Tracker - version %s", _setting->program.version);
-  _command = new DriverCommand(&_setting->board.pin.driver.command);
+  _command = new DriverCommand(&_setting->board.pin.driver.command, &_setting->program.command.stop);
   _command->init();
   _state.setIdle();
 }

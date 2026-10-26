@@ -133,8 +133,8 @@ bool assertSetting() {
     logFatal("Program version is null or empty");
     return false;
   }
-  if (setting->program.command.stop.time == 0) {
-    logFatal("Stop command time must be greater than 0");
+  if (setting->program.command.stop.pressMs == 0) {
+    logFatal("Stop command press duration must be greater than 0 ms");
     return false;
   }
   if (setting->program.trackers.interval == 0) {

@@ -46,7 +46,7 @@ LDR 2 - sun sensor 2:
 #define SETTING_PROGRAM_LDRS_NIGHT_CUTOFF 10
 #define SETTING_PROGRAM_MOTORS_SPEED 30
 #define SETTING_PROGRAM_MOTORS_TIMEOUT 1000
-#define SETTING_PROGRAM_COMMAND_STOP_TIME 1000
+#define SETTING_PROGRAM_COMMAND_STOP_PRESS_MS 1000
 
 Setting* settingInit() {
   Setting *setting = getSetting();
@@ -75,7 +75,7 @@ Setting* settingInit() {
   setting->program.ldrs.night.cutoff = SETTING_PROGRAM_LDRS_NIGHT_CUTOFF;
   setting->program.motors.speed = SETTING_PROGRAM_MOTORS_SPEED;
   setting->program.motors.timeout = SETTING_PROGRAM_MOTORS_TIMEOUT;
-  setting->program.command.stop.time = SETTING_PROGRAM_COMMAND_STOP_TIME;
+  setting->program.command.stop.pressMs = SETTING_PROGRAM_COMMAND_STOP_PRESS_MS;
   return setting;
 }
 

@@ -11,7 +11,7 @@
 #define SETTING_PROGRAM_LDRS_NIGHT_CUTOFF 10
 #define SETTING_PROGRAM_MOTORS_SPEED 30
 #define SETTING_PROGRAM_MOTORS_TIMEOUT 1000
-#define SETTING_PROGRAM_COMMAND_STOP_TIME 1000
+#define SETTING_PROGRAM_COMMAND_STOP_PRESS_MS 1000
 #define SETTING_PROGRAM_TRACKERS_COMMAND_DEBOUNCE 10
 
 // GPIO assignment: avoid boot strapping pins (0, 2, 12, 15), flash pins (6-11) and input-only pins (34-39) for buttons
@@ -40,7 +40,7 @@ Setting* settingInit() {
   setting->board.pin.driver.command.stop = SETTING_PIN_DRIVER_COMMAND_STOP;
   setting->board.pin.mode.manual = SETTING_PIN_MODE_MANUAL; // TODO remove
   setting->program.version = VERSION;
-  setting->program.command.stop.time = SETTING_PROGRAM_COMMAND_STOP_TIME;
+  setting->program.command.stop.pressMs = SETTING_PROGRAM_COMMAND_STOP_PRESS_MS;
   setting->program.trackers.interval = SETTING_PROGRAM_TRACKERS_INTERVAL;
   setting->program.trackers.command.debounce = SETTING_PROGRAM_TRACKERS_COMMAND_DEBOUNCE;
   setting->program.ldr.sampling.interval = SETTING_PROGRAM_LDR_SAMPLING_INTERVAL;

@@ -156,7 +156,7 @@ typedef struct SettingProgramMotors {
 } SettingProgramMotors;
 
 typedef struct SettingProgramCommandStop {
-  unsigned int time;
+  unsigned int pressMs;
 } SettingProgramCommandStop;
 
 typedef struct SettingProgramCommand {
