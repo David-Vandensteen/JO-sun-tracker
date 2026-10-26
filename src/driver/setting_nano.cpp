@@ -40,6 +40,7 @@ LDR 2 - sun sensor 2:
 #define SETTING_BOARD_PWM_RESOLUTION 255
 #define SETTING_BOARD_SERIAL_BAUD_RATE 115200
 #define SETTING_PROGRAM_TRACKERS_INTERVAL 3 * (60 * 1000)
+#define SETTING_PROGRAM_TRACKERS_COMMAND_DEBOUNCE 10
 #define SETTING_PROGRAM_LDR_SAMPLING_INTERVAL 1000
 #define SETTING_PROGRAM_LDRS_THRESHOLD 10
 #define SETTING_PROGRAM_LDRS_NIGHT_CUTOFF 10
@@ -65,6 +66,7 @@ Setting* settingInit() {
   setting->board.pin.mode.manual = 3;
 	setting->program.version = VERSION;
   setting->program.trackers.interval = SETTING_PROGRAM_TRACKERS_INTERVAL;
+  setting->program.trackers.command.debounce = SETTING_PROGRAM_TRACKERS_COMMAND_DEBOUNCE;
   setting->program.ldr.sampling.interval = SETTING_PROGRAM_LDR_SAMPLING_INTERVAL;
 	setting->program.ldrs.threshold = SETTING_PROGRAM_LDRS_THRESHOLD;
   setting->program.ldrs.night.cutoff = SETTING_PROGRAM_LDRS_NIGHT_CUTOFF;

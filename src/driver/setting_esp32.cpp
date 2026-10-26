@@ -12,6 +12,7 @@
 #define SETTING_PROGRAM_MOTORS_SPEED 30
 #define SETTING_PROGRAM_MOTORS_TIMEOUT 1000
 #define SETTING_PROGRAM_COMMAND_STOP_TIME 1000
+#define SETTING_PROGRAM_TRACKERS_COMMAND_DEBOUNCE 10
 
 Setting* settingInit() {
   Setting *setting = getSetting();
@@ -35,6 +36,7 @@ Setting* settingInit() {
   setting->program.version = VERSION;
   setting->program.command.stop.time = SETTING_PROGRAM_COMMAND_STOP_TIME;
   setting->program.trackers.interval = SETTING_PROGRAM_TRACKERS_INTERVAL;
+  setting->program.trackers.command.debounce = SETTING_PROGRAM_TRACKERS_COMMAND_DEBOUNCE;
   setting->program.ldr.sampling.interval = SETTING_PROGRAM_LDR_SAMPLING_INTERVAL;
   setting->program.ldrs.threshold = SETTING_PROGRAM_LDRS_THRESHOLD;
   setting->program.ldrs.night.cutoff = SETTING_PROGRAM_LDRS_NIGHT_CUTOFF;

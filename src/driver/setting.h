@@ -124,8 +124,13 @@ typedef struct SettingBoard {
   SettingBoardSerial serial;
 } SettingBoard;
 
+typedef struct SettingProgramTrackersCommand {
+  unsigned long debounce;
+} SettingProgramTrackersCommand;
+
 typedef struct SettingProgramTrackers {
   unsigned long interval;
+  SettingProgramTrackersCommand command;
 } SettingProgramTrackers;
 
 typedef struct SettingProgramLDRSampling {
