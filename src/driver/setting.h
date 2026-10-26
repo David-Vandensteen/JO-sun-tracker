@@ -54,8 +54,11 @@
 // ------------------
 //  MOCK
 // ------------------
-#define MOCK_LDR_AVERAGE_PERCENT_VALUE true
+#define MOCK_LDR_AVERAGE_PERCENT_VALUE false
 
+// --------------------------------------------------------
+// Setting structures for board and program configuration
+// --------------------------------------------------------
 typedef struct SettingBoardPinTrackerLDR {
   uint8_t up;
   uint8_t down;
