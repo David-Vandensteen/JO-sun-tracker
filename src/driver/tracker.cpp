@@ -75,8 +75,14 @@ void Tracker::handleCommand() {
   _trackerCommand.update();
   TrackerCommandState state = _trackerCommand.state();
 
+  // Sortie du mode manuel : arrêt immédiat du mouvement manuel en cours.
+  // La commande est remise à IDLE, donc un bouton encore maintenu sera pris en compte au retour en manuel.
   if (!isManualMode()) {
-    _commandState = state;
+    if (!_commandState.isIdle()) {
+      Log.traceln("Tracker::handleCommand - leaving manual mode, stopping");
+      stop();
+    }
+    _commandState.setIdle();
     return;
   }
 
