@@ -54,13 +54,15 @@ void Driver::update() {
   _command->update();
   DriverCommandState commandState = _command->state();
 
-  if (commandState.isStop()) {
-    _state.setStop();
+  if (commandState.isStop() && !_state.isStop()) {
+    stop();
   }
   if (commandState.isReset()) {
     _state.setReset();
   }
-  _trackers->update();
+  if (!_state.isStop()) {
+    _trackers->update();
+  }
   #if defined(HEARTBEAT_INTERVAL)
     if (LOG && HEARTBEAT) { heartBeat(); }
   #endif

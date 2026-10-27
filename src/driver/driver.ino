@@ -19,9 +19,6 @@ void setup() {
 void loop() {
   Driver::update();
   DriverState state = Driver::state();
-  if (state.isStop()) {
-    Driver::stop();
-  }
   if (state.isReset()) {
     Driver::reset();
   }
