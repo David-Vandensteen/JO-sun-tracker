@@ -9,23 +9,6 @@
 #define TRACKER_1 0
 
 // ------------------
-//  BOARD
-// ------------------
-// #define BOARD_NANO
-// #define BOARD_UNO
-#define BOARD_ESP32
-
-#ifdef BOARD_UNO
-#undef TRACKER_MAX
-#define TRACKER_MAX 1
-#endif
-
-#ifdef BOARD_NANO
-#undef TRACKER_MAX
-#define TRACKER_MAX 1
-#endif
-
-// ------------------
 //  LOG
 // ------------------
 #define LOG true
@@ -38,12 +21,7 @@
 #define LOG_LEVEL LOG_LEVEL_TRACE
 // #define LOG_LEVEL LOG_LEVEL_VERBOSE
 
-// Memory optimization for Arduino Uno/Nano: disable debug logs for setting validation
-#if defined(BOARD_UNO) || defined(BOARD_NANO)
-  #define LOG_FATAL_SETTING false
-#else
-  #define LOG_FATAL_SETTING true
-#endif
+#define LOG_FATAL_SETTING true
 
 #define LOG_LDR_INTERVAL true
 #define LOG_TRACKER_INTERVAL true
@@ -177,8 +155,6 @@ void logFatal(const char *message);
 Setting* settingInit();
 bool assertSetting();
 Setting* getSetting();
-#ifdef BOARD_ESP32
 void logSetting();
-#endif
 
 #endif

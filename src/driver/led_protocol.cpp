@@ -12,9 +12,6 @@ LedProtocol::LedProtocol(uint8_t pin)
 
 void LedProtocol::blink(unsigned long interval, uint8_t iteration) {
   _led = DV_LedBlink(_pin, interval, iteration);
-  #if defined(BOARD_UNO) || defined(BOARD_NANO)
-    _ledBuiltin = DV_LedBlink(LED_BUILTIN, interval, iteration);
-  #endif
 }
 
 void LedProtocol::fatalError() {
@@ -32,7 +29,4 @@ void LedProtocol::waiting() {
 
 void LedProtocol::update() {
   _led.update();
-  #if defined(BOARD_UNO) || defined(BOARD_NANO)
-    _ledBuiltin.update();
-  #endif
 }

@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include "setting.h"
-#ifdef BOARD_ESP32
 
 #define SETTING_BOARD_ADC_RESOLUTION 4095
 #define SETTING_BOARD_PWM_RESOLUTION 255
@@ -50,5 +49,3 @@ Setting* settingInit() {
   setting->program.motors.timeout = SETTING_PROGRAM_MOTORS_TIMEOUT;
   return setting;
 }
-
-#endif

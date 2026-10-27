@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
+#include <esp_system.h>
 #include "setting.h"
 #include "driver.h"
 #include "led_protocol.h"
@@ -27,9 +28,7 @@ void Driver::init(Setting *setting) {
     _ledProtocol->fatalError();
   }
   Log.noticeln("Setting is valid");
-  #ifdef BOARD_ESP32
   logSetting();
-  #endif
    Log.noticeln("Waiting before starting...");
   _ledProtocol->waiting();
   _trackers = new Trackers(_setting, _ledProtocol);
@@ -77,14 +76,7 @@ void Driver::stop() {
 void Driver::reset() {
   Log.traceln("Driver::reset");
   _state.setReset();
-  #ifdef BOARD_ESP32
-  #include <esp_system.h>
   ESP.restart();
-  #elif defined(BOARD_UNO) || defined(BOARD_NANO)
-  #include <avr/wdt.h>
-  wdt_enable(WDTO_15MS);
-  while (1) {}
-  #endif
 }
 
 DriverState Driver::state() {

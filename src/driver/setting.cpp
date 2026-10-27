@@ -173,8 +173,6 @@ Setting* getSetting() {
   return &setting;
 }
 
-#ifdef BOARD_ESP32
-// Must be compiled only for ESP32 board, it's a memory optimization for Arduino boards
 void logSetting() {
   Setting *setting = getSetting();
   Log.traceln("Setting:");
@@ -209,5 +207,3 @@ void logSetting() {
   Log.traceln("  - Motors speed: %d", setting->program.motors.speed);
   Log.traceln("  - Motors timeout: %d", setting->program.motors.timeout);
 }
-
-#endif

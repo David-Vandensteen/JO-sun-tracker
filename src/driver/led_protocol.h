@@ -18,9 +18,6 @@ private:
     Error,
   };
   DV_LedBlink _led;
-  #if defined(BOARD_UNO) || defined(BOARD_NANO)
-    DV_LedBlink _ledBuiltin = DV_LedBlink(LED_BUILTIN);
-  #endif
   uint8_t _pin;
   State _state = State::Idle;
   void blink(unsigned long interval, uint8_t iteration);
