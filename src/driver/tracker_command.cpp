@@ -10,13 +10,26 @@ TrackerCommand::TrackerCommand(SettingBoardPinTrackerCommand *settingBoardPinTra
 
 // Buttons use INPUT_PULLUP: pressed reads LOW, so the debounced output starts HIGH (released)
 void TrackerCommand::init() {
+  pinMode(_settingBoardPinTrackerCommand->mode, INPUT_PULLUP);
   pinMode(_settingBoardPinTrackerCommand->deploy, INPUT_PULLUP);
   pinMode(_settingBoardPinTrackerCommand->retract, INPUT_PULLUP);
   _deployButton.mode(DELAYED, _settingProgramTrackersCommand->debounce, HIGH);
   _retractButton.mode(DELAYED, _settingProgramTrackersCommand->debounce, HIGH);
+  // Switch pulled up: LOW selects manual, so the debounced output starts HIGH (automatic) when released
+  _modeSwitch.mode(DELAYED, _settingProgramTrackersCommand->debounce, digitalRead(_settingBoardPinTrackerCommand->mode));
+  if (_modeSwitch.debounced() == HIGH) {
+    _commandState.setAuto();
+  }
 }
 
 void TrackerCommand::update() {
+  // Two-position switch: LOW selects manual mode, buttons are only read in manual mode
+  bool manualMode = !_modeSwitch.debounce(digitalRead(_settingBoardPinTrackerCommand->mode));
+  if (!manualMode) {
+    _commandState.setAuto();
+    return;
+  }
+
   bool deployPressed = !_deployButton.debounce(digitalRead(_settingBoardPinTrackerCommand->deploy));
   bool retractPressed = !_retractButton.debounce(digitalRead(_settingBoardPinTrackerCommand->retract));
 

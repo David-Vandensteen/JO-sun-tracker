@@ -26,7 +26,6 @@ public:
 
 private:
   static void onIntervalTick(void *ctx);
-  SettingBoardPinTrackerCommand *_settingBoardPinTrackerCommand;
   Ldrs _ldrs;
   Motors _motors;
   TrackerCommand _trackerCommand;
@@ -35,7 +34,6 @@ private:
   SettingProgramTrackers *_settingProgramTrackers;
   DV_EveryInterval _everyInterval;
   TrackerState _state;
-  bool isManualMode();
   void deploy();
   void retract();
   void handleCommand();

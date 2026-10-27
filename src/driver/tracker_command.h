@@ -18,6 +18,7 @@ class TrackerCommand {
     TrackerCommandState _commandState;
     ADebouncer _deployButton;
     ADebouncer _retractButton;
+    ADebouncer _modeSwitch;
 };
 
 

@@ -19,7 +19,6 @@ Tracker::Tracker(
   SettingProgramMotors *settingProgramMotors
 )
   : _settingProgramMotors(settingProgramMotors),
-    _settingBoardPinTrackerCommand(&settingBoardPinTracker->command),
     _ldrs(
       Ldr(
         settingBoardPinTracker->ldr.up,
@@ -52,11 +51,10 @@ Tracker::Tracker(
     _settingProgramTrackers(settingProgramTrackers) {}
 
 void Tracker::init() {
-  Log.traceln("Tracker::init - mode: %s", isManualMode() ? "manual" : "auto");
-  pinMode(_settingBoardPinTrackerCommand->mode, INPUT);
+  _trackerCommand.init();
+  Log.traceln("Tracker::init - mode: %s", _trackerCommand.state().isAuto() ? "auto" : "manual");
   _ldrs.init();
   _motors.init();
-  _trackerCommand.init();
   _everyInterval
     .setInterval(_settingProgramTrackers->interval)
     .setCallback(Tracker::onIntervalTick, this);
@@ -75,13 +73,13 @@ void Tracker::handleCommand() {
   TrackerCommandState state = _trackerCommand.state();
 
   // Sortie du mode manuel : arrêt immédiat du mouvement manuel en cours.
-  // La commande est remise à IDLE, donc un bouton encore maintenu sera pris en compte au retour en manuel.
-  if (!isManualMode()) {
-    if (!_commandState.isIdle()) {
+  // La commande passe à AUTO, donc un bouton encore maintenu sera pris en compte au retour en manuel.
+  if (state.isAuto()) {
+    if (_commandState.isDeploy() || _commandState.isRetract()) {
       Log.traceln("Tracker::handleCommand - leaving manual mode, stopping");
       stop();
     }
-    _commandState.setIdle();
+    _commandState = state;
     return;
   }
 
@@ -89,7 +87,7 @@ void Tracker::handleCommand() {
     _motors.deploy();
   } else if (state.isRetract()) {
     _motors.retract();
-  } else if (!_commandState.isIdle()) {
+  } else if (_commandState.isDeploy() || _commandState.isRetract()) {
     stop();
   }
   _commandState = state;
@@ -111,10 +109,6 @@ void Tracker::stop() {
   _motors.stop();
 }
 
-bool Tracker::isManualMode() {
-  return digitalRead(_settingBoardPinTrackerCommand->mode) == HIGH;
-}
-
 void Tracker::onIntervalTick(void *ctx) {
   if (ctx == nullptr) {
     return;
@@ -126,9 +120,9 @@ void Tracker::onIntervalTick(void *ctx) {
 
 void Tracker::interval() {
   #if LOG_TRACKER_INTERVAL
-  Log.traceln("Tracker::interval - mode: %s", isManualMode() ? "manual" : "automa");
+  Log.traceln("Tracker::interval - mode: %s", _trackerCommand.state().isAuto() ? "automa" : "manual");
   #endif
-  if (isManualMode()) {
+  if (!_trackerCommand.state().isAuto()) {
     return;
   }
 
