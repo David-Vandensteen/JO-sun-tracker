@@ -20,7 +20,10 @@ void TrackerCommand::update() {
   bool deployPressed = !_deployButton.debounce(digitalRead(_settingBoardPinTrackerCommand->deploy));
   bool retractPressed = !_retractButton.debounce(digitalRead(_settingBoardPinTrackerCommand->retract));
 
-  if (deployPressed) {
+  if (deployPressed && retractPressed) {
+    // Ambiguous input: both buttons pressed, so stop until a single command is detected
+    _commandState.setIdle();
+  } else if (deployPressed) {
     _commandState.setDeploy();
   } else if (retractPressed) {
     _commandState.setRetract();
