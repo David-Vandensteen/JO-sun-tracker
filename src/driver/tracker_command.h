@@ -9,7 +9,8 @@ class TrackerCommand {
   public:
     explicit TrackerCommand(SettingBoardPinTrackerCommand *settingBoardPinTrackerCommand, SettingProgramTrackersCommand *settingProgramTrackersCommand);
     void init();
-    TrackerCommandState update();
+    void update();
+    TrackerCommandState state();
 
   private:
     SettingBoardPinTrackerCommand *_settingBoardPinTrackerCommand;

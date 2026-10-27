@@ -10,9 +10,10 @@
 class Driver {
 public:
   static void init(Setting *setting);
-  static DriverState update();
+  static void update();
   static void stop();
   static void reset();
+  static DriverState state();
 
 private:
   static Setting *_setting;

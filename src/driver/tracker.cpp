@@ -72,7 +72,9 @@ void Tracker::update() {
 
 // Private
 void Tracker::handleCommand() {
-  TrackerCommandState state = _trackerCommand.update();
+  _trackerCommand.update();
+  TrackerCommandState state = _trackerCommand.state();
+
   if (!isManualMode()) {
     _commandState = state;
     return;

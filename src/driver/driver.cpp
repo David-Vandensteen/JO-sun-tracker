@@ -50,21 +50,20 @@ void Driver::heartBeat() {
   }
 }
 
-DriverState Driver::update() {
-  DriverCommandState commandState = _command->update();
+void Driver::update() {
+  _command->update();
+  DriverCommandState commandState = _command->state();
+
   if (commandState.isStop()) {
     _state.setStop();
-    return _state;
   }
   if (commandState.isReset()) {
     _state.setReset();
-    return _state;
   }
   _trackers->update();
   #if defined(HEARTBEAT_INTERVAL)
     if (LOG && HEARTBEAT) { heartBeat(); }
   #endif
-  return _state;
 }
 
 void Driver::stop() {
@@ -84,4 +83,8 @@ void Driver::reset() {
   wdt_enable(WDTO_15MS);
   while (1) {}
   #endif
+}
+
+DriverState Driver::state() {
+  return _state;
 }

@@ -9,7 +9,8 @@ class DriverCommand {
   public:
     explicit DriverCommand(SettingBoardPinDriverCommand *settingBoardPinDriverCommand, SettingProgramCommandStop *settingProgramCommandStop);
     void init();
-    DriverCommandState update();
+    void update();
+    DriverCommandState state();
 
   private:
     SettingBoardPinDriverCommand *_settingBoardPinDriverCommand;

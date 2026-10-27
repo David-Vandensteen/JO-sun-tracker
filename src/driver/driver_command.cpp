@@ -24,7 +24,10 @@ void DriverCommand::init() {
   }, this);
 }
 
-DriverCommandState DriverCommand::update() {
+void DriverCommand::update() {
   _stopButton->tick();
+}
+
+DriverCommandState DriverCommand::state() {
   return _commandState;
 }

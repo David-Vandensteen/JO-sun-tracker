@@ -16,7 +16,7 @@ void TrackerCommand::init() {
   _retractButton.mode(DELAYED, _settingProgramTrackersCommand->debounce, HIGH);
 }
 
-TrackerCommandState TrackerCommand::update() {
+void TrackerCommand::update() {
   bool deployPressed = !_deployButton.debounce(digitalRead(_settingBoardPinTrackerCommand->deploy));
   bool retractPressed = !_retractButton.debounce(digitalRead(_settingBoardPinTrackerCommand->retract));
 
@@ -27,5 +27,8 @@ TrackerCommandState TrackerCommand::update() {
   } else {
     _commandState.setIdle();
   }
+}
+
+TrackerCommandState TrackerCommand::state() {
   return _commandState;
 }
