@@ -80,11 +80,11 @@ void Tracker::handleCommand() {
     return;
   }
 
-  if (state.isDeploy()) {
+  if (state.isDeploy() && !_commandState.isDeploy()) {
     deploy();
-  } else if (state.isRetract()) {
+  } else if (state.isRetract() && !_commandState.isRetract()) {
     retract();
-  } else if (!_commandState.isIdle()) {
+  } else if (state.isIdle() && !_commandState.isIdle()) {
     stop();
   }
   _commandState = state;
