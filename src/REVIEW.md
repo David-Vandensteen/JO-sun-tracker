@@ -26,7 +26,7 @@ Cette revue porte sur le comportement à l'exécution, la cohérence de configur
 
 - Emplacement : `src/driver/setting_esp32.cpp`, `src/driver/setting.cpp`, `src/driver/setting_uno.cpp`, `src/driver/setting_nano.cpp`
 - Problème (ESP32, corrigé) : les broches 25, 26, 27 et 32 étaient utilisées deux fois (moteurs et boutons de commande, LDR up et mode manuel).
-- Correction (ESP32) : boutons deploy/retract sur 18/19, stop sur 21, mode manuel sur 23, définis par des `#define` nommés. `assertSetting()` vérifie désormais l'unicité des broches (`assertPinsUnique()`) et indique les deux champs en conflit.
+- Correction (ESP32) : boutons deploy/retract sur 18/19, stop sur 21, mode manuel sur 15, définis par des `#define` nommés. Le mode manuel est désormais porté par `SettingBoardPinTrackerCommand.mode` (par tracker). `assertSetting()` vérifie désormais l'unicité des broches (`assertPinsUnique()`) et indique les deux champs en conflit.
 - Uno/Nano (corrigé) : sur Uno, la LED tracker passe de `LED_BUILTIN` (13, conflit avec `motors.enb`) à GPIO 7. Sur Nano, la LED de statut passe de `LED_BUILTIN` (13, conflit avec `motors.enb`) à GPIO 5. Les boutons de commande Uno/Nano sont aussi réaffectés (Uno : deploy 3, retract 2, stop 4, manuel 5 ; Nano : deploy 4, retract 6, stop 2, manuel 3).
 
 ### 3 bis. Moyen : broches de strapping ESP32 (corrigé)

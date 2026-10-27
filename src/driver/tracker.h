@@ -12,7 +12,6 @@ class Tracker {
 public:
   explicit Tracker(
     SettingBoardPinTracker *settingBoardPinTracker,
-    SettingBoardPinMode *settingBoardPinMode,
     SettingBoardPinDriverCommand *settingBoardPinDriverCommand,
     SettingProgramTrackers *settingProgramTrackers,
     SettingProgramLDR *settingProgramLDR,
@@ -27,7 +26,7 @@ public:
 
 private:
   static void onIntervalTick(void *ctx);
-  SettingBoardPinMode *_settingBoardPinMode;
+  SettingBoardPinTrackerCommand *_settingBoardPinTrackerCommand;
   Ldrs _ldrs;
   Motors _motors;
   TrackerCommand _trackerCommand;

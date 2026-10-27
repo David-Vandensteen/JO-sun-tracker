@@ -10,7 +10,6 @@
 // Public
 Tracker::Tracker(
   SettingBoardPinTracker *settingBoardPinTracker,
-  SettingBoardPinMode *settingBoardPinMode,
   SettingBoardPinDriverCommand *settingBoardPinDriverCommand,
   SettingProgramTrackers *settingProgramTrackers,
   SettingProgramLDR *settingProgramLDR,
@@ -20,7 +19,7 @@ Tracker::Tracker(
   SettingProgramMotors *settingProgramMotors
 )
   : _settingProgramMotors(settingProgramMotors),
-    _settingBoardPinMode(settingBoardPinMode),
+    _settingBoardPinTrackerCommand(&settingBoardPinTracker->command),
     _ldrs(
       Ldr(
         settingBoardPinTracker->ldr.up,
@@ -54,7 +53,7 @@ Tracker::Tracker(
 
 void Tracker::init() {
   Log.traceln("Tracker::init - mode: %s", isManualMode() ? "manual" : "auto");
-  pinMode(_settingBoardPinMode->manual, INPUT);
+  pinMode(_settingBoardPinTrackerCommand->mode, INPUT);
   _ldrs.init();
   _motors.init();
   _trackerCommand.init();
@@ -113,7 +112,7 @@ void Tracker::stop() {
 }
 
 bool Tracker::isManualMode() {
-  return digitalRead(_settingBoardPinMode->manual) == HIGH;
+  return digitalRead(_settingBoardPinTrackerCommand->mode) == HIGH;
 }
 
 void Tracker::onIntervalTick(void *ctx) {

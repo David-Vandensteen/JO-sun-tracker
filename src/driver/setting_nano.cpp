@@ -63,10 +63,10 @@ Setting* settingInit() {
   setting->board.pin.tracker[TRACKER_1].motors.in4 = 12;
   setting->board.pin.tracker[TRACKER_1].command.deploy = 4;
   setting->board.pin.tracker[TRACKER_1].command.retract = 6;
+  setting->board.pin.tracker[TRACKER_1].command.mode = 3;
   setting->board.pin.driver.command.stop = 2;
   setting->board.pin.tracker[TRACKER_1].led = 7;
 	setting->board.pin.led = 5;
-  setting->board.pin.mode.manual = 3;
 	setting->program.version = VERSION;
   setting->program.trackers.interval = SETTING_PROGRAM_TRACKERS_INTERVAL;
   setting->program.trackers.command.debounce = SETTING_PROGRAM_TRACKERS_COMMAND_DEBOUNCE;

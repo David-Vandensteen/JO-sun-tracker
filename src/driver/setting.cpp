@@ -26,8 +26,8 @@ static bool registerPin(uint8_t pin, const char *name, uint8_t *pins, const char
 }
 
 static bool assertPinsUnique(Setting *setting) {
-  uint8_t pins[TRACKER_MAX * 11 + 3];
-  const char *names[TRACKER_MAX * 11 + 3];
+  uint8_t pins[TRACKER_MAX * 12 + 2];
+  const char *names[TRACKER_MAX * 12 + 2];
   uint8_t count = 0;
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     SettingBoardPinTracker &pin = setting->board.pin.tracker[i];
@@ -41,11 +41,11 @@ static bool assertPinsUnique(Setting *setting) {
     if (!registerPin(pin.motors.in4, "Motor IN4", pins, names, count)) return false;
     if (!registerPin(pin.command.deploy, "Tracker deploy command", pins, names, count)) return false;
     if (!registerPin(pin.command.retract, "Tracker retract command", pins, names, count)) return false;
+    if (!registerPin(pin.command.mode, "Tracker mode command", pins, names, count)) return false;
     if (!registerPin(pin.led, "Tracker LED", pins, names, count)) return false;
   }
   if (!registerPin(setting->board.pin.led, "LED status", pins, names, count)) return false;
   if (!registerPin(setting->board.pin.driver.command.stop, "Stop command", pins, names, count)) return false;
-  if (!registerPin(setting->board.pin.mode.manual, "Manual mode", pins, names, count)) return false;
   return true;
 }
 
@@ -108,6 +108,10 @@ bool assertSetting() {
       logFatal("Tracker retract command pin is invalid");
       return false;
     }
+    if (setting->board.pin.tracker[i].command.mode == 0) {
+      logFatal("Tracker mode command pin is invalid");
+      return false;
+    }
     if (setting->board.pin.tracker[i].led == 0) {
       logFatal("Tracker LED pin is invalid");
       return false;
@@ -119,10 +123,6 @@ bool assertSetting() {
   }
   if (setting->board.pin.driver.command.stop == 0) {
     logFatal("Stop command pin is invalid");
-    return false;
-  }
-  if (setting->board.pin.mode.manual == 0) {
-    logFatal("Manual mode pin is invalid");
     return false;
   }
   if (!assertPinsUnique(setting)) {
@@ -194,11 +194,11 @@ void logSetting() {
     Log.traceln("    - Motor IN4 pin: %d", setting->board.pin.tracker[i].motors.in4);
     Log.traceln("    - Tracker deploy command pin: %d", setting->board.pin.tracker[i].command.deploy);
     Log.traceln("    - Tracker retract command pin: %d", setting->board.pin.tracker[i].command.retract);
+    Log.traceln("    - Tracker mode command pin: %d", setting->board.pin.tracker[i].command.mode);
     Log.traceln("    - Tracker LED pin: %d", setting->board.pin.tracker[i].led);
   }
   Log.traceln("  - LED status pin: %d", setting->board.pin.led);
   Log.traceln("  - Stop command pin: %d", setting->board.pin.driver.command.stop);
-  Log.traceln("  - Manual mode pin: %d", setting->board.pin.mode.manual);
   Log.traceln("- Program:");
   Log.traceln("  - Version: %s", setting->program.version);
   Log.traceln("  - Trackers interval: %lu", setting->program.trackers.interval);

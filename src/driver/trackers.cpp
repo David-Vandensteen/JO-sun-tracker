@@ -12,7 +12,6 @@ void Trackers::init() {
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     _trackers[i] = new Tracker(
       &_setting->board.pin.tracker[i],
-      &_setting->board.pin.mode,
       &_setting->board.pin.driver.command,
       &_setting->program.trackers,
       &_setting->program.ldr,

@@ -76,6 +76,7 @@ typedef struct SettingBoardPinMotors {
 typedef struct SettingBoardPinTrackerCommand {
   uint8_t deploy;
   uint8_t retract;
+  uint8_t mode;
 } SettingBoardPinTrackerCommand;
 
 typedef struct SettingBoardPinTracker {
@@ -84,10 +85,6 @@ typedef struct SettingBoardPinTracker {
   SettingBoardPinTrackerCommand command;
   uint8_t led;
 } SettingBoardPinTracker;
-
-typedef struct SettingBoardPinMode {
-  uint8_t manual;
-} SettingBoardPinMode;
 
 typedef struct SettingBoardPinDriverCommand {
   uint8_t stop;
@@ -99,7 +96,6 @@ typedef struct SettingBoardPinDriver {
 
 typedef struct SettingBoardPin {
   SettingBoardPinTracker tracker[TRACKER_MAX];
-  SettingBoardPinMode mode;
   SettingBoardPinDriver driver;
   uint8_t led;
 
