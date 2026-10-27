@@ -38,3 +38,8 @@ void Trackers::stop() {
     _trackers[i]->stop();
   }
 }
+
+TrackerStatus Trackers::status() {
+  return _trackers[TRACKER_1]->status();
+}
+

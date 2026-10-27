@@ -6,6 +6,7 @@
 #include "trackers.h"
 #include "driver_state.h"
 #include "driver_command.h"
+#include "status.h"
 
 class Driver {
 public:
@@ -22,6 +23,7 @@ private:
   static DriverState _state;
   static DriverCommand *_command;
   static void heartBeat();
+  static void publishStatus();
 };
 
 #endif

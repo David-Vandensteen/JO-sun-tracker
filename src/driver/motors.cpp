@@ -55,3 +55,7 @@ void Motors::update() {
   _motor1.update();
   _motor2.update();
 }
+
+MotorState Motors::state() {
+  return _motor1.state();
+}

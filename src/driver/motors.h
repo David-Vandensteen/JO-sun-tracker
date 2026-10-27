@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include "setting.h"
 #include "motor.h"
+#include "motor_state.h"
 
 class Motors {
 public:
@@ -17,6 +18,7 @@ public:
   void setPositionZero();
   void stop();
   void update();
+  MotorState state();
 
 private:
 	Motor _motor1;

@@ -73,6 +73,15 @@ Cette revue porte sur le comportement à l'exécution, la cohérence de configur
 - Les symboles obsolètes ont été supprimés (`Ldr::raw`, `LdrsComparison::NOT_UPDATED`).
 - Les réglages ESP32 initialisent tous les champs programme validés actuellement, y compris `program.trackers.interval`.
 
+## Connectivité WiFi et serveur web (ajout)
+
+- Les identifiants WiFi viennent de `setting_secret_wifi.h` (ignoré par git). Le modèle `setting_secret_wifi_sample.h` définit les mêmes macros (`SETTING_SECRET_WIFI_SSID`, `SETTING_SECRET_WIFI_PASSWORD`) avec des valeurs vides. Un SSID vide désactive le réseau avec un avertissement, sans bloquer le firmware.
+- La classe s'appelle `NetworkService` (fichiers `network_service.h/.cpp`). Le nom `Network` entre en conflit avec l'objet global `Network` du core ESP32, et `network.h` entre en collision avec `Network.h` de la bibliothèque WiFi sur macOS (système de fichiers insensible à la casse).
+- La tâche réseau tourne sur le cœur 0 (`xTaskCreatePinnedToCore`). La boucle `loop()` reste sur le cœur 1. Elle reconnecte le WiFi toutes les 10 s.
+- Le cœur 1 publie un instantané `SystemStatus` (`status.h`) protégé par `portENTER_CRITICAL`. Le serveur le lit sans pointeur partagé vers des données mutables.
+- Routes en lecture seule : `/` (page HTML qui interroge `/status` chaque seconde) et `/status` (JSON : driver, uptime, ldrUp, ldrDown, mode, motor).
+- Le journal `ArduinoLog` est écrit depuis deux cœurs. Les lignes peuvent se mélanger sous forte charge (à surveiller).
+
 ## Lacunes de tests
 
 - Pas de matrice de compilation : seule la cible `esp32:esp32:esp32` est vérifiée (`arduino-cli compile` depuis `src/driver`).
@@ -81,6 +90,7 @@ Cette revue porte sur le comportement à l'exécution, la cohérence de configur
 - Pas de test de comportement moteur prouvant que les appels deploy/retract avec timeout maintiennent les moteurs actifs pendant la fenêtre prévue.
 - Pas de test du jog : maintenir un bouton au-delà de `motors.timeout` (1000 ms) doit garder le moteur en marche.
 - Pas de test de la transition manuel vers automatique : le moteur doit s'arrêter immédiatement.
+- Pas de test matériel du WiFi ni du serveur web : connexion, IP sur le port série, page `/` et JSON `/status`, reconnexion après coupure.
 
 ## Prochaines corrections suggérées
 

@@ -165,6 +165,14 @@ bool assertSetting() {
     logFatal("Motors timeout must be greater than 0");
     return false;
   }
+  if (setting->secret.wifi.ssid == nullptr) {
+    logFatal("WiFi SSID is null");
+    return false;
+  }
+  if (setting->secret.wifi.password == nullptr) {
+    logFatal("WiFi password is null");
+    return false;
+  }
 
   return true;
 }
@@ -206,4 +214,7 @@ void logSetting() {
   Log.traceln("  - LDRs night cutoff: %d", setting->program.ldrs.night.cutoff);
   Log.traceln("  - Motors speed: %d", setting->program.motors.speed);
   Log.traceln("  - Motors timeout: %d", setting->program.motors.timeout);
+  Log.traceln("- Secret:");
+  Log.traceln("  - WiFi SSID: %s", setting->secret.wifi.ssid);
+  Log.traceln("  - WiFi password: %s", setting->secret.wifi.password[0] == '\0' ? "empty" : "set");
 }

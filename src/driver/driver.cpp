@@ -3,10 +3,12 @@
 #include <esp_system.h>
 #include "setting.h"
 #include "driver.h"
-#include "led_protocol.h"
-#include "trackers.h"
 #include "driver_state.h"
 #include "driver_command_state.h"
+#include "led_protocol.h"
+#include "network_service.h"
+#include "trackers.h"
+#include "status.h"
 
 Setting *Driver::_setting;
 LedProtocol *Driver::_ledProtocol;
@@ -38,6 +40,7 @@ void Driver::init(Setting *setting) {
   _command = new DriverCommand(&_setting->board.pin.driver.command, &_setting->program.command.stop);
   _command->init();
   _state.setIdle();
+  NetworkService::start(&_setting->secret.wifi);
 }
 
 void Driver::heartBeat() {
@@ -62,9 +65,17 @@ void Driver::update() {
   if (!_state.isStop()) {
     _trackers->update();
   }
+  publishStatus();
   #if defined(HEARTBEAT_INTERVAL)
     if (LOG && HEARTBEAT) { heartBeat(); }
   #endif
+}
+
+void Driver::publishStatus() {
+  SystemStatus status;
+  status.driver = _state.isStop() ? "stop" : (_state.isReset() ? "reset" : "idle");
+  status.tracker = _trackers->status();
+  NetworkService::publish(status);
 }
 
 void Driver::stop() {

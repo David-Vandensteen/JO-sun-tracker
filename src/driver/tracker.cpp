@@ -109,6 +109,16 @@ void Tracker::stop() {
   _motors.stop();
 }
 
+TrackerStatus Tracker::status() {
+  TrackerStatus status;
+  status.ldrUp = _ldrs.ldrUp.getAveragePercentValue();
+  status.ldrDown = _ldrs.ldrDown.getAveragePercentValue();
+  status.mode = _trackerCommand.state().isAuto() ? "auto" : "manual";
+  MotorState motorState = _motors.state();
+  status.motor = motorState.isDeploy() ? "deploy" : (motorState.isRetract() ? "retract" : "idle");
+  return status;
+}
+
 void Tracker::onIntervalTick(void *ctx) {
   if (ctx == nullptr) {
     return;

@@ -30,6 +30,13 @@
 #define HEARTBEAT_INTERVAL 30000
 
 // ------------------
+// FEAT
+// ------------------
+
+#define FEAT_WIFI true
+#define FEAT_WEBSERVER true
+
+// ------------------
 //  MOCK
 // ------------------
 #define MOCK_LDR_AVERAGE_PERCENT_VALUE false
@@ -146,9 +153,19 @@ typedef struct SettingProgram {
   SettingProgramCommand command;
 } SettingProgram;
 
+typedef struct SettingSecretWifi {
+  const char *ssid;
+  const char *password;
+} SettingSecretWifi;
+
+typedef struct SettingSecret {
+  SettingSecretWifi wifi;
+} SettingSecret;
+
 typedef struct Setting {
   SettingBoard board;
   SettingProgram program;
+  SettingSecret secret;
 } Setting;
 
 void logFatal(const char *message);

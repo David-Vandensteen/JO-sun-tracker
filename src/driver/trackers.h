@@ -1,6 +1,7 @@
 #ifndef TRACKERS_H
 #define TRACKERS_H
 #include "setting.h"
+#include "status.h"
 #include "tracker.h"
 #include "led_protocol.h"
 
@@ -10,6 +11,7 @@ public:
   void init();
   void update();
   void stop();
+  TrackerStatus status();
 
 private:
   Setting *_setting;

@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "setting.h"
+#include "setting_secret_wifi.h"
 
 #define SETTING_BOARD_ADC_RESOLUTION 4095
 #define SETTING_BOARD_PWM_RESOLUTION 255
@@ -47,5 +48,7 @@ Setting* settingInit() {
   setting->program.ldrs.night.cutoff = SETTING_PROGRAM_LDRS_NIGHT_CUTOFF;
   setting->program.motors.speed = SETTING_PROGRAM_MOTORS_SPEED;
   setting->program.motors.timeout = SETTING_PROGRAM_MOTORS_TIMEOUT;
+  setting->secret.wifi.ssid = SETTING_SECRET_WIFI_SSID;
+  setting->secret.wifi.password = SETTING_SECRET_WIFI_PASSWORD;
   return setting;
 }
