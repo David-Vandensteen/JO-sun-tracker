@@ -110,8 +110,8 @@ void Tracker::stop() {
   _motors.stop();
 }
 
-TrackerStatus Tracker::status() {
-  TrackerStatus status;
+AppTrackerStatus Tracker::AppStatus() {
+  AppTrackerStatus status;
   status.ldrUp = _ldrs.ldrUp.getAveragePercentValue();
   status.ldrDown = _ldrs.ldrDown.getAveragePercentValue();
   status.mode = _trackerCommand.state().isAuto() ? "auto" : "manual";

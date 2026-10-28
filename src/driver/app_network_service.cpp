@@ -1,14 +1,14 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include "setting.h"
-#include "status.h"
-#include "network_service.h"
-#include "log_buffer.h"
+#include "app_status.h"
+#include "app_network_service.h"
+#include "app_log_buffer.h"
 
 static portMUX_TYPE sharedStatusMux = portMUX_INITIALIZER_UNLOCKED;
-static SystemStatus sharedStatus = {"idle", {0, 0, "manual", "idle", 0}, {"released", "released", "auto", "released"}};
+static AppSystemStatus sharedStatus = {"idle", {0, 0, "manual", "idle", 0}, {"released", "released", "auto", "released"}};
 
-void NetworkService::publish(const SystemStatus &status) {
+void AppNetworkService::publish(const AppSystemStatus &status) {
   portENTER_CRITICAL(&sharedStatusMux);
   sharedStatus = status;
   portEXIT_CRITICAL(&sharedStatusMux);
@@ -67,12 +67,12 @@ static void handleRoot() {
 }
 
 static void handleLog() {
-  LogOutput::copyTo(logBody, sizeof(logBody));
+  AppLogOutput::copyTo(logBody, sizeof(logBody));
   server.send(200, "text/plain; charset=utf-8", logBody);
 }
 
 static void handleStatus() {
-  SystemStatus snapshot;
+  AppSystemStatus snapshot;
   portENTER_CRITICAL(&sharedStatusMux);
   snapshot = sharedStatus;
   portEXIT_CRITICAL(&sharedStatusMux);
@@ -135,16 +135,16 @@ static void handleStatus() {
 }
 #endif
 
-void NetworkService::start(const SettingSecretWifi *secretWifi) {
+void AppNetworkService::start(const SettingSecretWifi *secretWifi) {
   if (secretWifi == nullptr || strlen(secretWifi->ssid) == 0) {
     Log.warningln("Network: WiFi SSID is empty, network disabled");
     return;
   }
   wifiSetting = secretWifi;
-  xTaskCreatePinnedToCore(NetworkService::task, "network", NETWORK_STACK_SIZE, nullptr, 1, nullptr, NETWORK_CORE);
+  xTaskCreatePinnedToCore(AppNetworkService::task, "network", NETWORK_STACK_SIZE, nullptr, 1, nullptr, NETWORK_CORE);
 }
 
-void NetworkService::task(void *ctx) {
+void AppNetworkService::task(void *ctx) {
   (void)ctx;
   WiFi.mode(WIFI_STA);
   WiFi.begin(wifiSetting->ssid, wifiSetting->password);

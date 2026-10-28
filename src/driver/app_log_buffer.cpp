@@ -1,4 +1,4 @@
-#include "log_buffer.h"
+#include "app_log_buffer.h"
 
 // Written from both cores (loop and network task), so every access is guarded
 static portMUX_TYPE logMux = portMUX_INITIALIZER_UNLOCKED;
@@ -16,13 +16,13 @@ static void appendByte(uint8_t c) {
   portEXIT_CRITICAL(&logMux);
 }
 
-size_t LogOutput::write(uint8_t c) {
+size_t AppLogOutput::write(uint8_t c) {
   Serial.write(c);
   appendByte(c);
   return 1;
 }
 
-size_t LogOutput::write(const uint8_t *buffer, size_t size) {
+size_t AppLogOutput::write(const uint8_t *buffer, size_t size) {
   for (size_t i = 0; i < size; i++) {
     write(buffer[i]);
   }
@@ -30,7 +30,7 @@ size_t LogOutput::write(const uint8_t *buffer, size_t size) {
 }
 
 // Copies the most recent bytes in order, keeping room for a terminating NUL
-size_t LogOutput::copyTo(char *out, size_t outSize) {
+size_t AppLogOutput::copyTo(char *out, size_t outSize) {
   if (outSize == 0) {
     return 0;
   }

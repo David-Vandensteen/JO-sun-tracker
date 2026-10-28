@@ -81,7 +81,7 @@ Cette revue porte sur le comportement à l'exécution, la cohérence de configur
 - Le cœur 1 publie un instantané `SystemStatus` (`status.h`) protégé par `portENTER_CRITICAL`. Le serveur le lit sans pointeur partagé vers des données mutables.
 - Routes en lecture seule : `/` (page HTML qui interroge `/status` chaque seconde), `/status` (JSON) et `/log` (texte brut).
 - `/status` contient trois objets :
-  - `status` : driver, uptime, ldrUp, ldrDown, mode, motor, et `buttons` (deploy, retract, stop en `pressed`/`released`, mode en `manual`/`auto`).
+  - `status` : driver, uptime, ldrUp, ldrDown, mode, motor, `nextComparisonMs`, et `buttons` (deploy, retract, stop en `pressed`/`released`, mode en `manual`/`auto`).
   - `setting` : version, trackers, ldr, ldrs, motors, command.stopPressMs, et `gpio` (broches du tracker 1, LED et STOP). Les identifiants WiFi ne sont jamais exposés.
   - Les valeurs de `buttons` et `gpio` sont lues sur le cœur 1 et publiées dans l'instantané.
 - Les journaux : `LogOutput` (classe `Print`, `log_buffer.h/.cpp`) écrit sur Serial et dans un tampon circulaire de 4 Ko protégé par un verrou. La page affiche les 4 Ko les plus récents.
@@ -99,6 +99,7 @@ Cette revue porte sur le comportement à l'exécution, la cohérence de configur
 - Pas de test de la transition manuel vers automatique : le moteur doit s'arrêter immédiatement.
 - Pas de test matériel du WiFi ni du serveur web : connexion, IP sur le port série, page `/`, JSON `/status`, `/log`, reconnexion après coupure.
 - Pas de test matériel de l'état des boutons sur la page : vérifier le niveau de chaque bouton et du commutateur de mode (manuel/auto).
+- Le JSON de `/status` est construit à la main avec `snprintf` : une accolade oubliée rend la réponse invalide et la page reste bloquée (régression rencontrée lors de l'ajout de `nextComparisonMs`). Aucun test ne valide la syntaxe du JSON ; à ajouter si le format évolue.
 
 ## Prochaines corrections suggérées
 

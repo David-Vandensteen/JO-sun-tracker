@@ -6,12 +6,12 @@
 #include "driver_state.h"
 #include "driver_command_state.h"
 #include "led_protocol.h"
-#include "network_service.h"
-#include "log_buffer.h"
+#include "app_network_service.h"
+#include "app_log_buffer.h"
 #include "trackers.h"
-#include "status.h"
+#include "app_status.h"
 
-static LogOutput logOutput;
+static AppLogOutput logOutput;
 
 Setting *Driver::_setting;
 LedProtocol *Driver::_ledProtocol;
@@ -43,7 +43,7 @@ void Driver::init(Setting *setting) {
   _command = new DriverCommand(&_setting->board.pin.driver.command, &_setting->program.command.stop);
   _command->init();
   _state.setIdle();
-  NetworkService::start(&_setting->secret.wifi);
+  AppNetworkService::start(&_setting->secret.wifi);
 }
 
 void Driver::heartBeat() {
@@ -79,15 +79,15 @@ static const char *buttonLevel(uint8_t pin) {
 }
 
 void Driver::publishStatus() {
-  SystemStatus status;
+  AppSystemStatus status;
   status.driver = _state.isStop() ? "stop" : (_state.isReset() ? "reset" : "idle");
-  status.tracker = _trackers->status();
+  status.tracker = _trackers->AppStatus();
   const SettingBoardPinTracker &tracker = _setting->board.pin.tracker[TRACKER_1];
   status.buttons.deploy = buttonLevel(tracker.command.deploy);
   status.buttons.retract = buttonLevel(tracker.command.retract);
   status.buttons.mode = digitalRead(tracker.command.mode) == LOW ? "manual" : "auto";
   status.buttons.stop = buttonLevel(_setting->board.pin.driver.command.stop);
-  NetworkService::publish(status);
+  AppNetworkService::publish(status);
 }
 
 void Driver::stop() {

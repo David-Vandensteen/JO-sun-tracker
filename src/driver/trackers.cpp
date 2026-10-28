@@ -39,7 +39,6 @@ void Trackers::stop() {
   }
 }
 
-TrackerStatus Trackers::status() {
-  return _trackers[TRACKER_1]->status();
+AppTrackerStatus Trackers::AppStatus() {
+  return _trackers[TRACKER_1]->AppStatus();
 }
-

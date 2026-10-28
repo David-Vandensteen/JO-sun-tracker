@@ -5,7 +5,7 @@
 #include "ldrs.h"
 #include "motors.h"
 #include "setting.h"
-#include "status.h"
+#include "app_status.h"
 #include "tracker_command.h"
 #include "tracker_state.h"
 
@@ -24,7 +24,7 @@ public:
   void init();
   void update();
   void stop();
-  TrackerStatus status();
+  AppTrackerStatus AppStatus();
 
 private:
   static void onIntervalTick(void *ctx);
