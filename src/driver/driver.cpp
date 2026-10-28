@@ -7,8 +7,11 @@
 #include "driver_command_state.h"
 #include "led_protocol.h"
 #include "network_service.h"
+#include "log_buffer.h"
 #include "trackers.h"
 #include "status.h"
+
+static LogOutput logOutput;
 
 Setting *Driver::_setting;
 LedProtocol *Driver::_ledProtocol;
@@ -21,7 +24,7 @@ void Driver::init(Setting *setting) {
   _ledProtocol = new LedProtocol(_setting->board.pin.led);
   if (LOG) {
     Serial.begin(_setting->board.serial.baudRate);
-    Log.begin(LOG_LEVEL, &Serial);
+    Log.begin(LOG_LEVEL, &logOutput);
     delay(10000);
   }
   Log.noticeln("---------");
