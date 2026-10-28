@@ -6,7 +6,7 @@
 #include "log_buffer.h"
 
 static portMUX_TYPE sharedStatusMux = portMUX_INITIALIZER_UNLOCKED;
-static SystemStatus sharedStatus = {"idle", {0, 0, "manual", "idle"}};
+static SystemStatus sharedStatus = {"idle", {0, 0, "manual", "idle", 0}, {"released", "released", "auto", "released"}};
 
 void NetworkService::publish(const SystemStatus &status) {
   portENTER_CRITICAL(&sharedStatusMux);
@@ -30,12 +30,22 @@ static char logBody[LOG_BUFFER_SIZE];
 
 static const char STATUS_PAGE[] PROGMEM = R"HTML(<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>JO Sun Tracker</title></head>
-<body><h1>JO Sun Tracker</h1><pre id="status">...</pre>
+<body><h1>JO Sun Tracker</h1>
+<p>Prochaine comparaison LDR dans : <strong id="countdown">--</strong> s</p>
+<pre id="status">...</pre>
 <h2>Logs</h2><pre id="log">...</pre>
 <script>
+let nextComparisonAt = null;
+function updateCountdown() {
+  const el = document.getElementById('countdown');
+  if (nextComparisonAt === null) { el.textContent = '--'; return; }
+  el.textContent = Math.max(0, Math.ceil((nextComparisonAt - Date.now()) / 1000));
+}
 function refresh() {
   fetch('/status').then(r => r.json()).then(d => {
     document.getElementById('status').textContent = JSON.stringify(d, null, 2);
+    nextComparisonAt = Date.now() + d.status.nextComparisonMs;
+    updateCountdown();
   });
 }
 function refreshLog() {
@@ -48,6 +58,7 @@ function refreshLog() {
 refresh();
 refreshLog();
 setInterval(refresh, 1000);
+setInterval(updateCountdown, 1000);
 setInterval(refreshLog, 2000);
 </script></body></html>)HTML";
 
@@ -72,7 +83,8 @@ static void handleStatus() {
   snprintf(
     body,
     sizeof(body),
-    "{\"status\":{\"driver\":\"%s\",\"uptime\":%lu,\"ldrUp\":%u,\"ldrDown\":%u,\"mode\":\"%s\",\"motor\":\"%s\"},"
+    "{\"status\":{\"driver\":\"%s\",\"uptime\":%lu,\"ldrUp\":%u,\"ldrDown\":%u,\"mode\":\"%s\",\"motor\":\"%s\",\"nextComparisonMs\":%lu,"
+    "\"buttons\":{\"deploy\":\"%s\",\"retract\":\"%s\",\"mode\":\"%s\",\"stop\":\"%s\"}},"
     "\"setting\":{\"version\":\"%s\","
     "\"trackers\":{\"interval\":%lu,\"commandDebounce\":%lu},"
     "\"ldr\":{\"samplingInterval\":%lu},"
@@ -90,6 +102,11 @@ static void handleStatus() {
     snapshot.tracker.ldrDown,
     snapshot.tracker.mode,
     snapshot.tracker.motor,
+    snapshot.tracker.nextComparisonMs,
+    snapshot.buttons.deploy,
+    snapshot.buttons.retract,
+    snapshot.buttons.mode,
+    snapshot.buttons.stop,
     setting->program.version,
     (unsigned long)setting->program.trackers.interval,
     (unsigned long)setting->program.trackers.command.debounce,

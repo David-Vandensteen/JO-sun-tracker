@@ -79,8 +79,15 @@ Cette revue porte sur le comportement à l'exécution, la cohérence de configur
 - La classe s'appelle `NetworkService` (fichiers `network_service.h/.cpp`). Le nom `Network` entre en conflit avec l'objet global `Network` du core ESP32, et `network.h` entre en collision avec `Network.h` de la bibliothèque WiFi sur macOS (système de fichiers insensible à la casse).
 - La tâche réseau tourne sur le cœur 0 (`xTaskCreatePinnedToCore`). La boucle `loop()` reste sur le cœur 1. Elle reconnecte le WiFi toutes les 10 s.
 - Le cœur 1 publie un instantané `SystemStatus` (`status.h`) protégé par `portENTER_CRITICAL`. Le serveur le lit sans pointeur partagé vers des données mutables.
-- Routes en lecture seule : `/` (page HTML qui interroge `/status` chaque seconde) et `/status` (JSON : driver, uptime, ldrUp, ldrDown, mode, motor).
+- Routes en lecture seule : `/` (page HTML qui interroge `/status` chaque seconde), `/status` (JSON) et `/log` (texte brut).
+- `/status` contient trois objets :
+  - `status` : driver, uptime, ldrUp, ldrDown, mode, motor, et `buttons` (deploy, retract, stop en `pressed`/`released`, mode en `manual`/`auto`).
+  - `setting` : version, trackers, ldr, ldrs, motors, command.stopPressMs, et `gpio` (broches du tracker 1, LED et STOP). Les identifiants WiFi ne sont jamais exposés.
+  - Les valeurs de `buttons` et `gpio` sont lues sur le cœur 1 et publiées dans l'instantané.
+- Les journaux : `LogOutput` (classe `Print`, `log_buffer.h/.cpp`) écrit sur Serial et dans un tampon circulaire de 4 Ko protégé par un verrou. La page affiche les 4 Ko les plus récents.
 - Le journal `ArduinoLog` est écrit depuis deux cœurs. Les lignes peuvent se mélanger sous forte charge (à surveiller).
+- Hypothèses non vérifiées : le commutateur de mode est câblé vers GND (LOW = manuel) avec pull-up interne ; la page n'a pas été testée dans un navigateur.
+- Compte à rebours avant la prochaine comparaison LDR : `Tracker` mémorise l'échéance (la bibliothèque `DV_EveryInterval` n'expose pas la prochaine exécution). Le champ `status.nextComparisonMs` donne les millisecondes restantes, et la page décrémente le compteur chaque seconde.
 
 ## Lacunes de tests
 
@@ -90,7 +97,8 @@ Cette revue porte sur le comportement à l'exécution, la cohérence de configur
 - Pas de test de comportement moteur prouvant que les appels deploy/retract avec timeout maintiennent les moteurs actifs pendant la fenêtre prévue.
 - Pas de test du jog : maintenir un bouton au-delà de `motors.timeout` (1000 ms) doit garder le moteur en marche.
 - Pas de test de la transition manuel vers automatique : le moteur doit s'arrêter immédiatement.
-- Pas de test matériel du WiFi ni du serveur web : connexion, IP sur le port série, page `/` et JSON `/status`, reconnexion après coupure.
+- Pas de test matériel du WiFi ni du serveur web : connexion, IP sur le port série, page `/`, JSON `/status`, `/log`, reconnexion après coupure.
+- Pas de test matériel de l'état des boutons sur la page : vérifier le niveau de chaque bouton et du commutateur de mode (manuel/auto).
 
 ## Prochaines corrections suggérées
 

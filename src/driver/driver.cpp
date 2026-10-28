@@ -74,10 +74,19 @@ void Driver::update() {
   #endif
 }
 
+static const char *buttonLevel(uint8_t pin) {
+  return digitalRead(pin) == LOW ? "pressed" : "released";
+}
+
 void Driver::publishStatus() {
   SystemStatus status;
   status.driver = _state.isStop() ? "stop" : (_state.isReset() ? "reset" : "idle");
   status.tracker = _trackers->status();
+  const SettingBoardPinTracker &tracker = _setting->board.pin.tracker[TRACKER_1];
+  status.buttons.deploy = buttonLevel(tracker.command.deploy);
+  status.buttons.retract = buttonLevel(tracker.command.retract);
+  status.buttons.mode = digitalRead(tracker.command.mode) == LOW ? "manual" : "auto";
+  status.buttons.stop = buttonLevel(_setting->board.pin.driver.command.stop);
   NetworkService::publish(status);
 }
 

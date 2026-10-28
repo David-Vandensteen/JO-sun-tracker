@@ -36,6 +36,7 @@ private:
   SettingProgramTrackers *_settingProgramTrackers;
   DV_EveryInterval _everyInterval;
   TrackerState _state;
+  unsigned long _nextComparisonMs = 0;
   void deploy();
   void retract();
   void handleCommand();

@@ -58,6 +58,7 @@ void Tracker::init() {
   _everyInterval
     .setInterval(_settingProgramTrackers->interval)
     .setCallback(Tracker::onIntervalTick, this);
+  _nextComparisonMs = millis() + _settingProgramTrackers->interval;
 }
 
 void Tracker::update() {
@@ -116,6 +117,8 @@ TrackerStatus Tracker::status() {
   status.mode = _trackerCommand.state().isAuto() ? "auto" : "manual";
   MotorState motorState = _motors.state();
   status.motor = motorState.isDeploy() ? "deploy" : (motorState.isRetract() ? "retract" : "idle");
+  long remainingMs = (long)(_nextComparisonMs - millis());
+  status.nextComparisonMs = remainingMs > 0 ? (unsigned long)remainingMs : 0;
   return status;
 }
 
@@ -132,6 +135,7 @@ void Tracker::interval() {
   #if LOG_TRACKER_INTERVAL
   Log.traceln("Tracker::interval - mode: %s", _trackerCommand.state().isAuto() ? "automa" : "manual");
   #endif
+  _nextComparisonMs = millis() + _settingProgramTrackers->interval;
   if (!_trackerCommand.state().isAuto()) {
     return;
   }
