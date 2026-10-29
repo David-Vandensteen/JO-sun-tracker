@@ -76,9 +76,7 @@ void Driver::update() {
     _state.setReset();
   }
   publishStatus();
-  #if defined(HEARTBEAT_INTERVAL)
-    if (LOG && HEARTBEAT) { heartBeat(); }
-  #endif
+  if (LOG && HEARTBEAT) { heartBeat(); }
 }
 
 static const char *buttonLevel(uint8_t pin) {
