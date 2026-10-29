@@ -10,8 +10,13 @@
 #include "app_log_buffer.h"
 #include "trackers.h"
 #include "app_status.h"
+#include "display.h"
 
 static AppLogOutput logOutput;
+
+#if FEAT_DISPLAY
+static Display display;
+#endif
 
 Setting *Driver::_setting;
 LedProtocol *Driver::_ledProtocol;
@@ -43,6 +48,9 @@ void Driver::init(Setting *setting) {
   _command = new DriverCommand(&_setting->board.pin.driver.command, &_setting->program.command.stop);
   _command->init();
   _state.setIdle();
+  #if FEAT_DISPLAY
+  display.init(_setting->board.pin.display, _setting->program.display);
+  #endif
   AppNetworkService::start(&_setting->secret.wifi);
 }
 
@@ -87,6 +95,9 @@ void Driver::publishStatus() {
   status.buttons.retract = buttonLevel(tracker.command.retract);
   status.buttons.mode = digitalRead(tracker.command.mode) == LOW ? "manual" : "auto";
   status.buttons.stop = buttonLevel(_setting->board.pin.driver.command.stop);
+  #if FEAT_DISPLAY
+  display.showLdrs(status.tracker.ldrUp, status.tracker.ldrDown);
+  #endif
   AppNetworkService::publish(status);
 }
 

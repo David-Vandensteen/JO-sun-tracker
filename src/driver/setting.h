@@ -33,6 +33,7 @@
 // FEAT
 // ------------------
 
+#define FEAT_DISPLAY true
 #define FEAT_WIFI true
 #define FEAT_WEBSERVER true
 
@@ -79,9 +80,15 @@ typedef struct SettingBoardPinDriver {
   SettingBoardPinDriverCommand command;
 } SettingBoardPinDriver;
 
+typedef struct SettingBoardPinDisplay {
+  uint8_t sda;
+  uint8_t scl;
+} SettingBoardPinDisplay;
+
 typedef struct SettingBoardPin {
   SettingBoardPinTracker tracker[TRACKER_MAX];
   SettingBoardPinDriver driver;
+  SettingBoardPinDisplay display;
   uint8_t led;
 
 } SettingBoardPin;
@@ -144,6 +151,12 @@ typedef struct SettingProgramCommand {
   SettingProgramCommandStop stop;
 } SettingProgramCommand;
 
+typedef struct SettingProgramDisplay {
+  uint8_t address;
+  uint8_t width;
+  uint8_t height;
+} SettingProgramDisplay;
+
 typedef struct SettingProgram {
   char *version;
   SettingProgramTrackers trackers;
@@ -151,6 +164,7 @@ typedef struct SettingProgram {
   SettingProgramLDRs ldrs;
   SettingProgramMotors motors;
   SettingProgramCommand command;
+  SettingProgramDisplay display;
 } SettingProgram;
 
 typedef struct SettingSecretWifi {

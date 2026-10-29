@@ -19,6 +19,12 @@
 #define SETTING_PIN_TRACKER_COMMAND_RETRACT 19
 #define SETTING_PIN_DRIVER_COMMAND_STOP 21
 #define SETTING_PIN_TRACKER_COMMAND_MODE 15
+#define SETTING_PIN_DISPLAY_SDA 23
+#define SETTING_PIN_DISPLAY_SCL 5
+
+#define SETTING_PROGRAM_DISPLAY_ADDRESS 0x3C
+#define SETTING_PROGRAM_DISPLAY_WIDTH 128
+#define SETTING_PROGRAM_DISPLAY_HEIGHT 64
 
 Setting* settingInit() {
   Setting *setting = getSetting();
@@ -36,9 +42,14 @@ Setting* settingInit() {
   setting->board.pin.tracker[TRACKER_1].command.deploy = SETTING_PIN_TRACKER_COMMAND_DEPLOY;
   setting->board.pin.tracker[TRACKER_1].command.retract = SETTING_PIN_TRACKER_COMMAND_RETRACT;
   setting->board.pin.tracker[TRACKER_1].command.mode = SETTING_PIN_TRACKER_COMMAND_MODE;
-  setting->board.pin.tracker[TRACKER_1].led = 4; // LED_BUILTIN
-  setting->board.pin.led = 16; // LED_BUILTIN
+  setting->board.pin.tracker[TRACKER_1].led = 4;
+  setting->board.pin.led = 16;
   setting->board.pin.driver.command.stop = SETTING_PIN_DRIVER_COMMAND_STOP;
+  setting->board.pin.display.sda = SETTING_PIN_DISPLAY_SDA;
+  setting->board.pin.display.scl = SETTING_PIN_DISPLAY_SCL;
+  setting->program.display.address = SETTING_PROGRAM_DISPLAY_ADDRESS;
+  setting->program.display.width = SETTING_PROGRAM_DISPLAY_WIDTH;
+  setting->program.display.height = SETTING_PROGRAM_DISPLAY_HEIGHT;
   setting->program.version = VERSION;
   setting->program.command.stop.pressMs = SETTING_PROGRAM_COMMAND_STOP_PRESS_MS;
   setting->program.trackers.interval = SETTING_PROGRAM_TRACKERS_INTERVAL;

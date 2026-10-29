@@ -89,6 +89,13 @@ Cette revue porte sur le comportement à l'exécution, la cohérence de configur
 - Hypothèses non vérifiées : le commutateur de mode est câblé vers GND (LOW = manuel) avec pull-up interne ; la page n'a pas été testée dans un navigateur.
 - Compte à rebours avant la prochaine comparaison LDR : `Tracker` mémorise l'échéance (la bibliothèque `DV_EveryInterval` n'expose pas la prochaine exécution). Le champ `status.nextComparisonMs` donne les millisecondes restantes, et la page décrémente le compteur chaque seconde.
 
+## Écran OLED SSD1306 (ajout)
+
+- Affichage des valeurs moyennes des LDR (UP et DOWN, en %) sur un SSD1306 128x64 à l'adresse I2C `0x3C` (`display.h/.cpp`, bibliothèque `Adafruit_SSD1306`).
+- Broches I2C : SDA = GPIO 23, SCL = GPIO 5. Ces broches sont libres dans la table actuelle. GPIO 5 est une broche de strapping SDIO ; GPIO 17 et 16 sont utilisées par la PSRAM sur les modules WROVER, donc évitées.
+- Rafraîchissement limité à 500 ms depuis `Driver::publishStatus()`. Si l'écran n'est pas détecté au démarrage, un avertissement est journalisé et le firmware continue sans affichage.
+- Non testé sur matériel : câblage, adresse réelle de l'écran et rendu du texte.
+
 ## Lacunes de tests
 
 - Pas de matrice de compilation : seule la cible `esp32:esp32:esp32` est vérifiée (`arduino-cli compile` depuis `src/driver`).
