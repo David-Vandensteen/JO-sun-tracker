@@ -26,8 +26,8 @@ static bool registerPin(uint8_t pin, const char *name, uint8_t *pins, const char
 }
 
 static bool assertPinsUnique(Setting *setting) {
-  uint8_t pins[TRACKER_MAX * 12 + 2];
-  const char *names[TRACKER_MAX * 12 + 2];
+  uint8_t pins[TRACKER_MAX * 12 + 4];
+  const char *names[TRACKER_MAX * 12 + 4];
   uint8_t count = 0;
   for (uint8_t i = 0; i < TRACKER_MAX; i++) {
     SettingBoardPinTracker &pin = setting->board.pin.tracker[i];
@@ -46,6 +46,8 @@ static bool assertPinsUnique(Setting *setting) {
   }
   if (!registerPin(setting->board.pin.led, "LED status", pins, names, count)) return false;
   if (!registerPin(setting->board.pin.driver.command.stop, "Stop command", pins, names, count)) return false;
+  if (!registerPin(setting->board.pin.display.sda, "Display SDA", pins, names, count)) return false;
+  if (!registerPin(setting->board.pin.display.scl, "Display SCL", pins, names, count)) return false;
   return true;
 }
 
