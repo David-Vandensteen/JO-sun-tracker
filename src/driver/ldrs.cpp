@@ -17,6 +17,14 @@ void Ldrs::init() {
   ldrDown.init();
 }
 
+uint8_t Ldrs::getUpAveragePercentValue() {
+  return ldrUp.getAveragePercentValue();
+}
+
+uint8_t Ldrs::getDownAveragePercentValue() {
+  return ldrDown.getAveragePercentValue();
+}
+
 LdrsComparison Ldrs::getComparison() {
   uint8_t upValue = ldrUp.getAveragePercentValue();
   uint8_t downValue = ldrDown.getAveragePercentValue();

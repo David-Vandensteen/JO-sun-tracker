@@ -114,8 +114,8 @@ bool Tracker::isResetRequested() {
 
 AppTrackerStatus Tracker::AppStatus() {
   AppTrackerStatus status;
-  status.ldrUp = _ldrs.ldrUp.getAveragePercentValue();
-  status.ldrDown = _ldrs.ldrDown.getAveragePercentValue();
+  status.ldrUp = _ldrs.getUpAveragePercentValue();
+  status.ldrDown = _ldrs.getDownAveragePercentValue();
   status.mode = _trackerCommand.state().isAuto() ? "auto" : "manual";
   MotorState motorState = _motors.state();
   status.motor = motorState.isDeploy() ? "deploy" : (motorState.isRetract() ? "retract" : "idle");

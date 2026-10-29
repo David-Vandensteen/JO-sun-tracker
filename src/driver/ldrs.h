@@ -12,14 +12,16 @@ enum class LdrsComparison {
 
 class Ldrs {
 public:
-  Ldr ldrUp;
-  Ldr ldrDown;
   explicit Ldrs(Ldr ldrUp, Ldr ldrDown, SettingProgramLDRs *settingProgramLDRs);
+  uint8_t getUpAveragePercentValue();
+  uint8_t getDownAveragePercentValue();
   LdrsComparison getComparison();
   LdrsComparison update();
   void init();
 
 private:
+  Ldr ldrUp;
+  Ldr ldrDown;
   SettingProgramLDRs *_settingProgramLDRs;
 };
 
