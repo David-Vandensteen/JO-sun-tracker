@@ -33,7 +33,7 @@ Cette revue porte sur le comportement à l'exécution, la cohérence de configur
 - Problème : GPIO 12 (`motors.in3`) et GPIO 2 (LED d'état) sont des broches de strapping ; leur état au démarrage peut perturber le boot.
 - Correction : `motors.in3` passe de 12 à 22, la LED d'état passe de 2 à 16.
 - Point à vérifier : GPIO 16 est utilisée par la PSRAM sur les modules WROVER. Le type exact de module n'est pas confirmé (le build utilise `PSRAM=disabled`).
-- Point à traiter : le switch de mode est sur GPIO 15, aussi une broche de strapping, et `setting_esp32.cpp` le signale comme à éviter. À déplacer ou à valider selon le câblage.
+- Point traité : le switch de mode est passé de GPIO 15 à GPIO 33 (pull-up interne), et le STOP de GPIO 21 à GPIO 32. GPIO 15 n'est plus utilisée.
 
 ### 3 ter. Moyen : durée de pression STOP et délai STOP non configurés (corrigé)
 
@@ -92,7 +92,7 @@ Cette revue porte sur le comportement à l'exécution, la cohérence de configur
 ## Écran OLED SSD1306 (ajout)
 
 - Affichage des valeurs moyennes des LDR (UP et DOWN, en %) sur un SSD1306 128x64 à l'adresse I2C `0x3C` (`display.h/.cpp`, bibliothèque `Adafruit_SSD1306`).
-- Broches I2C : SDA = GPIO 23, SCL = GPIO 5. Ces broches sont libres dans la table actuelle. GPIO 5 est une broche de strapping SDIO ; GPIO 17 et 16 sont utilisées par la PSRAM sur les modules WROVER, donc évitées.
+- Broches I2C : SDA = GPIO 21, SCL = GPIO 23. GPIO 5 (strapping SDIO) n'est plus utilisée. GPIO 16 reste la LED de la carte, à valider selon le module.
 - Rafraîchissement limité à 500 ms depuis `Driver::publishStatus()`. Si l'écran n'est pas détecté au démarrage, un avertissement est journalisé et le firmware continue sans affichage.
 - Non testé sur matériel : câblage, adresse réelle de l'écran et rendu du texte.
 
@@ -113,7 +113,7 @@ Cette revue porte sur le comportement à l'exécution, la cohérence de configur
 1. Décider si l'état STOP/RESET est un événement ou un verrou ; s'il est un événement, le ramener à `IDLE` après traitement.
 2. Ajouter un scénario de test (Wokwi dans `tests/`) pour le jog et la transition de mode.
 3. Confirmer le type de module ESP32 (WROVER ou DevKit) pour valider l'usage de GPIO 16.
-4. Déplacer le switch de mode hors de GPIO 15 (strapping), ou valider son usage au démarrage.
+4. Vérifier le câblage des boutons STOP (GPIO 32) et mode (GPIO 33), et des LDR (GPIO 34 et 35, entrées seules sans pull-up).
 
 ## Conclusion
 

@@ -14,13 +14,14 @@
 #define SETTING_PROGRAM_COMMAND_STOP_PRESS_MS 1000
 #define SETTING_PROGRAM_TRACKERS_COMMAND_DEBOUNCE 10
 
-// GPIO assignment: avoid boot strapping pins (0, 2, 12, 15), flash pins (6-11) and input-only pins (34-39) for buttons
+// GPIO assignment: avoid boot strapping pins (0, 2, 5, 12, 15), flash pins (6-11), PSRAM pins (16, 17 on WROVER) and ADC2 pins for inputs read while WiFi is active
+// Buttons use internal pull-ups, LDRs use ADC1 input-only pins
 #define SETTING_PIN_TRACKER_COMMAND_DEPLOY 18
 #define SETTING_PIN_TRACKER_COMMAND_RETRACT 19
-#define SETTING_PIN_DRIVER_COMMAND_STOP 21
-#define SETTING_PIN_TRACKER_COMMAND_MODE 15
-#define SETTING_PIN_DISPLAY_SDA 23
-#define SETTING_PIN_DISPLAY_SCL 5
+#define SETTING_PIN_DRIVER_COMMAND_STOP 32
+#define SETTING_PIN_TRACKER_COMMAND_MODE 33
+#define SETTING_PIN_DISPLAY_SDA 21
+#define SETTING_PIN_DISPLAY_SCL 23
 
 #define SETTING_PROGRAM_DISPLAY_ADDRESS 0x3C
 #define SETTING_PROGRAM_DISPLAY_WIDTH 128
@@ -38,8 +39,8 @@ Setting* settingInit() {
   setting->board.adc.resolution = SETTING_BOARD_ADC_RESOLUTION;
   setting->board.pwm.resolution = SETTING_BOARD_PWM_RESOLUTION;
   setting->board.serial.baudRate = SETTING_BOARD_SERIAL_BAUD_RATE;
-  setting->board.pin.tracker[TRACKER_1].ldr.up = 32;
-  setting->board.pin.tracker[TRACKER_1].ldr.down = 33;
+  setting->board.pin.tracker[TRACKER_1].ldr.up = 34;
+  setting->board.pin.tracker[TRACKER_1].ldr.down = 35;
   setting->board.pin.tracker[TRACKER_1].motors.ena = 25;
   setting->board.pin.tracker[TRACKER_1].motors.in1 = 26;
   setting->board.pin.tracker[TRACKER_1].motors.in2 = 27;
