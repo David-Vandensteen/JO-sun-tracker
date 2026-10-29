@@ -9,6 +9,8 @@
 //  LOG
 // ------------------
 #define LOG true
+// Pause after Serial init so a serial monitor can attach before the boot logs; 0 disables it
+#define LOG_BOOT_DELAY_MS 10000
 
 // #define LOG_LEVEL LOG_LEVEL_SILENT
 // #define LOG_LEVEL LOG_LEVEL_FATAL

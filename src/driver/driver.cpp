@@ -29,7 +29,7 @@ void Driver::init(Setting *setting) {
   if (LOG) {
     Serial.begin(_setting->board.serial.baudRate);
     Log.begin(LOG_LEVEL, &logOutput);
-    delay(10000);
+    delay(LOG_BOOT_DELAY_MS);
   }
   Log.noticeln("---------");
   if (!assertSetting()) {
