@@ -19,14 +19,16 @@ void AppNetworkService::publish(const AppSystemStatus &status) {
 
 static const SettingSecretWifi *wifiSetting = nullptr;
 static const BaseType_t NETWORK_CORE = 0;
-static const uint32_t NETWORK_STACK_SIZE = 8192;
-static const unsigned long WIFI_RECONNECT_INTERVAL = 10000;
+static uint32_t networkStackSize = 8192;
+static unsigned long wifiReconnectInterval = 10000;
 
 #if FEAT_WEBSERVER
 #include <WebServer.h>
 
-static WebServer server(80);
-static char logBody[LOG_BUFFER_SIZE];
+static WebServer *server = nullptr;
+static uint16_t webServerPort = 80;
+static char *logBody = nullptr;
+static size_t logBodySize = 0;
 
 static const char STATUS_PAGE[] PROGMEM = R"HTML(<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>JO Sun Tracker</title></head>
@@ -63,12 +65,12 @@ setInterval(refreshLog, 2000);
 </script></body></html>)HTML";
 
 static void handleRoot() {
-  server.send(200, "text/html; charset=utf-8", STATUS_PAGE);
+  server->send(200, "text/html; charset=utf-8", STATUS_PAGE);
 }
 
 static void handleLog() {
-  AppLogOutput::copyTo(logBody, sizeof(logBody));
-  server.send(200, "text/plain; charset=utf-8", logBody);
+  AppLogOutput::copyTo(logBody, logBodySize);
+  server->send(200, "text/plain; charset=utf-8", logBody);
 }
 
 static void handleStatus() {
@@ -131,17 +133,24 @@ static void handleStatus() {
     (unsigned int)setting->board.pin.led,
     (unsigned int)setting->board.pin.driver.command.stop
   );
-  server.send(200, "application/json", body);
+  server->send(200, "application/json", body);
 }
 #endif
 
-void AppNetworkService::start(const SettingSecretWifi *secretWifi) {
+void AppNetworkService::start(const SettingSecretWifi *secretWifi, const SettingProgram *program) {
   if (secretWifi == nullptr || strlen(secretWifi->ssid) == 0) {
     Log.warningln("Network: WiFi SSID is empty, network disabled");
     return;
   }
   wifiSetting = secretWifi;
-  xTaskCreatePinnedToCore(AppNetworkService::task, "network", NETWORK_STACK_SIZE, nullptr, 1, nullptr, NETWORK_CORE);
+  networkStackSize = program->app.network.taskStackSize;
+  wifiReconnectInterval = program->app.network.wifiReconnectInterval;
+  #if FEAT_WEBSERVER
+  webServerPort = program->app.webServer.port;
+  logBodySize = program->app.log.bufferSize;
+  logBody = (char *)malloc(logBodySize);
+  #endif
+  xTaskCreatePinnedToCore(AppNetworkService::task, "network", networkStackSize, nullptr, 1, nullptr, NETWORK_CORE);
 }
 
 void AppNetworkService::task(void *ctx) {
@@ -152,9 +161,10 @@ void AppNetworkService::task(void *ctx) {
   bool connected = false;
   #if FEAT_WEBSERVER
   bool serverStarted = false;
-  server.on("/", handleRoot);
-  server.on("/status", handleStatus);
-  server.on("/log", handleLog);
+  server = new WebServer(webServerPort);
+  server->on("/", handleRoot);
+  server->on("/status", handleStatus);
+  server->on("/log", handleLog);
   #endif
 
   for (;;) {
@@ -165,15 +175,15 @@ void AppNetworkService::task(void *ctx) {
       }
       #if FEAT_WEBSERVER
       if (!serverStarted) {
-        server.begin();
+        server->begin();
         serverStarted = true;
-        Log.noticeln("Network: web server started on port 80");
+        Log.noticeln("Network: web server started on port %d", webServerPort);
       }
-      server.handleClient();
+      server->handleClient();
       #endif
     } else {
       connected = false;
-      if (millis() - lastAttempt >= WIFI_RECONNECT_INTERVAL) {
+      if (millis() - lastAttempt >= wifiReconnectInterval) {
         lastAttempt = millis();
         Log.warningln("Network: WiFi not connected, reconnecting");
         WiFi.reconnect();

@@ -26,6 +26,7 @@ DriverCommand *Driver::_command;
 
 void Driver::init(Setting *setting) {
   _setting = setting;
+  AppLogOutput::init(_setting->program.app.log.bufferSize);
   _ledProtocol = new LedProtocol(_setting->board.pin.led);
   if (LOG) {
     Serial.begin(_setting->board.serial.baudRate);
@@ -51,7 +52,7 @@ void Driver::init(Setting *setting) {
   #if FEAT_DISPLAY
   display.init(_setting->board.pin.display, _setting->program.display);
   #endif
-  AppNetworkService::start(&_setting->secret.wifi);
+  AppNetworkService::start(&_setting->secret.wifi, &_setting->program);
 }
 
 void Driver::heartBeat() {

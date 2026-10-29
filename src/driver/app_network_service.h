@@ -6,7 +6,7 @@
 
 class AppNetworkService {
 public:
-  static void start(const SettingSecretWifi *secretWifi);
+  static void start(const SettingSecretWifi *secretWifi, const SettingProgram *program);
   static void publish(const AppSystemStatus &status);
 
 private:

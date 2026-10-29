@@ -157,6 +157,25 @@ typedef struct SettingProgramDisplay {
   uint8_t height;
 } SettingProgramDisplay;
 
+typedef struct SettingProgramWebServer {
+  uint16_t port;
+} SettingProgramWebServer;
+
+typedef struct SettingProgramLog {
+  uint16_t bufferSize;
+} SettingProgramLog;
+
+typedef struct SettingProgramNetwork {
+  uint32_t taskStackSize;
+  uint32_t wifiReconnectInterval;
+} SettingProgramNetwork;
+
+typedef struct SettingProgramApp {
+  SettingProgramWebServer webServer;
+  SettingProgramLog log;
+  SettingProgramNetwork network;
+} SettingProgramApp;
+
 typedef struct SettingProgram {
   char *version;
   SettingProgramTrackers trackers;
@@ -165,6 +184,7 @@ typedef struct SettingProgram {
   SettingProgramMotors motors;
   SettingProgramCommand command;
   SettingProgramDisplay display;
+  SettingProgramApp app;
 } SettingProgram;
 
 typedef struct SettingSecretWifi {
