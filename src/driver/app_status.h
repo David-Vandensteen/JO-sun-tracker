@@ -16,7 +16,6 @@ struct AppButtonsStatus {
   const char *deploy;
   const char *retract;
   const char *mode;
-  const char *stop;
 };
 
 struct AppSystemStatus {

@@ -13,7 +13,6 @@ class Tracker {
 public:
   explicit Tracker(
     SettingBoardPinTracker *settingBoardPinTracker,
-    SettingBoardPinDriverCommand *settingBoardPinDriverCommand,
     SettingProgramTracker *settingProgramTracker,
     SettingProgramLDR *settingProgramLDR,
     SettingProgramLDRs *settingProgramLDRs,
@@ -25,6 +24,7 @@ public:
   void update();
   void stop();
   AppTrackerStatus AppStatus();
+  bool isResetRequested();
 
 private:
   static void onIntervalTick(void *ctx);

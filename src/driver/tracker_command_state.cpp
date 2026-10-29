@@ -26,6 +26,10 @@ bool TrackerCommandState::isAuto() {
   return _state == TrackerCommandStateType::AUTO;
 }
 
+bool TrackerCommandState::isReset() {
+  return _state == TrackerCommandStateType::RESET;
+}
+
 void TrackerCommandState::setIdle() {
   _state = TrackerCommandStateType::IDLE;
 }
@@ -40,4 +44,8 @@ void TrackerCommandState::setRetract() {
 
 void TrackerCommandState::setAuto() {
   _state = TrackerCommandStateType::AUTO;
+}
+
+void TrackerCommandState::setReset() {
+  _state = TrackerCommandStateType::RESET;
 }

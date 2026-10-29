@@ -6,7 +6,7 @@
 #include "app_log_buffer.h"
 
 static portMUX_TYPE sharedStatusMux = portMUX_INITIALIZER_UNLOCKED;
-static AppSystemStatus sharedStatus = {"idle", {0, 0, "manual", "idle", 0}, {"released", "released", "auto", "released"}};
+static AppSystemStatus sharedStatus = {"idle", {0, 0, "manual", "idle", 0}, {"released", "released", "auto"}};
 
 void AppNetworkService::publish(const AppSystemStatus &status) {
   portENTER_CRITICAL(&sharedStatusMux);
@@ -90,18 +90,17 @@ static void handleStatus() {
     body,
     sizeof(body),
     "{\"status\":{\"driver\":\"%s\",\"uptime\":%lu,\"ldrUp\":%u,\"ldrDown\":%u,\"mode\":\"%s\",\"motor\":\"%s\",\"nextComparisonMs\":%lu,"
-    "\"buttons\":{\"deploy\":\"%s\",\"retract\":\"%s\",\"mode\":\"%s\",\"stop\":\"%s\"}},"
+    "\"buttons\":{\"deploy\":\"%s\",\"retract\":\"%s\",\"mode\":\"%s\"}},"
     "\"setting\":{\"version\":\"%s\","
-    "\"tracker\":{\"interval\":%lu,\"commandDebounce\":%lu},"
+    "\"tracker\":{\"interval\":%lu,\"commandDebounce\":%lu,\"commandResetHoldMs\":%lu},"
     "\"ldr\":{\"samplingInterval\":%lu},"
     "\"ldrs\":{\"threshold\":%d,\"nightCutoff\":%d},"
     "\"motors\":{\"speed\":%d,\"timeout\":%d},"
-    "\"command\":{\"stopPressMs\":%u},"
     "\"gpio\":{"
     "\"ldrUp\":%u,\"ldrDown\":%u,"
     "\"motorEna\":%u,\"motorIn1\":%u,\"motorIn2\":%u,\"motorEnb\":%u,\"motorIn3\":%u,\"motorIn4\":%u,"
     "\"trackerDeploy\":%u,\"trackerRetract\":%u,\"trackerMode\":%u,\"trackerLed\":%u,"
-    "\"led\":%u,\"stop\":%u}}}",
+    "\"led\":%u}}}",
     snapshot.driver,
     millis() / 1000,
     snapshot.tracker.ldrUp,
@@ -112,16 +111,15 @@ static void handleStatus() {
     snapshot.buttons.deploy,
     snapshot.buttons.retract,
     snapshot.buttons.mode,
-    snapshot.buttons.stop,
     setting->program.version,
     (unsigned long)setting->program.tracker.interval,
     (unsigned long)setting->program.tracker.command.debounce,
+    (unsigned long)setting->program.tracker.command.resetHoldMs,
     (unsigned long)setting->program.ldr.sampling.interval,
     (int)setting->program.ldrs.threshold,
     (int)setting->program.ldrs.night.cutoff,
     (int)setting->program.motors.speed,
     (int)setting->program.motors.timeout,
-    (unsigned int)setting->program.command.stop.pressMs,
     (unsigned int)tracker.ldr.up,
     (unsigned int)tracker.ldr.down,
     (unsigned int)tracker.motors.ena,
@@ -134,8 +132,7 @@ static void handleStatus() {
     (unsigned int)tracker.command.retract,
     (unsigned int)tracker.command.mode,
     (unsigned int)tracker.led,
-    (unsigned int)setting->board.pin.led,
-    (unsigned int)setting->board.pin.driver.command.stop
+    (unsigned int)setting->board.pin.led
   );
   server->send(200, "application/json", body);
 }

@@ -11,14 +11,13 @@
 #define SETTING_PROGRAM_LDRS_NIGHT_CUTOFF 10
 #define SETTING_PROGRAM_MOTORS_SPEED 30
 #define SETTING_PROGRAM_MOTORS_TIMEOUT 1000
-#define SETTING_PROGRAM_COMMAND_STOP_PRESS_MS 1000
 #define SETTING_PROGRAM_TRACKER_COMMAND_DEBOUNCE 10
+#define SETTING_PROGRAM_TRACKER_COMMAND_RESET_HOLD_MS 5000
 
 // GPIO assignment: avoid boot strapping pins (0, 2, 5, 12, 15), flash pins (6-11), PSRAM pins (16, 17 on WROVER) and ADC2 pins for inputs read while WiFi is active
 // Buttons use internal pull-ups, LDRs use ADC1 input-only pins
 #define SETTING_PIN_TRACKER_COMMAND_DEPLOY 18
 #define SETTING_PIN_TRACKER_COMMAND_RETRACT 19
-#define SETTING_PIN_DRIVER_COMMAND_STOP 32
 #define SETTING_PIN_TRACKER_COMMAND_MODE 33
 #define SETTING_PIN_DISPLAY_SDA 21
 #define SETTING_PIN_DISPLAY_SCL 23
@@ -52,7 +51,6 @@ Setting* settingInit() {
   setting->board.pin.tracker.command.mode = SETTING_PIN_TRACKER_COMMAND_MODE;
   setting->board.pin.tracker.led = 4;
   setting->board.pin.led = 2;
-  setting->board.pin.driver.command.stop = SETTING_PIN_DRIVER_COMMAND_STOP;
   setting->board.pin.display.sda = SETTING_PIN_DISPLAY_SDA;
   setting->board.pin.display.scl = SETTING_PIN_DISPLAY_SCL;
   setting->program.display.address = SETTING_PROGRAM_DISPLAY_ADDRESS;
@@ -63,9 +61,9 @@ Setting* settingInit() {
   setting->program.app.network.taskStackSize = SETTING_PROGRAM_NETWORK_TASK_STACK_SIZE;
   setting->program.app.network.wifiReconnectInterval = SETTING_PROGRAM_NETWORK_WIFI_RECONNECT_INTERVAL;
   setting->program.version = VERSION;
-  setting->program.command.stop.pressMs = SETTING_PROGRAM_COMMAND_STOP_PRESS_MS;
   setting->program.tracker.interval = SETTING_PROGRAM_TRACKER_INTERVAL;
   setting->program.tracker.command.debounce = SETTING_PROGRAM_TRACKER_COMMAND_DEBOUNCE;
+  setting->program.tracker.command.resetHoldMs = SETTING_PROGRAM_TRACKER_COMMAND_RESET_HOLD_MS;
   setting->program.ldr.sampling.interval = SETTING_PROGRAM_LDR_SAMPLING_INTERVAL;
   setting->program.ldrs.threshold = SETTING_PROGRAM_LDRS_THRESHOLD;
   setting->program.ldrs.night.cutoff = SETTING_PROGRAM_LDRS_NIGHT_CUTOFF;

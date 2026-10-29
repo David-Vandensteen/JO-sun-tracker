@@ -7,6 +7,7 @@ enum class TrackerCommandStateType {
   DEPLOY,
   RETRACT,
   AUTO,
+  RESET,
 };
 
 class TrackerCommandState {
@@ -17,10 +18,12 @@ class TrackerCommandState {
     bool isDeploy();
     bool isRetract();
     bool isAuto();
+    bool isReset();
     void setIdle();
     void setDeploy();
     void setRetract();
     void setAuto();
+    void setReset();
 
   private:
     TrackerCommandStateType _state;

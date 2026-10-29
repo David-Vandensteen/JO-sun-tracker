@@ -69,14 +69,6 @@ typedef struct SettingBoardPinTracker {
   uint8_t led;
 } SettingBoardPinTracker;
 
-typedef struct SettingBoardPinDriverCommand {
-  uint8_t stop;
-} SettingBoardPinDriverCommand;
-
-typedef struct SettingBoardPinDriver {
-  SettingBoardPinDriverCommand command;
-} SettingBoardPinDriver;
-
 typedef struct SettingBoardPinDisplay {
   uint8_t sda;
   uint8_t scl;
@@ -84,7 +76,6 @@ typedef struct SettingBoardPinDisplay {
 
 typedef struct SettingBoardPin {
   SettingBoardPinTracker tracker;
-  SettingBoardPinDriver driver;
   SettingBoardPinDisplay display;
   uint8_t led;
 
@@ -111,6 +102,7 @@ typedef struct SettingBoard {
 
 typedef struct SettingProgramTrackerCommand {
   unsigned long debounce;
+  unsigned long resetHoldMs;
 } SettingProgramTrackerCommand;
 
 typedef struct SettingProgramTracker {
@@ -139,14 +131,6 @@ typedef struct SettingProgramMotors {
   unsigned long timeout;
   uint8_t speed;
 } SettingProgramMotors;
-
-typedef struct SettingProgramCommandStop {
-  unsigned int pressMs;
-} SettingProgramCommandStop;
-
-typedef struct SettingProgramCommand {
-  SettingProgramCommandStop stop;
-} SettingProgramCommand;
 
 typedef struct SettingProgramDisplay {
   uint8_t address;
@@ -179,7 +163,6 @@ typedef struct SettingProgram {
   SettingProgramLDR ldr;
   SettingProgramLDRs ldrs;
   SettingProgramMotors motors;
-  SettingProgramCommand command;
   SettingProgramDisplay display;
   SettingProgramApp app;
 } SettingProgram;

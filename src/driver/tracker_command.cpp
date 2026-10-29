@@ -26,6 +26,7 @@ void TrackerCommand::update() {
   // Two-position switch: LOW selects manual mode, buttons are only read in manual mode
   bool manualMode = !_modeSwitch.debounce(digitalRead(_settingBoardPinTrackerCommand->mode));
   if (!manualMode) {
+    _bothPressed = false;
     _commandState.setAuto();
     return;
   }
@@ -35,8 +36,20 @@ void TrackerCommand::update() {
 
   if (deployPressed && retractPressed) {
     // Ambiguous input: both buttons pressed, so stop until a single command is detected
-    _commandState.setIdle();
-  } else if (deployPressed) {
+    if (!_bothPressed) {
+      _bothPressed = true;
+      _bothPressedSinceMs = millis();
+    }
+    if (millis() - _bothPressedSinceMs >= _settingProgramTrackerCommand->resetHoldMs) {
+      _commandState.setReset();
+    } else {
+      _commandState.setIdle();
+    }
+    return;
+  }
+  _bothPressed = false;
+
+  if (deployPressed) {
     _commandState.setDeploy();
   } else if (retractPressed) {
     _commandState.setRetract();

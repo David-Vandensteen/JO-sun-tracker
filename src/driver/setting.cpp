@@ -43,7 +43,6 @@ static bool assertPinsUnique(Setting *setting) {
   if (!registerPin(pin.command.mode, "Tracker mode command", pins, names, count)) return false;
   if (!registerPin(pin.led, "Tracker LED", pins, names, count)) return false;
   if (!registerPin(setting->board.pin.led, "LED status", pins, names, count)) return false;
-  if (!registerPin(setting->board.pin.driver.command.stop, "Stop command", pins, names, count)) return false;
   if (!registerPin(setting->board.pin.display.sda, "Display SDA", pins, names, count)) return false;
   if (!registerPin(setting->board.pin.display.scl, "Display SCL", pins, names, count)) return false;
   return true;
@@ -119,20 +118,12 @@ bool assertSetting() {
     logFatal("LED pin is invalid");
     return false;
   }
-  if (setting->board.pin.driver.command.stop == 0) {
-    logFatal("Stop command pin is invalid");
-    return false;
-  }
   if (!assertPinsUnique(setting)) {
     logFatal("Duplicate GPIO pin in board settings");
     return false;
   }
   if (setting->program.version == nullptr || setting->program.version[0] == '\0') {
     logFatal("Program version is null or empty");
-    return false;
-  }
-  if (setting->program.command.stop.pressMs == 0) {
-    logFatal("Stop command press duration must be greater than 0 ms");
     return false;
   }
   if (setting->program.tracker.interval == 0) {
@@ -200,7 +191,6 @@ void logSetting() {
   Log.traceln("  - Tracker mode command pin: %d", setting->board.pin.tracker.command.mode);
   Log.traceln("  - Tracker LED pin: %d", setting->board.pin.tracker.led);
   Log.traceln("  - LED status pin: %d", setting->board.pin.led);
-  Log.traceln("  - Stop command pin: %d", setting->board.pin.driver.command.stop);
   Log.traceln("- Program:");
   Log.traceln("  - Version: %s", setting->program.version);
   Log.traceln("  - Tracker interval: %lu", setting->program.tracker.interval);

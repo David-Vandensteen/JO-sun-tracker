@@ -4,7 +4,6 @@
 #include "setting.h"
 #include "driver.h"
 #include "driver_state.h"
-#include "driver_command_state.h"
 #include "led_protocol.h"
 #include "app_network_service.h"
 #include "app_log_buffer.h"
@@ -22,7 +21,6 @@ Setting *Driver::_setting;
 LedProtocol *Driver::_ledProtocol;
 Tracker *Driver::_tracker;
 DriverState Driver::_state;
-DriverCommand *Driver::_command;
 
 void Driver::init(Setting *setting) {
   _setting = setting;
@@ -45,7 +43,6 @@ void Driver::init(Setting *setting) {
   Log.noticeln("Initializing tracker");
   _tracker = new Tracker(
     &_setting->board.pin.tracker,
-    &_setting->board.pin.driver.command,
     &_setting->program.tracker,
     &_setting->program.ldr,
     &_setting->program.ldrs,
@@ -56,8 +53,6 @@ void Driver::init(Setting *setting) {
   _tracker->init();
   Log.noticeln("Starting program");
   Log.noticeln("JO Sun Tracker - version %s", _setting->program.version);
-  _command = new DriverCommand(&_setting->board.pin.driver.command, &_setting->program.command.stop);
-  _command->init();
   _state.setIdle();
   #if FEAT_DISPLAY
   display.init(_setting->board.pin.display, _setting->program.display);
@@ -75,18 +70,10 @@ void Driver::heartBeat() {
 }
 
 void Driver::update() {
-  _command->update();
-  DriverCommandState commandState = _command->state();
-
-  if (commandState.isStop() && !_state.isStop()) {
-    stop();
-  }
-  if (commandState.isReset()) {
+  _ledProtocol->update();
+  _tracker->update();
+  if (_tracker->isResetRequested()) {
     _state.setReset();
-  }
-  if (!_state.isStop()) {
-    _ledProtocol->update();
-    _tracker->update();
   }
   publishStatus();
   #if defined(HEARTBEAT_INTERVAL)
@@ -100,23 +87,16 @@ static const char *buttonLevel(uint8_t pin) {
 
 void Driver::publishStatus() {
   AppSystemStatus status;
-  status.driver = _state.isStop() ? "stop" : (_state.isReset() ? "reset" : "idle");
+  status.driver = _state.isReset() ? "reset" : "idle";
   status.tracker = _tracker->AppStatus();
   const SettingBoardPinTracker &tracker = _setting->board.pin.tracker;
   status.buttons.deploy = buttonLevel(tracker.command.deploy);
   status.buttons.retract = buttonLevel(tracker.command.retract);
   status.buttons.mode = digitalRead(tracker.command.mode) == LOW ? "manual" : "auto";
-  status.buttons.stop = buttonLevel(_setting->board.pin.driver.command.stop);
   #if FEAT_DISPLAY
   display.showLdrs(status.tracker.ldrUp, status.tracker.ldrDown);
   #endif
   AppNetworkService::publish(status);
-}
-
-void Driver::stop() {
-  Log.traceln("Driver::stop");
-  _tracker->stop();
-  _state.setStop();
 }
 
 void Driver::reset() {

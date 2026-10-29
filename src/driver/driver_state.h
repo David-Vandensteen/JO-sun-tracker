@@ -4,8 +4,7 @@
 
 enum class DriverStateType {
   IDLE,
-  RESET,
-  STOP
+  RESET
 };
 
 class DriverState {
@@ -14,10 +13,8 @@ class DriverState {
     explicit DriverState(DriverStateType type);
     bool isIdle();
     bool isReset();
-    bool isStop();
     void setIdle();
     void setReset();
-    void setStop();
 
   private:
     DriverStateType _state;

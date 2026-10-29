@@ -10,7 +10,6 @@
 // Public
 Tracker::Tracker(
   SettingBoardPinTracker *settingBoardPinTracker,
-  SettingBoardPinDriverCommand *settingBoardPinDriverCommand,
   SettingProgramTracker *settingProgramTracker,
   SettingProgramLDR *settingProgramLDR,
   SettingProgramLDRs *settingProgramLDRs,
@@ -108,6 +107,10 @@ void Tracker::retract() {
 void Tracker::stop() {
   Log.traceln("Tracker::stop");
   _motors.stop();
+}
+
+bool Tracker::isResetRequested() {
+  return _commandState.isReset();
 }
 
 AppTrackerStatus Tracker::AppStatus() {

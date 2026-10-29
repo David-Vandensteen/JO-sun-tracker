@@ -19,6 +19,8 @@ class TrackerCommand {
     ADebouncer _deployButton;
     ADebouncer _retractButton;
     ADebouncer _modeSwitch;
+    bool _bothPressed = false;
+    unsigned long _bothPressedSinceMs = 0;
 };
 
 
