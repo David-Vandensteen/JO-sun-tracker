@@ -135,7 +135,7 @@ void Tracker::onIntervalTick(void *ctx) {
 
 void Tracker::interval() {
   #if LOG_TRACKER_INTERVAL
-  Log.traceln("Tracker::interval - mode: %s", _trackerCommand.state().isAuto() ? "automa" : "manual");
+  Log.traceln("Tracker::interval - mode: %s", _trackerCommand.state().isAuto() ? "auto" : "manual");
   #endif
   _nextComparisonMs = millis() + _settingProgramTracker->interval;
   if (!_trackerCommand.state().isAuto()) {

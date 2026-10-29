@@ -204,11 +204,12 @@ void logSetting() {
   Log.traceln("  - Version: %s", setting->program.version);
   Log.traceln("  - Tracker interval: %lu", setting->program.tracker.interval);
   Log.traceln("  - Tracker command debounce: %lu", setting->program.tracker.command.debounce);
+  Log.traceln("  - Tracker command reset hold: %lu", setting->program.tracker.command.resetHoldMs);
   Log.traceln("  - LDR sampling interval: %lu", setting->program.ldr.sampling.interval);
   Log.traceln("  - LDRs threshold: %d", setting->program.ldrs.threshold);
   Log.traceln("  - LDRs night cutoff: %d", setting->program.ldrs.night.cutoff);
   Log.traceln("  - Motors speed: %d", setting->program.motors.speed);
-  Log.traceln("  - Motors timeout: %d", setting->program.motors.timeout);
+  Log.traceln("  - Motors timeout: %lu", setting->program.motors.timeout);
   Log.traceln("- Secret:");
   Log.traceln("  - WiFi SSID: %s", setting->secret.wifi.ssid);
   Log.traceln("  - WiFi password: %s", setting->secret.wifi.password[0] == '\0' ? "empty" : "set");
