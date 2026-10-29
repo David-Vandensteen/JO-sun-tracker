@@ -177,6 +177,7 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 - La tâche réseau tourne sur le cœur 0 (`xTaskCreatePinnedToCore`), avec une pile de `program.app.network.taskStackSize` octets. La boucle `loop()` reste sur le cœur 1. Elle tente une reconnexion WiFi tous les `program.app.network.wifiReconnectInterval` ms (10 s par défaut).
 - Réglages (`setting_esp32.cpp`) : `program.app.webServer.port` (80), `program.app.log.bufferSize` (4096), `program.app.network.taskStackSize` (8192), `program.app.network.wifiReconnectInterval` (10000). L'écran utilise `program.display` (adresse 0x3C, 128x64).
 - Routes en lecture seule : `/` (page HTML qui interroge `/status` chaque seconde), `/status` (JSON) et `/log` (texte brut).
+- Page `/` : source éditable `src/driver/app/app_status_page.html`. Après modification, lancer `python3 src/driver/app/app_embed_status_page.py` pour régénérer `src/driver/app_status_page.h` (chaîne `STATUS_PAGE` en PROGMEM), inclus par `app_network_service.cpp`. Le fichier généré doit être committé avec la source.
 - `/status` contient deux objets principaux :
   - `status` : `driver`, `uptime`, `ldrUp`, `ldrDown`, `mode`, `motor`, `nextComparisonMs`, et `buttons` (`deploy` et `retract` en `pressed`/`released`, `mode` en `manual`/`auto`).
   - `setting` : `version`, `tracker` (`interval`, `commandDebounce`, `commandResetHoldMs`), `ldr`, `ldrs`, `motors`, et `gpio` (broches du tracker et LED). Les identifiants WiFi ne sont jamais exposés.
