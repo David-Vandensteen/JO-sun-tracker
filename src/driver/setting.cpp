@@ -9,8 +9,8 @@ void logFatal(const char* message) {
   #endif
 }
 
-// Returns false when the pin is already registered by another setting
-static bool registerPin(uint8_t pin, const char *name, uint8_t *pins, const char **names, uint8_t &count) {
+// Returns false when the pin is already registered by another setting or when the table is full
+static bool registerPin(uint8_t pin, const char *name, uint8_t *pins, const char **names, uint8_t &count, uint8_t capacity) {
   for (uint8_t i = 0; i < count; i++) {
     if (pins[i] == pin) {
       #if LOG_FATAL_SETTING
@@ -19,6 +19,10 @@ static bool registerPin(uint8_t pin, const char *name, uint8_t *pins, const char
       return false;
     }
   }
+  if (count >= capacity) {
+    logFatal("Too many pins registered");
+    return false;
+  }
   pins[count] = pin;
   names[count] = name;
   count++;
@@ -26,25 +30,26 @@ static bool registerPin(uint8_t pin, const char *name, uint8_t *pins, const char
 }
 
 static bool assertPinsUnique(Setting *setting) {
-  uint8_t pins[12 + 4];
-  const char *names[12 + 4];
+  constexpr uint8_t PIN_CAPACITY = 16;
+  uint8_t pins[PIN_CAPACITY];
+  const char *names[PIN_CAPACITY];
   uint8_t count = 0;
   SettingBoardPinTracker &pin = setting->board.pin.tracker;
-  if (!registerPin(pin.ldr.up, "LDR up", pins, names, count)) return false;
-  if (!registerPin(pin.ldr.down, "LDR down", pins, names, count)) return false;
-  if (!registerPin(pin.motors.ena, "Motor ENA", pins, names, count)) return false;
-  if (!registerPin(pin.motors.in1, "Motor IN1", pins, names, count)) return false;
-  if (!registerPin(pin.motors.in2, "Motor IN2", pins, names, count)) return false;
-  if (!registerPin(pin.motors.enb, "Motor ENB", pins, names, count)) return false;
-  if (!registerPin(pin.motors.in3, "Motor IN3", pins, names, count)) return false;
-  if (!registerPin(pin.motors.in4, "Motor IN4", pins, names, count)) return false;
-  if (!registerPin(pin.command.deploy, "Tracker deploy command", pins, names, count)) return false;
-  if (!registerPin(pin.command.retract, "Tracker retract command", pins, names, count)) return false;
-  if (!registerPin(pin.command.mode, "Tracker mode command", pins, names, count)) return false;
-  if (!registerPin(pin.led, "Tracker LED", pins, names, count)) return false;
-  if (!registerPin(setting->board.pin.led, "LED status", pins, names, count)) return false;
-  if (!registerPin(setting->board.pin.display.sda, "Display SDA", pins, names, count)) return false;
-  if (!registerPin(setting->board.pin.display.scl, "Display SCL", pins, names, count)) return false;
+  if (!registerPin(pin.ldr.up, "LDR up", pins, names, count, PIN_CAPACITY)) return false;
+  if (!registerPin(pin.ldr.down, "LDR down", pins, names, count, PIN_CAPACITY)) return false;
+  if (!registerPin(pin.motors.ena, "Motor ENA", pins, names, count, PIN_CAPACITY)) return false;
+  if (!registerPin(pin.motors.in1, "Motor IN1", pins, names, count, PIN_CAPACITY)) return false;
+  if (!registerPin(pin.motors.in2, "Motor IN2", pins, names, count, PIN_CAPACITY)) return false;
+  if (!registerPin(pin.motors.enb, "Motor ENB", pins, names, count, PIN_CAPACITY)) return false;
+  if (!registerPin(pin.motors.in3, "Motor IN3", pins, names, count, PIN_CAPACITY)) return false;
+  if (!registerPin(pin.motors.in4, "Motor IN4", pins, names, count, PIN_CAPACITY)) return false;
+  if (!registerPin(pin.command.deploy, "Tracker deploy command", pins, names, count, PIN_CAPACITY)) return false;
+  if (!registerPin(pin.command.retract, "Tracker retract command", pins, names, count, PIN_CAPACITY)) return false;
+  if (!registerPin(pin.command.mode, "Tracker mode command", pins, names, count, PIN_CAPACITY)) return false;
+  if (!registerPin(pin.led, "Tracker LED", pins, names, count, PIN_CAPACITY)) return false;
+  if (!registerPin(setting->board.pin.led, "LED status", pins, names, count, PIN_CAPACITY)) return false;
+  if (!registerPin(setting->board.pin.display.sda, "Display SDA", pins, names, count, PIN_CAPACITY)) return false;
+  if (!registerPin(setting->board.pin.display.scl, "Display SCL", pins, names, count, PIN_CAPACITY)) return false;
   return true;
 }
 
