@@ -134,6 +134,10 @@ bool assertSetting() {
     logFatal("Tracker command debounce must be greater than 0");
     return false;
   }
+  if (setting->program.tracker.command.resetHoldMs == 0) {
+    logFatal("Tracker command reset hold must be greater than 0");
+    return false;
+  }
   if (setting->program.ldr.sampling.interval == 0) {
     logFatal("LDR sampling interval must be greater than 0");
     return false;
