@@ -14,7 +14,7 @@ public:
   explicit Tracker(
     SettingBoardPinTracker *settingBoardPinTracker,
     SettingBoardPinDriverCommand *settingBoardPinDriverCommand,
-    SettingProgramTrackers *settingProgramTrackers,
+    SettingProgramTracker *settingProgramTracker,
     SettingProgramLDR *settingProgramLDR,
     SettingProgramLDRs *settingProgramLDRs,
     SettingBoardADC *settingBoardADC,
@@ -33,7 +33,7 @@ private:
   TrackerCommand _trackerCommand;
   TrackerCommandState _commandState;
   SettingProgramMotors *_settingProgramMotors;
-  SettingProgramTrackers *_settingProgramTrackers;
+  SettingProgramTracker *_settingProgramTracker;
   DV_EveryInterval _everyInterval;
   TrackerState _state;
   unsigned long _nextComparisonMs = 0;

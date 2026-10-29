@@ -25,10 +25,10 @@ void Ldr::init() {
 uint8_t Ldr::getAveragePercentValue() {
   // mock
   #if MOCK_LDR_AVERAGE_PERCENT_VALUE
-  if (_pin == getSetting()->board.pin.tracker[TRACKER_1].ldr.up) {
+  if (_pin == getSetting()->board.pin.tracker.ldr.up) {
     return uint8_t(30);
   }
-  if (_pin == getSetting()->board.pin.tracker[TRACKER_1].ldr.down) {
+  if (_pin == getSetting()->board.pin.tracker.ldr.down) {
     return uint8_t(10);
   }
   #endif

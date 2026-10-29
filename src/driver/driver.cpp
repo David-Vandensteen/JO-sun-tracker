@@ -8,7 +8,7 @@
 #include "led_protocol.h"
 #include "app_network_service.h"
 #include "app_log_buffer.h"
-#include "trackers.h"
+#include "tracker.h"
 #include "app_status.h"
 #include "display.h"
 
@@ -20,7 +20,7 @@ static Display display;
 
 Setting *Driver::_setting;
 LedProtocol *Driver::_ledProtocol;
-Trackers *Driver::_trackers;
+Tracker *Driver::_tracker;
 DriverState Driver::_state;
 DriverCommand *Driver::_command;
 
@@ -42,8 +42,18 @@ void Driver::init(Setting *setting) {
   logSetting();
    Log.noticeln("Waiting before starting...");
   _ledProtocol->waiting();
-  _trackers = new Trackers(_setting, _ledProtocol);
-  _trackers->init();
+  Log.noticeln("Initializing tracker");
+  _tracker = new Tracker(
+    &_setting->board.pin.tracker,
+    &_setting->board.pin.driver.command,
+    &_setting->program.tracker,
+    &_setting->program.ldr,
+    &_setting->program.ldrs,
+    &_setting->board.adc,
+    &_setting->board.pwm,
+    &_setting->program.motors
+  );
+  _tracker->init();
   Log.noticeln("Starting program");
   Log.noticeln("JO Sun Tracker - version %s", _setting->program.version);
   _command = new DriverCommand(&_setting->board.pin.driver.command, &_setting->program.command.stop);
@@ -75,7 +85,8 @@ void Driver::update() {
     _state.setReset();
   }
   if (!_state.isStop()) {
-    _trackers->update();
+    _ledProtocol->update();
+    _tracker->update();
   }
   publishStatus();
   #if defined(HEARTBEAT_INTERVAL)
@@ -90,8 +101,8 @@ static const char *buttonLevel(uint8_t pin) {
 void Driver::publishStatus() {
   AppSystemStatus status;
   status.driver = _state.isStop() ? "stop" : (_state.isReset() ? "reset" : "idle");
-  status.tracker = _trackers->AppStatus();
-  const SettingBoardPinTracker &tracker = _setting->board.pin.tracker[TRACKER_1];
+  status.tracker = _tracker->AppStatus();
+  const SettingBoardPinTracker &tracker = _setting->board.pin.tracker;
   status.buttons.deploy = buttonLevel(tracker.command.deploy);
   status.buttons.retract = buttonLevel(tracker.command.retract);
   status.buttons.mode = digitalRead(tracker.command.mode) == LOW ? "manual" : "auto";
@@ -104,7 +115,7 @@ void Driver::publishStatus() {
 
 void Driver::stop() {
   Log.traceln("Driver::stop");
-  _trackers->stop();
+  _tracker->stop();
   _state.setStop();
 }
 

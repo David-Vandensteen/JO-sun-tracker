@@ -45,8 +45,7 @@ Cette revue porte sur le comportement à l'exécution, la cohérence de configur
 
 - Emplacement : `src/driver/tracker_command.h`, `src/driver/tracker_command.cpp`, `src/driver/tracker_command_state.h`, `src/driver/tracker_command_state.cpp`, `src/driver/tracker.cpp`
 - Problème : `TrackerCommand::update()` lisait les boutons sans exploiter leur état, et ses `ADebouncer` n'étaient pas initialisés.
-- Correction : `TrackerCommand` suit le pattern `driver_command` (`init()`, `update()` et `state()`, `ADebouncer` en membres par valeur). Le debounce est injecté via `SettingProgramTrackersCommand`. `TrackerCommandState` (`tracker_command_state.h/.cpp`) est un `enum class` pour éviter les conflits de noms (`IDLE`).
-- Règles de commande :
+- Correction : `TrackerCommand` suit le pattern `driver_command` (`init()`, `update()` et `state()`, `ADebouncer` en membres par valeur). Le debounce est injecté via `SettingProgramTrackerCommand`. `TrackerCommandState` (`tracker_command_state.h/.cpp`) est un `enum class` pour éviter les conflits de noms (`IDLE`).- Règles de commande :
   - Deux boutons manuels appuyés en même temps : état `IDLE` (arrêt sûr), au lieu d'un DEPLOY arbitraire.
   - Un seul bouton : `DEPLOY` ou `RETRACT`.
   - Au relâchement : `stop()`.

@@ -5,14 +5,14 @@
 #define SETTING_BOARD_ADC_RESOLUTION 4095
 #define SETTING_BOARD_PWM_RESOLUTION 255
 #define SETTING_BOARD_SERIAL_BAUD_RATE 115200
-#define SETTING_PROGRAM_TRACKERS_INTERVAL 3 * (60 * 1000)
+#define SETTING_PROGRAM_TRACKER_INTERVAL 3 * (60 * 1000)
 #define SETTING_PROGRAM_LDR_SAMPLING_INTERVAL 1000
 #define SETTING_PROGRAM_LDRS_THRESHOLD 10
 #define SETTING_PROGRAM_LDRS_NIGHT_CUTOFF 10
 #define SETTING_PROGRAM_MOTORS_SPEED 30
 #define SETTING_PROGRAM_MOTORS_TIMEOUT 1000
 #define SETTING_PROGRAM_COMMAND_STOP_PRESS_MS 1000
-#define SETTING_PROGRAM_TRACKERS_COMMAND_DEBOUNCE 10
+#define SETTING_PROGRAM_TRACKER_COMMAND_DEBOUNCE 10
 
 // GPIO assignment: avoid boot strapping pins (0, 2, 5, 12, 15), flash pins (6-11), PSRAM pins (16, 17 on WROVER) and ADC2 pins for inputs read while WiFi is active
 // Buttons use internal pull-ups, LDRs use ADC1 input-only pins
@@ -39,18 +39,18 @@ Setting* settingInit() {
   setting->board.adc.resolution = SETTING_BOARD_ADC_RESOLUTION;
   setting->board.pwm.resolution = SETTING_BOARD_PWM_RESOLUTION;
   setting->board.serial.baudRate = SETTING_BOARD_SERIAL_BAUD_RATE;
-  setting->board.pin.tracker[TRACKER_1].ldr.up = 34;
-  setting->board.pin.tracker[TRACKER_1].ldr.down = 35;
-  setting->board.pin.tracker[TRACKER_1].motors.ena = 25;
-  setting->board.pin.tracker[TRACKER_1].motors.in1 = 26;
-  setting->board.pin.tracker[TRACKER_1].motors.in2 = 27;
-  setting->board.pin.tracker[TRACKER_1].motors.enb = 14;
-  setting->board.pin.tracker[TRACKER_1].motors.in3 = 22;
-  setting->board.pin.tracker[TRACKER_1].motors.in4 = 13;
-  setting->board.pin.tracker[TRACKER_1].command.deploy = SETTING_PIN_TRACKER_COMMAND_DEPLOY;
-  setting->board.pin.tracker[TRACKER_1].command.retract = SETTING_PIN_TRACKER_COMMAND_RETRACT;
-  setting->board.pin.tracker[TRACKER_1].command.mode = SETTING_PIN_TRACKER_COMMAND_MODE;
-  setting->board.pin.tracker[TRACKER_1].led = 4;
+  setting->board.pin.tracker.ldr.up = 34;
+  setting->board.pin.tracker.ldr.down = 35;
+  setting->board.pin.tracker.motors.ena = 25;
+  setting->board.pin.tracker.motors.in1 = 26;
+  setting->board.pin.tracker.motors.in2 = 27;
+  setting->board.pin.tracker.motors.enb = 14;
+  setting->board.pin.tracker.motors.in3 = 22;
+  setting->board.pin.tracker.motors.in4 = 13;
+  setting->board.pin.tracker.command.deploy = SETTING_PIN_TRACKER_COMMAND_DEPLOY;
+  setting->board.pin.tracker.command.retract = SETTING_PIN_TRACKER_COMMAND_RETRACT;
+  setting->board.pin.tracker.command.mode = SETTING_PIN_TRACKER_COMMAND_MODE;
+  setting->board.pin.tracker.led = 4;
   setting->board.pin.led = 2;
   setting->board.pin.driver.command.stop = SETTING_PIN_DRIVER_COMMAND_STOP;
   setting->board.pin.display.sda = SETTING_PIN_DISPLAY_SDA;
@@ -64,8 +64,8 @@ Setting* settingInit() {
   setting->program.app.network.wifiReconnectInterval = SETTING_PROGRAM_NETWORK_WIFI_RECONNECT_INTERVAL;
   setting->program.version = VERSION;
   setting->program.command.stop.pressMs = SETTING_PROGRAM_COMMAND_STOP_PRESS_MS;
-  setting->program.trackers.interval = SETTING_PROGRAM_TRACKERS_INTERVAL;
-  setting->program.trackers.command.debounce = SETTING_PROGRAM_TRACKERS_COMMAND_DEBOUNCE;
+  setting->program.tracker.interval = SETTING_PROGRAM_TRACKER_INTERVAL;
+  setting->program.tracker.command.debounce = SETTING_PROGRAM_TRACKER_COMMAND_DEBOUNCE;
   setting->program.ldr.sampling.interval = SETTING_PROGRAM_LDR_SAMPLING_INTERVAL;
   setting->program.ldrs.threshold = SETTING_PROGRAM_LDRS_THRESHOLD;
   setting->program.ldrs.night.cutoff = SETTING_PROGRAM_LDRS_NIGHT_CUTOFF;

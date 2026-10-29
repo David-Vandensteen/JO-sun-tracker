@@ -11,7 +11,7 @@
 Tracker::Tracker(
   SettingBoardPinTracker *settingBoardPinTracker,
   SettingBoardPinDriverCommand *settingBoardPinDriverCommand,
-  SettingProgramTrackers *settingProgramTrackers,
+  SettingProgramTracker *settingProgramTracker,
   SettingProgramLDR *settingProgramLDR,
   SettingProgramLDRs *settingProgramLDRs,
   SettingBoardADC *settingBoardADC,
@@ -47,8 +47,8 @@ Tracker::Tracker(
       ),
       settingProgramMotors
     ),
-    _trackerCommand(&settingBoardPinTracker->command, &settingProgramTrackers->command),
-    _settingProgramTrackers(settingProgramTrackers) {}
+    _trackerCommand(&settingBoardPinTracker->command, &settingProgramTracker->command),
+    _settingProgramTracker(settingProgramTracker) {}
 
 void Tracker::init() {
   _trackerCommand.init();
@@ -56,9 +56,9 @@ void Tracker::init() {
   _ldrs.init();
   _motors.init();
   _everyInterval
-    .setInterval(_settingProgramTrackers->interval)
+    .setInterval(_settingProgramTracker->interval)
     .setCallback(Tracker::onIntervalTick, this);
-  _nextComparisonMs = millis() + _settingProgramTrackers->interval;
+  _nextComparisonMs = millis() + _settingProgramTracker->interval;
 }
 
 void Tracker::update() {
@@ -135,7 +135,7 @@ void Tracker::interval() {
   #if LOG_TRACKER_INTERVAL
   Log.traceln("Tracker::interval - mode: %s", _trackerCommand.state().isAuto() ? "automa" : "manual");
   #endif
-  _nextComparisonMs = millis() + _settingProgramTrackers->interval;
+  _nextComparisonMs = millis() + _settingProgramTracker->interval;
   if (!_trackerCommand.state().isAuto()) {
     return;
   }

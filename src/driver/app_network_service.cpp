@@ -84,7 +84,7 @@ static void handleStatus() {
   portEXIT_CRITICAL(&sharedStatusMux);
 
   const Setting *setting = getSetting();
-  const SettingBoardPinTracker &tracker = setting->board.pin.tracker[TRACKER_1];
+  const SettingBoardPinTracker &tracker = setting->board.pin.tracker;
   char body[1536];
   snprintf(
     body,
@@ -92,7 +92,7 @@ static void handleStatus() {
     "{\"status\":{\"driver\":\"%s\",\"uptime\":%lu,\"ldrUp\":%u,\"ldrDown\":%u,\"mode\":\"%s\",\"motor\":\"%s\",\"nextComparisonMs\":%lu,"
     "\"buttons\":{\"deploy\":\"%s\",\"retract\":\"%s\",\"mode\":\"%s\",\"stop\":\"%s\"}},"
     "\"setting\":{\"version\":\"%s\","
-    "\"trackers\":{\"interval\":%lu,\"commandDebounce\":%lu},"
+    "\"tracker\":{\"interval\":%lu,\"commandDebounce\":%lu},"
     "\"ldr\":{\"samplingInterval\":%lu},"
     "\"ldrs\":{\"threshold\":%d,\"nightCutoff\":%d},"
     "\"motors\":{\"speed\":%d,\"timeout\":%d},"
@@ -114,8 +114,8 @@ static void handleStatus() {
     snapshot.buttons.mode,
     snapshot.buttons.stop,
     setting->program.version,
-    (unsigned long)setting->program.trackers.interval,
-    (unsigned long)setting->program.trackers.command.debounce,
+    (unsigned long)setting->program.tracker.interval,
+    (unsigned long)setting->program.tracker.command.debounce,
     (unsigned long)setting->program.ldr.sampling.interval,
     (int)setting->program.ldrs.threshold,
     (int)setting->program.ldrs.night.cutoff,

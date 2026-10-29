@@ -5,9 +5,6 @@
 
 #define VERSION "0.0.1"
 
-#define TRACKER_MAX 1
-#define TRACKER_1 0
-
 // ------------------
 //  LOG
 // ------------------
@@ -86,7 +83,7 @@ typedef struct SettingBoardPinDisplay {
 } SettingBoardPinDisplay;
 
 typedef struct SettingBoardPin {
-  SettingBoardPinTracker tracker[TRACKER_MAX];
+  SettingBoardPinTracker tracker;
   SettingBoardPinDriver driver;
   SettingBoardPinDisplay display;
   uint8_t led;
@@ -112,14 +109,14 @@ typedef struct SettingBoard {
   SettingBoardSerial serial;
 } SettingBoard;
 
-typedef struct SettingProgramTrackersCommand {
+typedef struct SettingProgramTrackerCommand {
   unsigned long debounce;
-} SettingProgramTrackersCommand;
+} SettingProgramTrackerCommand;
 
-typedef struct SettingProgramTrackers {
+typedef struct SettingProgramTracker {
   unsigned long interval;
-  SettingProgramTrackersCommand command;
-} SettingProgramTrackers;
+  SettingProgramTrackerCommand command;
+} SettingProgramTracker;
 
 typedef struct SettingProgramLDRSampling {
   unsigned long interval;
@@ -178,7 +175,7 @@ typedef struct SettingProgramApp {
 
 typedef struct SettingProgram {
   char *version;
-  SettingProgramTrackers trackers;
+  SettingProgramTracker tracker;
   SettingProgramLDR ldr;
   SettingProgramLDRs ldrs;
   SettingProgramMotors motors;

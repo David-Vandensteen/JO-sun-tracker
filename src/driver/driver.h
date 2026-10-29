@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include "setting.h"
 #include "led_protocol.h"
-#include "trackers.h"
+#include "tracker.h"
 #include "driver_state.h"
 #include "driver_command.h"
 #include "app_status.h"
@@ -19,7 +19,7 @@ public:
 private:
   static Setting *_setting;
   static LedProtocol *_ledProtocol;
-  static Trackers *_trackers;
+  static Tracker *_tracker;
   static DriverState _state;
   static DriverCommand *_command;
   static void heartBeat();
