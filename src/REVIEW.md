@@ -23,15 +23,15 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 | 5 | Moyen | Partiel | `MotorState` |
 | 6 | Ajout | Corrigé, à tester | Reset par maintien en mode manuel |
 | 7 | Moyen | Ouvert | Logs TRACE dans le chemin de jog |
-| 8 | Moyen | Ouvert | `resetHoldMs` non validé |
-| 9 | Moyen | Ouvert | Délai de 10 s au démarrage |
+| 8 | Moyen | Corrigé | `resetHoldMs` non validé |
+| 9 | Moyen | Corrigé (paramétrable) | Délai de 10 s au démarrage |
 | 10 | Bas | Ouvert | Indicateur « waiting » affiché après le délai |
-| 11 | Bas | Ouvert | Code mort (`Tracker::_state`, `_settingProgramMotors`, `Ldr::getPin`) |
-| 12 | Bas | Ouvert | Garde `#if defined(HEARTBEAT_INTERVAL)` toujours vraie |
+| 11 | Bas | Corrigé | Code mort (`Tracker::_state`, `_settingProgramMotors`, `Ldr::getPin`) |
+| 12 | Bas | Corrigé | Garde `#if defined(HEARTBEAT_INTERVAL)` toujours vraie |
 | 13 | Bas | Ouvert | LED tracker (GPIO 4) configurée mais jamais pilotée |
-| 14 | Bas | Ouvert | Accès direct aux membres publics de `Ldrs` |
-| 15 | Bas | Ouvert | Tableau de broches de taille fixe sans contrôle de bornes |
-| 16 | Bas | Ouvert | Journaux de configuration incorrects ou incomplets |
+| 14 | Bas | Corrigé | Accès direct aux membres publics de `Ldrs` |
+| 15 | Bas | Corrigé | Tableau de broches de taille fixe sans contrôle de bornes |
+| 16 | Bas | Corrigé | Journaux de configuration incorrects ou incomplets |
 | 17 | Bas | À surveiller | Journal `ArduinoLog` écrit depuis deux cœurs |
 | 18 | Bas | Ouvert | JSON de `/status` : troncature silencieuse possible |
 | 19 | Info | À confirmer | Régulation automatique par impulsions de 1 s ; mode nuit non implémenté |
@@ -96,34 +96,30 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 - Problème : en mode manuel, `Tracker::handleCommand()` appelle `_motors.deploy()` ou `_motors.retract()` à chaque boucle. Chaque appel écrit des lignes `Log.traceln` pour chaque moteur. Un jog produit environ 4 lignes par boucle (`deploy`), et environ 6 pour `retract` (`stop` puis `retract`). Ces écritures série peuvent ralentir la boucle principale, donc retarder la lecture des boutons et le réarmement du timeout (si la boucle s'allonge au-delà de `motors.timeout`, le moteur s'arrête en plein jog).
 - Recommandation : passer ces logs en `verboseln`, ou les retirer du chemin de jog. Passer `LOG_LEVEL` à `LOG_LEVEL_NOTICE` pour l'usage normal.
 
-### 8. Moyen : `resetHoldMs` non validé (ouvert)
+### 8. Moyen : `resetHoldMs` non validé (corrigé)
 
-- Emplacement : `src/driver/setting.cpp` (`assertSetting()`), `src/driver/tracker_command.cpp`
-- Problème : `assertSetting()` vérifie `debounce > 0`, mais pas `resetHoldMs > 0`. Avec `0`, un maintien simultané des deux boutons déclenche le reset dès la première boucle.
-- Recommandation : ajouter un contrôle `resetHoldMs > 0`, avec un message de log dédié.
+- Emplacement : `src/driver/setting.cpp` (`assertSetting()`)
+- Correction : ajout du contrôle `resetHoldMs > 0`, avec le message « Tracker command reset hold must be greater than 0 ».
 
-### 9. Moyen : délai de 10 s au démarrage (ouvert)
+### 9. Moyen : délai de 10 s au démarrage (corrigé, paramétrable)
 
-- Emplacement : `src/driver/driver.cpp` (`Driver::init()`, `delay(10000)` dans le bloc `if (LOG)`)
-- Problème : `LOG` vaut toujours `true`. Le firmware attend donc 10 s à chaque démarrage, avant la validation des réglages, le tracker, le serveur web et l'écran. Ce délai n'est pas paramétré.
-- À confirmer : si le délai sert à laisser le temps d'ouvrir le moniteur série, le rendre paramétrable ou le limiter aux builds de debug.
+- Emplacement : `src/driver/driver.cpp` (`Driver::init()`), `src/driver/setting.h`
+- Correction : le délai est désormais la constante `LOG_BOOT_DELAY_MS` (10000 par défaut, conservé pour le moniteur série). Mettre `0` pour le supprimer.
+- Reste à décider : conditionner le délai à la présence d'un moniteur série, si souhaité.
 
 ### 10. Bas : indicateur « waiting » affiché après le délai (ouvert)
 
 - Emplacement : `src/driver/driver.cpp` (`_ledProtocol->waiting()` après `delay`)
 - Problème : `waiting()` est appelé après le délai de 10 s. La LED n'est donc pas animée pendant ce délai, et le signal ne sert à rien pendant l'attente.
 
-### 11. Bas : code mort (ouvert)
+### 11. Bas : code mort (corrigé)
 
-- `src/driver/tracker.h` (ligne 38) : `TrackerState _state` n'est jamais lu ni écrit. `src/driver/tracker_state.h/.cpp` ne servent qu'à ce membre.
-- `src/driver/tracker.h` (ligne 35) et `src/driver/tracker.cpp` (ligne 20) : `_settingProgramMotors` est stocké mais jamais utilisé.
-- `src/driver/ldr.h` (ligne 11) : `Ldr::getPin()` est déclaré mais n'est pas défini.
-- Recommandation : supprimer ces éléments, ou les utiliser.
+- Suppression de `TrackerState _state` et de `tracker_state.h/.cpp` (fichiers retirés), de `Tracker::_settingProgramMotors` (le paramètre du constructeur reste utilisé pour `Motors`), et de la déclaration non définie `Ldr::getPin()`.
 
-### 12. Bas : garde `#if` toujours vraie (ouvert)
+### 12. Bas : garde `#if` toujours vraie (corrigé)
 
-- Emplacement : `src/driver/driver.cpp` (`Driver::update()`, `#if defined(HEARTBEAT_INTERVAL)`)
-- Problème : `HEARTBEAT_INTERVAL` est toujours défini dans `setting.h`. La garde n'a aucun effet ; le contrôle réel est `LOG && HEARTBEAT`.
+- Emplacement : `src/driver/driver.cpp` (`Driver::update()`)
+- Correction : garde `#if defined(HEARTBEAT_INTERVAL)` retirée ; le contrôle est `LOG && HEARTBEAT`.
 
 ### 13. Bas : LED tracker jamais pilotée (ouvert)
 
@@ -131,22 +127,20 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 - Problème : la broche est validée, journalisée et exposée dans `/status`, mais aucun code de commande ne l'utilise. Seule la LED d'état (`board.pin.led`) est pilotée, par `LedProtocol`.
 - À confirmer : LED prévue pour une future indication, ou réglage obsolète à retirer.
 
-### 14. Bas : accès direct aux membres publics (ouvert)
+### 14. Bas : accès direct aux membres publics (corrigé)
 
-- Emplacement : `src/driver/ldrs.h` (`ldrUp`, `ldrDown` publics), `src/driver/tracker.cpp` (`Tracker::AppStatus()`)
-- Problème : `Tracker::AppStatus()` lit `_ldrs.ldrUp` et `_ldrs.ldrDown` directement. Il faudrait passer par des accesseurs.
+- Emplacement : `src/driver/ldrs.h`, `src/driver/ldrs.cpp`, `src/driver/tracker.cpp` (`Tracker::AppStatus()`)
+- Correction : `ldrUp` et `ldrDown` sont privés ; ajout de `getUpAveragePercentValue()` et `getDownAveragePercentValue()`, utilisés par `AppStatus()`.
 
-### 15. Bas : tableau de broches sans contrôle de bornes (ouvert)
+### 15. Bas : tableau de broches sans contrôle de bornes (corrigé)
 
-- Emplacement : `src/driver/setting.cpp` (`assertPinsUnique()`)
-- Problème : le tableau est dimensionné par `12 + 4` (16 entrées), alors que 15 broches sont enregistrées. `registerPin()` n'a pas de contrôle de bornes : ajouter deux broches sans changer la taille provoque un dépassement de tableau.
-- Recommandation : calculer la taille à partir du nombre réel de broches, ou ajouter un contrôle de bornes dans `registerPin()`.
+- Emplacement : `src/driver/setting.cpp` (`assertPinsUnique()`, `registerPin()`)
+- Correction : taille du tableau définie par `PIN_CAPACITY` (16), et `registerPin()` refuse l'enregistrement une fois la capacité atteinte (journal fatal « Too many pins registered »).
 
-### 16. Bas : journaux de configuration incorrects ou incomplets (ouvert)
+### 16. Bas : journaux de configuration incorrects ou incomplets (corrigé)
 
-- `src/driver/setting.cpp` (`logSetting()`) : `motors.timeout` (`unsigned long`) est affiché avec `%d`. Utiliser `%lu`.
-- `src/driver/setting.cpp` (`logSetting()`) : `resetHoldMs` n'est pas journalisé.
-- `src/driver/tracker.cpp` (`Tracker::interval()`) : la chaîne `"automa"` est une coquille (`"auto"`).
+- `src/driver/setting.cpp` (`logSetting()`) : `motors.timeout` affiché avec `%lu`, et `resetHoldMs` journalisé.
+- `src/driver/tracker.cpp` (`Tracker::interval()`) : la coquille `"automa"` est corrigée en `"auto"`.
 
 ### 17. Bas : journal `ArduinoLog` écrit depuis deux cœurs (à surveiller)
 
@@ -219,14 +213,13 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 
 ## Prochaines corrections suggérées
 
-1. Ajouter la validation de `resetHoldMs > 0` (constat 8) et retirer les logs TRACE du chemin de jog (constat 7).
-2. Décider du délai de 10 s au démarrage (constat 9) : paramétrer, limiter aux builds de debug, ou retirer.
-3. Nettoyer le code mort (constat 11) et les coquilles de logs (constat 16).
-4. Ajouter un scénario de test (Wokwi dans `tests/`) pour le jog, la transition de mode et le reset par maintien.
-5. Vérifier sur le matériel : polarité du commutateur de mode (GPIO 33), câblage des LDR (GPIO 34 et 35, entrées seules sans pull-up), démarrage avec GPIO 2 (LED d'état), et délai réel du reset.
+1. Retirer les logs TRACE du chemin de jog (constat 7).
+2. Décider si le délai de démarrage (constat 9) doit être conditionné à la présence d'un moniteur série.
+3. Ajouter un scénario de test (Wokwi dans `tests/`) pour le jog, la transition de mode et le reset par maintien.
+4. Vérifier sur le matériel : polarité du commutateur de mode (GPIO 33), câblage des LDR (GPIO 34 et 35, entrées seules sans pull-up), démarrage avec GPIO 2 (LED d'état), et délai réel du reset.
 
 ## Conclusion
 
 La boucle de contrôle du tracker est fonctionnelle sur le papier : jog manuel, règle « deux boutons = arrêt », transition de mode, reset par maintien de deux boutons en mode manuel, et suppression complète du STOP. Le support est limité à l'ESP32, et la compilation est vérifiée sur cette cible.
 
-Les risques principaux restent matériels : polarité du commutateur de mode, GPIO 2 au démarrage, délai réel du reset, et journalisation TRACE qui peut ralentir le jog (constat 7). Côté logiciel, les points à traiter en priorité sont la validation de `resetHoldMs` (constat 8) et le délai de 10 s au démarrage (constat 9).
+Les risques principaux restent matériels : polarité du commutateur de mode, GPIO 2 au démarrage, délai réel du reset, et journalisation TRACE qui peut ralentir le jog (constat 7). Côté logiciel, le point à traiter en priorité est désormais le retrait des logs TRACE du jog (constat 7).
