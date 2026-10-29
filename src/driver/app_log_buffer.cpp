@@ -40,7 +40,7 @@ size_t AppLogOutput::write(const uint8_t *buffer, size_t size) {
 
 // Copies the most recent bytes in order, keeping room for a terminating NUL
 size_t AppLogOutput::copyTo(char *out, size_t outSize) {
-  if (outSize == 0) {
+  if (out == nullptr || outSize == 0) {
     return 0;
   }
   if (logSize == 0) {

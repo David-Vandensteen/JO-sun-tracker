@@ -69,6 +69,10 @@ static void handleRoot() {
 }
 
 static void handleLog() {
+  if (logBody == nullptr) {
+    server->send(500, "text/plain; charset=utf-8", "log buffer unavailable");
+    return;
+  }
   AppLogOutput::copyTo(logBody, logBodySize);
   server->send(200, "text/plain; charset=utf-8", logBody);
 }
@@ -149,6 +153,10 @@ void AppNetworkService::start(const SettingSecretWifi *secretWifi, const Setting
   webServerPort = program->app.webServer.port;
   logBodySize = program->app.log.bufferSize;
   logBody = (char *)malloc(logBodySize);
+  if (logBody == nullptr) {
+    logBodySize = 0;
+    Log.warningln("Network: log buffer allocation failed, /log disabled");
+  }
   #endif
   xTaskCreatePinnedToCore(AppNetworkService::task, "network", networkStackSize, nullptr, 1, nullptr, NETWORK_CORE);
 }
