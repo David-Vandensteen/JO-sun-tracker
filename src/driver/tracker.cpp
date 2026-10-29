@@ -17,8 +17,7 @@ Tracker::Tracker(
   SettingBoardPWM *settingBoardPWM,
   SettingProgramMotors *settingProgramMotors
 )
-  : _settingProgramMotors(settingProgramMotors),
-    _ldrs(
+  : _ldrs(
       Ldr(
         settingBoardPinTracker->ldr.up,
         settingBoardADC->resolution,

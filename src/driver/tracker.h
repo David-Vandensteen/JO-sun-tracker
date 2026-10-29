@@ -7,7 +7,6 @@
 #include "setting.h"
 #include "app_status.h"
 #include "tracker_command.h"
-#include "tracker_state.h"
 
 class Tracker {
 public:
@@ -32,10 +31,8 @@ private:
   Motors _motors;
   TrackerCommand _trackerCommand;
   TrackerCommandState _commandState;
-  SettingProgramMotors *_settingProgramMotors;
   SettingProgramTracker *_settingProgramTracker;
   DV_EveryInterval _everyInterval;
-  TrackerState _state;
   unsigned long _nextComparisonMs = 0;
   void deploy();
   void retract();
