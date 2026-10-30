@@ -25,7 +25,7 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 | 7 | Moyen | Ouvert | Logs TRACE dans le chemin de jog |
 | 8 | Moyen | Corrigé | `resetHoldMs` non validé |
 | 9 | Moyen | Corrigé (paramétrable) | Délai de 10 s au démarrage |
-| 10 | Bas | Ouvert | Indicateur « waiting » affiché après le délai |
+| 10 | Bas | Corrigé | Indicateur « waiting » affiché après le délai |
 | 11 | Bas | Corrigé | Code mort (`Tracker::_state`, `_settingProgramMotors`, `Ldr::getPin`) |
 | 12 | Bas | Corrigé | Garde `#if defined(HEARTBEAT_INTERVAL)` toujours vraie |
 | 13 | Bas | Ouvert | LED tracker (GPIO 4) configurée mais jamais pilotée |
@@ -111,10 +111,11 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 - Correction : le délai est désormais la constante `LOG_BOOT_DELAY_MS` (10000 par défaut, conservé pour le moniteur série). Mettre `0` pour le supprimer.
 - Reste à décider : conditionner le délai à la présence d'un moniteur série, si souhaité.
 
-### 10. Bas : indicateur « waiting » affiché après le délai (ouvert)
+### 10. Bas : indicateur « waiting » affiché après le délai (corrigé)
 
-- Emplacement : `src/driver/driver.cpp` (`_ledProtocol->waiting()` après `delay`)
-- Problème : `waiting()` est appelé après le délai de 10 s. La LED n'est donc pas animée pendant ce délai, et le signal ne sert à rien pendant l'attente.
+- Emplacement : `src/driver/driver.cpp` (`Driver::init()`)
+- Problème : `waiting()` était appelé après le délai de démarrage. La LED n'était donc pas animée pendant ce délai.
+- Correction : `waiting()` est appelé avant le délai. L'attente est une boucle qui appelle `_ledProtocol->update()` jusqu'à `LOG_BOOT_DELAY_MS`, au lieu d'un `delay()` bloquant. Le message « Waiting before starting... » est journalisé dans le même bloc.
 
 ### 11. Bas : code mort (corrigé)
 
@@ -229,7 +230,7 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 
 - Allocation mémoire : `malloc` du tampon de `/log` et du tampon circulaire sont vérifiés. Si `/log` ne peut pas allouer, la route renvoie HTTP 500 et le serveur continue.
 - Validation des GPIO : `assertPinsUnique()` couvre désormais l'écran (SDA/SCL), en plus des broches du tracker et de la LED d'état (voir constat 15 pour la taille du tableau).
-- Ouverts : constats 7 à 18 ci-dessus. Les constats 20 à 23 sont corrigés ou acceptés.
+- Ouverts : constats 7, 13 et 18. À surveiller ou à confirmer : constats 17 et 19. Partiels : constats 3 bis et 5. Corrigés ou acceptés : les autres.
 
 ## Lacunes de tests
 

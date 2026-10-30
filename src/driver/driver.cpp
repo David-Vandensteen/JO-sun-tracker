@@ -26,10 +26,15 @@ void Driver::init(Setting *setting) {
   _setting = setting;
   AppLogOutput::init(_setting->program.app.log.bufferSize);
   _ledProtocol = new LedProtocol(_setting->board.pin.led);
+  _ledProtocol->waiting();
   if (LOG) {
     Serial.begin(_setting->board.serial.baudRate);
     Log.begin(LOG_LEVEL, &logOutput);
-    delay(LOG_BOOT_DELAY_MS);
+    Log.noticeln("Waiting before starting...");
+    unsigned long bootStart = millis();
+    while (millis() - bootStart < LOG_BOOT_DELAY_MS) {
+      _ledProtocol->update();
+    }
   }
   Log.noticeln("---------");
   if (!assertSetting()) {
@@ -38,8 +43,6 @@ void Driver::init(Setting *setting) {
   }
   Log.noticeln("Setting is valid");
   logSetting();
-   Log.noticeln("Waiting before starting...");
-  _ledProtocol->waiting();
   Log.noticeln("Initializing tracker");
   _tracker = new Tracker(
     &_setting->board.pin.tracker,
