@@ -51,7 +51,6 @@ Setting* settingInit() {
   setting->board.pin.tracker.command.retract = SETTING_PIN_TRACKER_COMMAND_RETRACT;
   setting->board.pin.tracker.command.mode = SETTING_PIN_TRACKER_COMMAND_MODE;
   setting->board.pin.tracker.led = 4;
-  setting->board.pin.led = 2;
   setting->board.pin.display.sda = SETTING_PIN_DISPLAY_SDA;
   setting->board.pin.display.scl = SETTING_PIN_DISPLAY_SCL;
   setting->program.display.address = SETTING_PROGRAM_DISPLAY_ADDRESS;

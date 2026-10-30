@@ -47,7 +47,7 @@ static bool assertPinsUnique(Setting *setting) {
   if (!registerPin(pin.command.retract, "Tracker retract command", pins, names, count, PIN_CAPACITY)) return false;
   if (!registerPin(pin.command.mode, "Tracker mode command", pins, names, count, PIN_CAPACITY)) return false;
   if (!registerPin(pin.led, "Tracker LED", pins, names, count, PIN_CAPACITY)) return false;
-  if (!registerPin(setting->board.pin.led, "LED status", pins, names, count, PIN_CAPACITY)) return false;
+  if (!registerPin(LED_ESP32_BUILTIN, "LED status", pins, names, count, PIN_CAPACITY)) return false;
   if (!registerPin(setting->board.pin.display.sda, "Display SDA", pins, names, count, PIN_CAPACITY)) return false;
   if (!registerPin(setting->board.pin.display.scl, "Display SCL", pins, names, count, PIN_CAPACITY)) return false;
   return true;
@@ -117,10 +117,6 @@ bool assertSetting() {
   }
   if (setting->board.pin.tracker.led == 0) {
     logFatal("Tracker LED pin is invalid");
-    return false;
-  }
-  if (setting->board.pin.led == 0) {
-    logFatal("LED pin is invalid");
     return false;
   }
   if (!assertPinsUnique(setting)) {
@@ -215,7 +211,7 @@ void logSetting() {
   Log.traceln("  - Tracker retract command pin: %d", setting->board.pin.tracker.command.retract);
   Log.traceln("  - Tracker mode command pin: %d", setting->board.pin.tracker.command.mode);
   Log.traceln("  - Tracker LED pin: %d", setting->board.pin.tracker.led);
-  Log.traceln("  - LED status pin: %d", setting->board.pin.led);
+  Log.traceln("  - LED status pin: %d", LED_ESP32_BUILTIN);
   Log.traceln("- Program:");
   Log.traceln("  - Version: %s", setting->program.version);
   Log.traceln("  - Tracker interval: %lu", setting->program.tracker.interval);

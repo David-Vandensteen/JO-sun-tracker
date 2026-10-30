@@ -5,6 +5,8 @@
 
 #define VERSION "0.0.1"
 
+#define LED_ESP32_BUILTIN 2
+
 // ------------------
 //  LOG
 // ------------------
@@ -79,8 +81,6 @@ typedef struct SettingBoardPinDisplay {
 typedef struct SettingBoardPin {
   SettingBoardPinTracker tracker;
   SettingBoardPinDisplay display;
-  uint8_t led;
-
 } SettingBoardPin;
 
 typedef struct SettingBoardADC {

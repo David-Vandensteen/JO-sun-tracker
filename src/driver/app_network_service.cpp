@@ -99,7 +99,7 @@ static void handleStatus() {
     (unsigned int)tracker.command.retract,
     (unsigned int)tracker.command.mode,
     (unsigned int)tracker.led,
-    (unsigned int)setting->board.pin.led
+    (unsigned int)LED_ESP32_BUILTIN
   );
   if (written < 0 || (size_t)written >= sizeof(body)) {
     Log.warningln("Network: /status buffer too small (%d bytes needed)", written);

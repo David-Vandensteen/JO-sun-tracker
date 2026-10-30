@@ -25,7 +25,7 @@ DriverState Driver::_state;
 void Driver::init(Setting *setting) {
   _setting = setting;
   AppLogOutput::init(_setting->program.app.log.bufferSize);
-  _ledProtocol = new LedProtocol(_setting->board.pin.led);
+  _ledProtocol = new LedProtocol(LED_ESP32_BUILTIN);
   _ledProtocol->waiting();
   if (LOG) {
     Serial.begin(_setting->board.serial.baudRate);
