@@ -109,6 +109,7 @@ typedef struct SettingProgramTrackerCommand {
 
 typedef struct SettingProgramTracker {
   unsigned long interval;
+  bool invertDirection;
   SettingProgramTrackerCommand command;
 } SettingProgramTracker;
 

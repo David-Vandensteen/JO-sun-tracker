@@ -6,6 +6,7 @@
 #define SETTING_BOARD_PWM_RESOLUTION 255
 #define SETTING_BOARD_SERIAL_BAUD_RATE 115200
 #define SETTING_PROGRAM_TRACKER_INTERVAL 3 * (60 * 1000)
+#define SETTING_PROGRAM_TRACKER_INVERT_DIRECTION false
 #define SETTING_PROGRAM_LDR_SAMPLING_INTERVAL 1000
 #define SETTING_PROGRAM_LDRS_THRESHOLD 10
 #define SETTING_PROGRAM_LDRS_NIGHT_CUTOFF 10
@@ -62,6 +63,7 @@ Setting* settingInit() {
   setting->program.app.network.wifiReconnectInterval = SETTING_PROGRAM_NETWORK_WIFI_RECONNECT_INTERVAL;
   setting->program.version = VERSION;
   setting->program.tracker.interval = SETTING_PROGRAM_TRACKER_INTERVAL;
+  setting->program.tracker.invertDirection = SETTING_PROGRAM_TRACKER_INVERT_DIRECTION;
   setting->program.tracker.command.debounce = SETTING_PROGRAM_TRACKER_COMMAND_DEBOUNCE;
   setting->program.tracker.command.resetHoldMs = SETTING_PROGRAM_TRACKER_COMMAND_RESET_HOLD_MS;
   setting->program.ldr.sampling.interval = SETTING_PROGRAM_LDR_SAMPLING_INTERVAL;

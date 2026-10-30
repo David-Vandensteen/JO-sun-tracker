@@ -148,13 +148,21 @@ void Tracker::interval() {
     #if LOG_TRACKER_INTERVAL
     Log.traceln("Tracker::interval - LDR UP_GREATER_THAN_DOWN");
     #endif
-    deploy();
+    if (_settingProgramTracker->invertDirection) {
+      retract();
+    } else {
+      deploy();
+    }
     break;
   case LdrsComparison::DOWN_GREATER_THAN_UP:
     #if LOG_TRACKER_INTERVAL
     Log.traceln("Tracker::interval - LDR DOWN_GREATER_THAN_UP");
     #endif
-    retract();
+    if (_settingProgramTracker->invertDirection) {
+      deploy();
+    } else {
+      retract();
+    }
     break;
   case LdrsComparison::DEADBAND:
     #if LOG_TRACKER_INTERVAL

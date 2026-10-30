@@ -203,6 +203,7 @@ void logSetting() {
   Log.traceln("- Program:");
   Log.traceln("  - Version: %s", setting->program.version);
   Log.traceln("  - Tracker interval: %lu", setting->program.tracker.interval);
+  Log.traceln("  - Tracker invert direction: %s", setting->program.tracker.invertDirection ? "true" : "false");
   Log.traceln("  - Tracker command debounce: %lu", setting->program.tracker.command.debounce);
   Log.traceln("  - Tracker command reset hold: %lu", setting->program.tracker.command.resetHoldMs);
   Log.traceln("  - LDR sampling interval: %lu", setting->program.ldr.sampling.interval);
