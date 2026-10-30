@@ -212,6 +212,6 @@ void logSetting() {
   Log.traceln("  - Motors speed: %d", setting->program.motors.speed);
   Log.traceln("  - Motors timeout: %lu", setting->program.motors.timeout);
   Log.traceln("- Secret:");
-  Log.traceln("  - WiFi SSID: %s", setting->secret.wifi.ssid);
+  Log.traceln("  - WiFi SSID: %s", setting->secret.wifi.ssid[0] == '\0' ? "empty" : "set");
   Log.traceln("  - WiFi password: %s", setting->secret.wifi.password[0] == '\0' ? "empty" : "set");
 }

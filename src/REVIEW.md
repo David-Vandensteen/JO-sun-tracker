@@ -1,12 +1,12 @@
 # Code Review of src
 
-Dernière revue : 2026-10-29
+Dernière revue : 2026-10-30
 
 ## Périmètre
 
 Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lecture directe du code, sans sous-agent. Les fichiers `setting_secret_wifi.h` (ignoré par git) ne sont pas lus.
 
-- Compilation : `arduino-cli compile --fqbn esp32:esp32:esp32 driver.ino` passe (dernier build après le reset par maintien).
+- Compilation : `arduino-cli compile --fqbn esp32:esp32:esp32 driver.ino` passe (vérifié le 2026-10-30, après les corrections des constats 8 à 16).
 - Matériel : aucun test réalisé. Tous les constats « à vérifier » restent ouverts.
 - Aucune modification du firmware pendant cette revue.
 
@@ -35,6 +35,10 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 | 17 | Bas | À surveiller | Journal `ArduinoLog` écrit depuis deux cœurs |
 | 18 | Bas | Ouvert | JSON de `/status` : troncature silencieuse possible |
 | 19 | Info | À confirmer | Régulation automatique par impulsions de 1 s ; mode nuit non implémenté |
+| 20 | Bas | Corrigé | Commentaire d'en-tête de `driver.ino` obsolète (« Uno/Nano ») |
+| 21 | Bas | Corrigé | SSID WiFi journalisé en TRACE, visible sur `/log` sans authentification |
+| 22 | Bas | Corrigé | `Motors::state()` ne lit que le moteur 1 (champ `motor` de `/status`) |
+| 23 | Bas | Accepté | `AppLogOutput::copyTo()` garde la section critique pendant la copie de 4096 octets |
 
 ## Constats
 
@@ -152,6 +156,7 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 - Emplacement : `src/driver/app_network_service.cpp` (`handleStatus()`, `char body[1536]`, `snprintf`)
 - État : les accolades sont équilibrées, et la taille actuelle reste sous 1536 octets. Mais `snprintf` tronque silencieusement : un champ qui grandit produirait un JSON invalide, et la page resterait bloquée.
 - Recommandation : vérifier la valeur de retour de `snprintf` (taille ≥ `sizeof(body)`), ou passer à un sérialiseur JSON.
+- Point mineur : `motors.timeout` est casté en `(int)` pour `%d`, alors que le constat 16 impose `%lu` pour ce champ dans les logs. Le résultat est correct, mais l'écriture est incohérente.
 
 ### 19. Info : points de conception à confirmer
 
@@ -159,16 +164,43 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 - Mode nuit : dans `Tracker::interval()`, le cas `NIGHT` appelle `stop()` avec `// TODO: night behavior`. Le comportement de nuit (rangement, position de repos) n'est pas implémenté.
 - Pas de limite de course en jog manuel : le moteur tourne tant que le bouton est enfoncé.
 
+### 20. Bas : commentaire d'en-tête de `driver.ino` obsolète (corrigé)
+
+- Emplacement : `src/driver/driver.ino` (ligne 4)
+- Problème : le commentaire indiquait « Driver code for Arduino Uno/Nano/ESP32 ». Le support Uno/Nano a été retiré (constat 1).
+- Correction : le commentaire indique désormais « Driver code for ESP32 ».
+
+### 21. Bas : SSID WiFi journalisé en TRACE et exposé sur `/log` (corrigé)
+
+- Emplacement : `src/driver/setting.cpp` (`logSetting()`, ligne 215), `src/driver/app_network_service.cpp` (`handleLog()`)
+- Problème : `logSetting()` écrivait le SSID à chaque démarrage. `/log` renvoie ce tampon sans authentification.
+- Correction : le SSID est affiché comme le mot de passe, c'est-à-dire « set » ou « empty ». `/log` n'expose plus le nom du réseau, et l'état reste utile au diagnostic.
+
+### 22. Bas : `Motors::state()` ne reflétait que le moteur 1 (corrigé)
+
+- Emplacement : `src/driver/motors.cpp` (`Motors::state()`), `src/driver/tracker.cpp` (`AppStatus()`, lignes 120-121)
+- Problème : `Motors::state()` retournait `_motor1.state()` uniquement. Le champ `motor` de `/status` était donc calculé à partir du moteur 1 seul. Si un seul moteur s'arrêtait, le statut restait faux.
+- Correction : `Motors::state()` combine les deux moteurs. Il renvoie `DEPLOY` si l'un des deux avance, sinon `RETRACT` si l'un des deux recule, sinon `IDLE`.
+
+### 23. Bas : section critique longue dans `AppLogOutput::copyTo()` (accepté)
+
+- Emplacement : `src/driver/app_log_buffer.cpp` (`copyTo()`, lignes 50-55)
+- Constat : la boucle de copie (jusqu'à 4096 octets) s'exécute sous `portENTER_CRITICAL(&logMux)`, ce qui bloque brièvement les écritures de logs du cœur 1. La durée est estimée à quelques dizaines de microsecondes (non mesurée).
+- Décision : conservé. Copier hors verrou risquerait de lire des données écrasées pendant la copie, donc des lignes de log mélangées dans `/log`. Ce compromis n'en vaut pas la peine pour un tampon de cette taille.
+- Réouverture si : des mesures montrent un blocage gênant, ou si `program.app.log.bufferSize` est augmenté fortement.
+
 ## Améliorations vérifiées
 
 - La boucle de décision par intervalle est connectée : `Tracker::update()` fait avancer `_everyInterval`, et les décisions sont prises dans `Tracker::interval()`.
 - La règle « deux boutons = IDLE, puis RESET après `resetHoldMs` » est implémentée dans `TrackerCommand::update()`, uniquement en mode manuel.
 - Le switch de mode est débouncé et initialisé dans `TrackerCommand::init()`. La sortie du mode manuel arrête le mouvement en cours.
+- En mode automatique, `TrackerCommand::update()` ne lit pas les boutons. À la reprise du mode manuel, les débouncers se resynchronisent après leur délai ; aucun état incohérent n'a été trouvé.
 - Le timeout moteur est réarmé à chaque appel en jog (`Motors::deploy()` et `Motors::retract()`), donc il ne coupe pas un mouvement maintenu.
 - La validation des broches couvre toutes les broches du tracker, la LED d'état, et l'écran (SDA/SCL).
 - Il ne reste aucune trace du STOP : ni broche, ni `DriverCommand`, ni JSON `stop`.
 - Le tampon de logs est protégé par `portENTER_CRITICAL`, `copyTo()` refuse un pointeur nul, et les `malloc` sont vérifiés.
 - L'instantané publié vers le serveur web est protégé par `portENTER_CRITICAL` ; le serveur ne garde aucun pointeur vers des données mutables.
+
 
 ## Connectivité WiFi et serveur web
 
@@ -197,7 +229,7 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 
 - Allocation mémoire : `malloc` du tampon de `/log` et du tampon circulaire sont vérifiés. Si `/log` ne peut pas allouer, la route renvoie HTTP 500 et le serveur continue.
 - Validation des GPIO : `assertPinsUnique()` couvre désormais l'écran (SDA/SCL), en plus des broches du tracker et de la LED d'état (voir constat 15 pour la taille du tableau).
-- Ouverts : constats 7 à 18 ci-dessus.
+- Ouverts : constats 7 à 18 ci-dessus. Les constats 20 à 23 sont corrigés ou acceptés.
 
 ## Lacunes de tests
 
@@ -218,9 +250,11 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 2. Décider si le délai de démarrage (constat 9) doit être conditionné à la présence d'un moniteur série.
 3. Ajouter un scénario de test (Wokwi dans `tests/`) pour le jog, la transition de mode et le reset par maintien.
 4. Vérifier sur le matériel : polarité du commutateur de mode (GPIO 33), câblage des LDR (GPIO 34 et 35, entrées seules sans pull-up), démarrage avec GPIO 2 (LED d'état), et délai réel du reset.
+5. Constat 23 (section critique de `copyTo()`) accepté : à rouvrir seulement si des mesures montrent un blocage gênant.
 
 ## Conclusion
 
-La boucle de contrôle du tracker est fonctionnelle sur le papier : jog manuel, règle « deux boutons = arrêt », transition de mode, reset par maintien de deux boutons en mode manuel, et suppression complète du STOP. Le support est limité à l'ESP32, et la compilation est vérifiée sur cette cible.
+La boucle de contrôle du tracker est fonctionnelle sur le papier : jog manuel, règle « deux boutons = arrêt », transition de mode, reset par maintien de deux boutons en mode manuel, et suppression complète du STOP. Le support est limité à l'ESP32, et la compilation est vérifiée sur cette cible (2026-10-30).
 
-Les risques principaux restent matériels : polarité du commutateur de mode, GPIO 2 au démarrage, délai réel du reset, et journalisation TRACE qui peut ralentir le jog (constat 7). Côté logiciel, le point à traiter en priorité est désormais le retrait des logs TRACE du jog (constat 7).
+Les risques principaux restent matériels : polarité du commutateur de mode, GPIO 2 au démarrage, délai réel du reset, et journalisation TRACE qui peut ralentir le jog (constat 7). Côté logiciel, le point à traiter en priorité est désormais le retrait des logs TRACE du jog (constat 7). Les constats 20 à 23 sont de faible impact et ne bloquent pas le fonctionnement.
+

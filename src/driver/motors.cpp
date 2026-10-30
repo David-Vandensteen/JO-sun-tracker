@@ -57,5 +57,13 @@ void Motors::update() {
 }
 
 MotorState Motors::state() {
-  return _motor1.state();
+  MotorState state1 = _motor1.state();
+  MotorState state2 = _motor2.state();
+  if (state1.isDeploy() || state2.isDeploy()) {
+    return MotorState(MotorStateType::DEPLOY);
+  }
+  if (state1.isRetract() || state2.isRetract()) {
+    return MotorState(MotorStateType::RETRACT);
+  }
+  return MotorState(MotorStateType::IDLE);
 }
