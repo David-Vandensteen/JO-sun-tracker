@@ -163,6 +163,22 @@ bool assertSetting() {
     logFatal("Motors timeout must be greater than 0");
     return false;
   }
+  if (setting->program.app.log.bufferSize == 0) {
+    logFatal("Log buffer size must be greater than 0");
+    return false;
+  }
+  if (setting->program.app.network.taskStackSize == 0) {
+    logFatal("Network task stack size must be greater than 0");
+    return false;
+  }
+  if (setting->program.app.network.wifiReconnectInterval == 0) {
+    logFatal("WiFi reconnect interval must be greater than 0");
+    return false;
+  }
+  if (setting->program.app.webServer.port == 0) {
+    logFatal("Web server port must be greater than 0");
+    return false;
+  }
   if (setting->secret.wifi.ssid == nullptr) {
     logFatal("WiFi SSID is null");
     return false;
