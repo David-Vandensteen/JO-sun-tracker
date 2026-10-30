@@ -53,7 +53,7 @@ static void handleStatus() {
   const Setting *setting = getSetting();
   const SettingBoardPinTracker &tracker = setting->board.pin.tracker;
   char body[1536];
-  snprintf(
+  int written = snprintf(
     body,
     sizeof(body),
     "{\"status\":{\"driver\":\"%s\",\"uptime\":%lu,\"ldrUp\":%u,\"ldrDown\":%u,\"mode\":\"%s\",\"motor\":\"%s\",\"nextComparisonMs\":%lu,"
@@ -62,7 +62,7 @@ static void handleStatus() {
     "\"tracker\":{\"interval\":%lu,\"commandDebounce\":%lu,\"commandResetHoldMs\":%lu},"
     "\"ldr\":{\"samplingInterval\":%lu},"
     "\"ldrs\":{\"threshold\":%d,\"nightCutoff\":%d},"
-    "\"motors\":{\"speed\":%d,\"timeout\":%d},"
+    "\"motors\":{\"speed\":%d,\"timeout\":%lu},"
     "\"gpio\":{"
     "\"ldrUp\":%u,\"ldrDown\":%u,"
     "\"motorEna\":%u,\"motorIn1\":%u,\"motorIn2\":%u,\"motorEnb\":%u,\"motorIn3\":%u,\"motorIn4\":%u,"
@@ -86,7 +86,7 @@ static void handleStatus() {
     (int)setting->program.ldrs.threshold,
     (int)setting->program.ldrs.night.cutoff,
     (int)setting->program.motors.speed,
-    (int)setting->program.motors.timeout,
+    (unsigned long)setting->program.motors.timeout,
     (unsigned int)tracker.ldr.up,
     (unsigned int)tracker.ldr.down,
     (unsigned int)tracker.motors.ena,
@@ -101,6 +101,11 @@ static void handleStatus() {
     (unsigned int)tracker.led,
     (unsigned int)setting->board.pin.led
   );
+  if (written < 0 || (size_t)written >= sizeof(body)) {
+    Log.warningln("Network: /status buffer too small (%d bytes needed)", written);
+    server->send(500, "text/plain; charset=utf-8", "status buffer too small");
+    return;
+  }
   server->send(200, "application/json", body);
 }
 #endif

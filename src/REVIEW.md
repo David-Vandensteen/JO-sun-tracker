@@ -33,7 +33,7 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 | 15 | Bas | Corrigé | Tableau de broches de taille fixe sans contrôle de bornes |
 | 16 | Bas | Corrigé | Journaux de configuration incorrects ou incomplets |
 | 17 | Bas | À surveiller | Journal `ArduinoLog` écrit depuis deux cœurs |
-| 18 | Bas | Ouvert | JSON de `/status` : troncature silencieuse possible |
+| 18 | Bas | Corrigé | JSON de `/status` : troncature silencieuse possible |
 | 19 | Info | À confirmer | Régulation automatique par impulsions de 1 s ; mode nuit non implémenté |
 | 20 | Bas | Corrigé | Commentaire d'en-tête de `driver.ino` obsolète (« Uno/Nano ») |
 | 21 | Bas | Corrigé | SSID WiFi journalisé en TRACE, visible sur `/log` sans authentification |
@@ -152,12 +152,13 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 - Emplacement : `src/driver/app_network_service.cpp` (tâche réseau, cœur 0), `src/driver/driver.cpp` (cœur 1)
 - Problème : `ArduinoLog` n'est pas protégé. Les lignes peuvent se mélanger sous forte charge. Le tampon `AppLogOutput` est protégé par `portENTER_CRITICAL`, donc seule la sortie `ArduinoLog` est concernée.
 
-### 18. Bas : JSON de `/status` construit à la main (ouvert)
+### 18. Bas : JSON de `/status` construit à la main (corrigé)
 
 - Emplacement : `src/driver/app_network_service.cpp` (`handleStatus()`, `char body[1536]`, `snprintf`)
-- État : les accolades sont équilibrées, et la taille actuelle reste sous 1536 octets. Mais `snprintf` tronque silencieusement : un champ qui grandit produirait un JSON invalide, et la page resterait bloquée.
-- Recommandation : vérifier la valeur de retour de `snprintf` (taille ≥ `sizeof(body)`), ou passer à un sérialiseur JSON.
-- Point mineur : `motors.timeout` est casté en `(int)` pour `%d`, alors que le constat 16 impose `%lu` pour ce champ dans les logs. Le résultat est correct, mais l'écriture est incohérente.
+- Problème : `snprintf` tronque silencieusement. Un champ qui grandit aurait produit un JSON invalide, et la page serait restée bloquée.
+- Correction : la valeur de retour de `snprintf` est contrôlée. Si le JSON ne tient pas dans `body`, `/status` répond HTTP 500 et journalise un avertissement, au lieu d'envoyer un JSON tronqué.
+- Point mineur corrigé : `motors.timeout` est affiché avec `%lu` et `(unsigned long)`, comme dans les logs (constat 16).
+- Reste ouvert : le JSON est toujours construit à la main. Un sérialiseur serait une évolution, non nécessaire.
 
 ### 19. Info : points de conception à confirmer
 
@@ -230,7 +231,7 @@ Revue complète de `src/driver/` (firmware ESP32, `driver.ino`), faite par lectu
 
 - Allocation mémoire : `malloc` du tampon de `/log` et du tampon circulaire sont vérifiés. Si `/log` ne peut pas allouer, la route renvoie HTTP 500 et le serveur continue.
 - Validation des GPIO : `assertPinsUnique()` couvre désormais l'écran (SDA/SCL), en plus des broches du tracker et de la LED d'état (voir constat 15 pour la taille du tableau).
-- Ouverts : constats 7, 13 et 18. À surveiller ou à confirmer : constats 17 et 19. Partiels : constats 3 bis et 5. Corrigés ou acceptés : les autres.
+- Ouverts : constat 7 (et 13, LED tracker jamais pilotée). À surveiller ou à confirmer : constats 17 et 19. Partiels : constats 3 bis et 5. Corrigés ou acceptés : les autres.
 
 ## Lacunes de tests
 
