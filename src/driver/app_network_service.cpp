@@ -127,22 +127,35 @@ void AppNetworkService::start(const SettingSecretWifi *secretWifi, const Setting
     Log.warningln("Network: log buffer allocation failed, /log disabled");
   }
   #endif
-  xTaskCreatePinnedToCore(AppNetworkService::task, "network", networkStackSize, nullptr, 1, nullptr, NETWORK_CORE);
+  BaseType_t created = xTaskCreatePinnedToCore(AppNetworkService::task, "network", networkStackSize, nullptr, 1, nullptr, NETWORK_CORE);
+  if (created != pdPASS) {
+    Log.errorln("Network: task creation failed, network disabled");
+    #if FEAT_WEBSERVER
+    free(logBody);
+    logBody = nullptr;
+    logBodySize = 0;
+    #endif
+  }
 }
 
 void AppNetworkService::task(void *ctx) {
   (void)ctx;
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(wifiSetting->ssid, wifiSetting->password);
-  unsigned long lastAttempt = millis();
-  bool connected = false;
   #if FEAT_WEBSERVER
   bool serverStarted = false;
   server = new WebServer(webServerPort);
+  if (server == nullptr) {
+    Log.errorln("Network: web server allocation failed, network disabled");
+    vTaskDelete(nullptr);
+    return;
+  }
   server->on("/", handleRoot);
   server->on("/status", handleStatus);
   server->on("/log", handleLog);
   #endif
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(wifiSetting->ssid, wifiSetting->password);
+  unsigned long lastAttempt = millis();
+  bool connected = false;
 
   for (;;) {
     if (WiFi.status() == WL_CONNECTED) {
